@@ -1,0 +1,517 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* Clean and professional font */
+    font-size: 14px; /* Default font size */
+    color: #011F7F; ; /* Dark gray for professional look */
+
+}
+
+
+.save-button {
+    position: absolute;
+    top: 30px;
+    right: 136px;
+    background-color: rgb(2, 2, 2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.export-button {
+    /* position: absolute; */
+    top: 30px;
+    right: 10px;
+    background-color: rgb(5, 1, 1);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-button {
+    /* position: absolute; */
+    top: 750px;
+    right:20px; /* Position the "Add Row" button to the left */
+    background-color: rgb(2, 2, 2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.remove-button {
+    /* position: absolute; */
+    top: 800px;
+    right: 6px; /* Position the "Remove Row" button next to "Add Row" */
+    background-color: rgb(2, 2, 2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.invoice-container {
+    margin-top: 50px;
+    border: 1px solid #e0dbdb;
+    padding: 10px;
+    color: #011F7F; 
+    position: relative;
+}
+
+.header-img {
+    width: 100%;          
+    height: auto;        
+    object-fit: cover;  
+}
+
+.service-items {
+    position: absolute;
+    top: 36%;
+    right: 0%;
+    z-index: 111;
+    width: 200px;
+}
+
+.d-flex.flex-wrap
+{
+    gap: 0px 15px;
+}
+.form-check
+{
+    padding-left: 0px;
+    width: 128px;
+}
+
+
+
+.form-check .form-check-input
+{
+    float: none;
+    margin-right: 10px;
+}
+
+/* table container */
+
+.table-container {
+    width: 100%;
+    border-collapse: collapse;
+    color: #011F7F; 
+}
+
+.table-container th,
+.table-container td {
+    border: 1px solid #000000;
+    padding: 5px;
+    text-align: center;
+}
+
+.table-container th {
+    background-color: #ed9a1e;
+    font-size: 18px;
+}
+
+.footer-bg{
+    background-color: #011F7F;
+}
+
+
+.footer {
+    text-align: center; 
+    font-size: 18px;
+    font-weight: bold;
+    color: #ed9a1e;
+
+}
+
+.footer>p,ul,li{
+    color: #ed9a1e;
+}
+
+.footer ul {
+    list-style-type: none; 
+    text-align: center;
+}
+
+
+/* Form input width */
+
+.custom-width {
+    width: 160px;
+}
+
+.custom-width-1 {
+    width: 200px;
+}
+
+.custom-width-2{
+    width: 438px;
+
+}
+
+.custom-width-3 {
+    width: 130px;
+}
+
+.form-control{
+    /* border: 1px solid transparent; */
+    color: #031d91;
+}
+
+.heading {
+    font-family: 'Playfair Display', serif; 
+    font-weight: 600; 
+    font-size: 1.8rem; 
+    color:  #031d91; 
+    line-height: 1.5; 
+}
+
+/* For labels */
+
+label {
+    font-size: 17px;
+    font-weight: 496;
+}
+
+/* invoice table cutomer and amount */
+
+.custom-width-4{
+    width: 100px;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+.custom-width-5{
+    width: 65px;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+
+ /* For checkboxes and labels of the invoice */
+
+ .check {
+    display: inline-block;
+    position: relative; 
+}
+
+.form-checkboxes {
+    appearance: none; 
+    width: 14px;
+    height: 14px;
+    border: 1px solid #000; 
+    background-color: #fff; 
+    position: relative;
+    cursor: pointer;
+}
+
+.form-checkboxes:checked {
+    background-color: #011F7F;; 
+    border-color: #011F7F; 
+}
+
+.form-checkboxes:checked::after {
+    content: ''; 
+    position: absolute;
+    bottom: 2px;
+    left: 4px;
+    width: 5px;
+    height: 12px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg); 
+}
+
+.d-flex {
+    gap: 0px; 
+    flex-wrap: nowrap; 
+    align-items: center; 
+}
+
+.custom-postion{
+   top: 0px;
+   right: 10px;
+}
+  
+.form-check-label{
+      font-size: 14px!important;
+      font-weight: 500;
+}
+  
+.form-check-2{
+      position: relative;
+      bottom: 5px;
+      left: 0px;
+}
+
+.label-custom-width {
+    width: 55px !important; 
+  }
+
+  .custom-select {
+    appearance: none; 
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    background-color: transparent;
+    border: 1px solid transparent; /* Border style */
+    padding: 0px 0px; /* Padding */
+    font-size: 13px; /* Font size */
+    color: #011F7F; /* Text color */
+    font-weight: 500;
+    margin-top: 1px;
+    cursor: pointer; /* Pointer cursor */
+  }
+
+  .custom-select:focus {
+    border-color: #031d91; /* Highlight border on focus */
+    outline: none; /* Removes outline */
+  }
+
+  /* Invoice Items Input Fields */
+
+  .inv-items{
+     position: relative;
+     top: 20px;
+     left: 205px;
+  }
+
+  .item-value-1 {
+    position: absolute;
+    bottom: 15.5px;
+    right: 155px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-2 {
+    position: absolute;
+    bottom: 15.5px;
+    right: 110px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-3 {
+    position: absolute;
+    bottom: 15.5px;
+    right: 60px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-4 {
+    position: absolute;
+    bottom: 15.5px;
+    right: 10px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-5 {
+    position: absolute;
+    bottom: 15.5px;
+    right: -30px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+    
+.item-value-6 {
+    position: absolute;
+    bottom: 15.5px;
+    left: 18px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-7 {
+    position: absolute;
+    bottom: 15.5px;
+    left: 80px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-8 {
+    position: absolute;
+    bottom: 15.5px;
+    left: 130px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-9 {
+    position: absolute;
+    bottom: 15.5px;
+    left: 176px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-10 {
+    position: absolute;
+    bottom: 15.5px;
+    left: 215px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-11 {
+    position: absolute;
+    bottom: 15.5px;
+    left: 250px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-12 {
+    position: absolute;
+    bottom: 15.5px;
+    left: 298px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-13 {
+    position: absolute;
+    bottom: 15.5px;
+    left: 358px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.item-value-14 {
+    position: absolute;
+    bottom: 15.5px;
+    left: 405px;
+    color:#011F7F;
+    font-size: 14px;
+    font-weight: 500;
+    width: 60px!important; 
+    background: transparent;
+    border: 1px solid red;
+}
+
+.table-container-2 td {
+    width: 50%; 
+    text-align: left; 
+    vertical-align: middle; 
+}
+
+.table-2-width {
+    width: 100%; 
+}
+
+
+.bold-label {
+    font-weight: bold; 
+}
+
+.table-container-2 tr{
+    font-size: 17px;
+}
+
+.table-container-2 td{
+    border: 1px solid #011F7F;
+    padding: 3px;
+    text-align: center;
+}
+
+.table-container-2 tr:nth-child(1),
+.table-container-2 tr:nth-child(4) {
+    background-color: #ed9a1e!important;
+    color: #011F7F!important;
+}
+
+.table-container-2 tr:nth-child(2),
+.table-container-2 tr:nth-child(3) {
+    background-color: #ffffff !important;
+}
+
+.bg-transparent{
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: #011F7F;
+    font-weight: 500;
+    text-align: center;
+}
+
+
+
+.topbtngrp
+{
+
+    margin-bottom: 30px;
+}

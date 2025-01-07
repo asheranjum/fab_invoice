@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* Clean and professional font */
+    font-size: 14px; /* Default font size */
+    color: #011F7F; ; /* Dark gray for professional look */
+    line-height: 1.6; 
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(52deg,  #294dc5, #ed9a1e,#5471d1 );
+    padding: 20px;
+}
+
+.signin-form {
+    background: #000;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100vw;
+    max-width: 400px;
+    height: 350px;
+}
+
+.signin-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ff9b00;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.input-group input,
+textarea,
+button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    font-size: 14px;
+}
+
+textarea {
+    margin-bottom: 20px;
+    resize: none;
+}
+
+button {
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #ff9b00, #0516d7);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg,  #0516d7, #ff9b00);
+}
+
+@media (max-width: 400px) {
+    .signin-form {
+        padding: 20px;
+    }
+}
+
+.label{
+    color: silver;
+}
+
+
+.register-form {
+    background: #000;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100vw;
+    max-width: 400px;
+    height: 320px;
+}
+
+.register-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ff9b00;
+}
