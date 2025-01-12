@@ -119,6 +119,7 @@ $html = '
             text-align: center;
             color:#263278;
         }
+       
         .details th {
             background-color: #f89c1c;
             color:#263278;
@@ -128,6 +129,14 @@ $html = '
             text-align: center;
             border-collapse: collapse;
         }
+
+       .checkbox-table  th, .checkbox-table  td {
+            border: 0px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            color:#263278;
+        }
+
         .checkbox-table img {
             margin-bottom: 3px;
         }

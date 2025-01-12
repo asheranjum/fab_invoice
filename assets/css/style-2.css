@@ -101,7 +101,7 @@ body {
 
 .form-check
 {
-    width: 65px;
+    /* width: 65px; */
     /* background-color: red; */
     display: flex;
     flex-direction: column;
@@ -205,6 +205,11 @@ body {
     color: #031d91;
 }
 
+.form-contro
+{
+    padding: 7px 5px;
+    margin-bottom: 7px;
+}
 .heading {
     font-family: 'Playfair Display', serif; 
     font-weight: 600; 
