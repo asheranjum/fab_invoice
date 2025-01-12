@@ -131,6 +131,13 @@ body {
 {
     opacity: 0;
 }
+
+.form-control:focus {
+    border-color: none;
+    outline: 0;
+    box-shadow: none;
+}
+
 /* table container */
 
 .table-container {
@@ -194,7 +201,7 @@ body {
 }
 
 .form-control{
-    /* border: 1px solid transparent; */
+    border-radius: 0px;
     color: #031d91;
 }
 
@@ -487,6 +494,13 @@ label {
     width: 50%; 
     text-align: left; 
     vertical-align: middle; 
+}
+
+.table-container-2 .form-control
+{
+    border-radius: 0px !important;
+    border: 0px !important;
+    background: transparent;
 }
 
 .table-2-width {

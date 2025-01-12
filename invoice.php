@@ -192,8 +192,8 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][door_remove_value]" class="form-control mt-1" disabled placeholder="Value">
                                     </div>
                                     <div class="form-check ">
-                                        <label for="pup-0" class="form-check-label">P/UP</label>
-                                        <select id="pup-0" name="item[0][pup]" class="form-control">
+                                        <select id="pup-0" name="item[0][pup]" class="form-contro">
+                                            <option value="">Select Value</option>
                                             <option value="0">P/UP</option>
                                             <option value="1">P/UP(1)</option>
                                             <option value="2">P/UP(2)</option>
@@ -206,6 +206,8 @@ mysqli_close($conn);
                                             <option value="9">P/UP(9)</option>
                                             <option value="10">P/UP(10)</option>
                                         </select>
+
+                                        <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="Value">
                                     </div>
                                 </div>
 
@@ -274,7 +276,7 @@ mysqli_close($conn);
 
     <script>
         $(document).ready(function() {
-            const maxRows = 20;
+            const maxRows = 25;
 
             function calculateRowAmount(row) {
                 let amount = 0;
@@ -282,8 +284,14 @@ mysqli_close($conn);
                 $(row).find(".form-checkboxes").each(function() {
                     const inputField = $(this).closest(".form-check").find("input[type='text']");
                     const value = parseFloat(inputField.val()) || 0;
+
                     if (this.checked) amount += value;
                 });
+
+                // Include the select input value in the calculation
+                const selectField = $(row).find(".form-contro");
+                const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
+                amount += selectValue;
 
                 $(row).find(".amount-field").val(amount.toFixed(2));
                 calculateSubTotal();
@@ -308,82 +316,90 @@ mysqli_close($conn);
                 $(row).find(".form-checkboxes").off("change").on("change", function() {
                     const inputField = $(this).closest(".form-check").find("input[type='text']");
                     inputField.prop("disabled", !this.checked).val("");
-
-                    inputField.removeClass('d-none');
-                    inputField.addClass('form-control');
-    
                     calculateRowAmount(row);
+                });
+
+                $(row).find(".form-contro").off("change").on("change", function() {
+                    const inputField = $(this).siblings("input[type='text']");
+
+                    // Enable the input if the selected value is not empty, otherwise disable and clear it
+                    if ($(this).val() !== "") {
+                        inputField.prop("disabled", false);
+                    } else {
+                        inputField.prop("disabled", true).val("");
+                    }
+
+                    calculateRowAmount($(this).closest("tr"));
                 });
 
                 $(row).find(".form-check input[type='text']").off("input").on("input", function() {
                     calculateRowAmount(row);
                 });
+
+                // Validation to restrict input to numbers only
+                $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
+                    if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
+                        e.preventDefault();
+                    }
+                });
+
+                // Disable all input fields initially
+                $(row).find(".form-check input[type='text']").prop("disabled", true);
+                $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true); // Ensure select inputs are disabled initially
             }
 
             $(".add-button").click(function() {
                 const rows = $(".table-container tbody tr");
                 if (rows.length >= maxRows) {
-                    alert("You cannot add more than 20 rows.");
+                    alert("You cannot add more than 25 rows.");
                     return;
                 }
 
                 const lastRow = rows.last();
                 const newRow = lastRow.clone();
-
-
                 const rowIndex = rows.length; // Calculate new row index for naming
 
                 // Reset input values and update names for the cloned row
-                newRow.find("input").each(function() {
+                newRow.find("input, select").each(function() {
                     if (this.type === "checkbox") {
                         this.checked = false; // Uncheck checkboxes
                     } else {
                         $(this).val("").prop("disabled", true); // Clear and disable inputs
                     }
 
-                    // Ensure Customer's Inv No remains enabled
                     if ($(this).hasClass("customer-inv-no")) {
                         $(this).prop("disabled", false).val("");
                     }
                 });
 
+                // Enable the select field in the duplicated row
+                newRow.find(".form-contro").prop("disabled", false);
 
-
-                // Update checkbox, label, and input names dynamically
+                // Update names dynamically
                 newRow.find(".form-check").each(function() {
-                    const labelText = $(this).find("label").text().trim(); // Get the label text (e.g., "DELIV", "ASSEM", "RUB")
-                    const baseName = labelText.toLowerCase(); // Convert label text to lowercase for name/id consistency
-                    const uniqueId = `${baseName}-${rowIndex}`; // Create a unique ID for the checkbox
+                    const labelText = $(this).find("label").text().trim();
+                    const baseName = labelText.toLowerCase();
+                    const uniqueId = `${baseName}-${rowIndex}`;
 
-                    // Update checkbox attributes
                     const checkbox = $(this).find("input[type='checkbox']");
                     checkbox.attr({
                         id: uniqueId,
                         name: `item[${rowIndex}][${baseName}]`
                     });
 
-                    // Update the associated label's `for` attribute
                     $(this).find("label").attr("for", uniqueId);
 
-                    // Update the associated text input's `name` attribute
                     const inputField = $(this).find("input[type='text']");
                     inputField.attr("name", `item[${rowIndex}][${baseName}_value]`);
                 });
 
-
-
-
-                // Update amount field name
+                newRow.find(".form-contro").attr("name", `item[${rowIndex}][pup]`);
+                newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
                 newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
 
-                console.log('newRow', );
-
-                // Append the new row and attach listeners
                 $(".table-container tbody").append(newRow);
                 attachRowListeners(newRow);
             });
-
-
 
             $(".remove-button").click(function() {
                 const rows = $(".table-container tbody tr");
@@ -401,84 +417,91 @@ mysqli_close($conn);
             attachRowListeners($(".table-container tbody tr"));
             $("#tax_rate, #other_cost").on("input", calculateSubTotal);
             calculateSubTotal();
-        });
 
+            // Prevent page refresh and warn user
+            let isFormDirty = false;
+            $("#invoiceForm input, #invoiceForm select").on("input change", function() {
+                isFormDirty = true;
+            });
 
+            $(window).on("beforeunload", function(e) {
+                if (isFormDirty) {
+                    return "Are you sure you want to leave? Your changes will be lost.";
+                }
+            });
 
+            $("#invoiceForm").on("submit", function(e) {
+                e.preventDefault();
 
-        $("#invoiceForm").on("submit", function(e) {
-            e.preventDefault(); // Prevent the default form submission
+                const formData = {
+                    date: $("input[name='date']").val(),
+                    invoice: $("input[name='invoice']").val(),
+                    company: $("input[name='company']").val(),
+                    address: $("input[name='address']").val(),
+                    phone: $("input[name='phone']").val(),
+                    postal_code: $("input[name='postal_code']").val(),
+                    abn: $("input[name='abn']").val(),
+                    runsheet: $("input[name='runsheet']").val(),
+                    sub_total: $("#sub_total").val(),
+                    tax_rate: $("#tax_rate").val(),
+                    other_cost: $("#other_cost").val(),
+                    total_cost: $("#total_cost").val(),
+                    items: []
+                };
 
-            // Collect form data
-            const formData = {
-                date: $("input[name='date']").val(),
-                invoice: $("input[name='invoice']").val(),
-                company: $("input[name='company']").val(),
-                address: $("input[name='address']").val(),
-                phone: $("input[name='phone']").val(),
-                postal_code: $("input[name='postal_code']").val(),
-                abn: $("input[name='abn']").val(),
-                runsheet: $("input[name='runsheet']").val(),
-                sub_total: $("#sub_total").val(),
-                tax_rate: $("#tax_rate").val(),
-                other_cost: $("#other_cost").val(),
-                total_cost: $("#total_cost").val(),
-                items: []
-            };
+                $(".table-container tbody tr").each(function(index) {
+                    const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
+                    const amount = $(this).find(".amount-field").val() || 0;
 
-            // Extract invoice_id
-            const invoiceId = $("input[name='invoice']").val() || '0';
-
-            // Collect items and amounts
-            $(".table-container tbody tr").each(function(index) {
-                const customerInvoiceNo = $(this).find(".customer-inv-no").val() || ''; // Extract customer invoice no.
-                const amount = $(this).find(".amount-field").val() || 0; // Extract amount for the row
-
-                // Generate unique item_row_id
-                const itemRowId = `${index + 1}`;
-
-                $(this)
-                    .find(".form-check")
-                    .each(function() {
+                    $(this).find(".form-check").each(function() {
                         const checkbox = $(this).find("input[type='checkbox']");
                         const inputField = $(this).find("input[type='text']");
 
                         if (checkbox.prop("checked")) {
-                            const itemName = $(this).find("label").text().trim(); // Extract item name from the label text
-                            const itemValue = inputField.val() || 0; // Extract the input value (price)
-
                             formData.items.push({
-                                item_row_id: itemRowId, // Add item_row_id
+                                item_row_id: `${index + 1}`,
                                 customer_inv_no: customerInvoiceNo,
-                                item_name: itemName,
-                                item_value: itemValue,
+                                item_name: $(this).find("label").text().trim(),
+                                item_value: inputField.val() || 0,
                                 amount: amount
                             });
                         }
                     });
-            });
 
-            // Submit data via API
-            fetch("save_invoice.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        alert(data.message);
-                        window.location.href = "index.php"; // Redirect after success
-                    } else {
-                        alert("Error: " + data.message);
+                    const selectField = $(this).find(".form-contro");
+                    if (selectField.val() !== "") {
+                        formData.items.push({
+                            item_row_id: `${index + 1}`,
+                            customer_inv_no: customerInvoiceNo,
+                            item_name: selectField.find("option:selected").text().trim(),
+                            item_value: selectField.siblings("input[type='text']").val() || 0,
+                            amount: amount
+                        });
                     }
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                    alert("An error occurred. Please try again.");
                 });
+
+                fetch("save_invoice.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(formData),
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            alert(data.message);
+                            isFormDirty = false; // Reset dirty flag on successful submission
+                            window.location.href = "index.php";
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred. Please try again.");
+                    });
+            });
         });
     </script>
 
