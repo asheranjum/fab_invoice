@@ -121,11 +121,11 @@ mysqli_close($conn);
                     </thead>
                     <tbody>
                         <tr>
-                            <td>
+                            <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
                             </td>
                             <td>
-                                <div class="d-flex flex-wrap">
+                                <div class="d-flex">
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="deliv-0" name="item[0][deliv]">
                                         <label for="deliv-0" class="form-check-label">DELIV</label>
@@ -210,7 +210,7 @@ mysqli_close($conn);
                                 </div>
 
                             </td>
-                            <td>
+                            <td style="width: 180px;">
                                 <input type="text" class="form-control amount-field" name="amount[]" readonly placeholder="$0.00">
                             </td>
                         </tr>
@@ -308,6 +308,10 @@ mysqli_close($conn);
                 $(row).find(".form-checkboxes").off("change").on("change", function() {
                     const inputField = $(this).closest(".form-check").find("input[type='text']");
                     inputField.prop("disabled", !this.checked).val("");
+
+                    inputField.removeClass('d-none');
+                    inputField.addClass('form-control');
+    
                     calculateRowAmount(row);
                 });
 
