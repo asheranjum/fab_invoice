@@ -67,7 +67,7 @@ mysqli_close($conn);
                     <h3 class="mt-1 mb-2 heading">Bill To:</h3>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="Company" class="form-label mb-0 me-3">Company:</label>
+                        <label for="Company" class="form-label mb-0 me-3">Company Name:</label>
                         <input type="text" name="company" class="form-control w-50" placeholder="Type Company Name" value="">
                     </div>
 
@@ -77,16 +77,16 @@ mysqli_close($conn);
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="phone" class="form-label mb-0 me-2">Phone No:</label>
-                        <input type="text" name="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="">
-
-                        <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
-                        <input type="text" name="postal_code" class="form-control custom-width-3" placeholder="Postal Code" value="">
+                        <label for="abn" class="form-label mb-0 me-5">ABN:</label>
+                        <input type="text" name="abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="">
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="abn" class="form-label mb-0 me-5">ABN:</label>
-                        <input type="text" name="abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="">
+                        <label for="phone" class="form-label mb-0 me-2">Phone No:</label>
+                        <input type="text" name="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="">
+
+                        <!-- <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
+                        <input type="text" name="postal_code" class="form-control custom-width-3" placeholder="Postal Code" value=""> -->
                     </div>
 
                     <div class="mb-0 d-flex align-items-center">
@@ -100,6 +100,14 @@ mysqli_close($conn);
 
 
             <div class="col-md-4 position-relative">
+
+                <div class="info">
+                    <h6>FAB TRANSPORT SERVICES PTY LTD</h6>
+                    <h6>PHONE: 0403729966</h6>
+                    <h6>ABN: 123 121 211 222 222</h6>
+                    <h6>ADDRESS: 5 LOUIS STREET 3177 VIC</h6>
+                </div>
+
                 <div class="service-items">
                     <h4>For:</h4>
                     <h6>1. Assembly</h6>
@@ -244,7 +252,7 @@ mysqli_close($conn);
 
                     <div class="form-group table-2-width">
                         <tr>
-                            <td><strong><label for="sub_total" class="bold-label">Sub Total</label></strong></td>
+                            <td><strong><label for="sub_total" class="bold-label">Total</label></strong></td>
                             <td><strong> <input type="text" id="sub_total" name="sub_total" class="form-control" readonly placeholder="$0.00"></strong></td>
                         </tr>
                     </div>
@@ -253,13 +261,6 @@ mysqli_close($conn);
                         <tr>
                             <td><label for="tax_rate">Tax Rate</label></td>
                             <td><input type="text" id="tax_rate" name="tax_rate" class="form-control" placeholder="$0.00"></td>
-                        </tr>
-                    </div>
-
-                    <div class="form-group table-2-width">
-                        <tr>
-                            <td><label for="other_cost">Other Costs</label></td>
-                            <td><input type="text" id="other_cost" name="other_cost" class="form-control" placeholder="$0.00"></td>
                         </tr>
                     </div>
 

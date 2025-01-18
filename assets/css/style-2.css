@@ -86,11 +86,18 @@ body {
     object-fit: cover;  
 }
 
+
+.info {
+    position: absolute;
+    top: 40%;
+    left: 20%;
+    font-weight: 200;
+}
+
 .service-items {
     position: absolute;
-    top: 36%;
-    right: 0%;
-    z-index: 111;
+    top: 70%;
+    right: -10%;
     width: 200px;
 }
 
