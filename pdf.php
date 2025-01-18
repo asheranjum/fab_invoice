@@ -273,7 +273,7 @@ foreach ($groupedItems as $itemRowId => $data) {
             <td>
                 <div style="display:flex">
                     <img src="assets/images/check.png" width="20" height="20" style="padding-top:5px; padding-bottom:5px;" />
-                    <div style="font-size:12px;">' . htmlspecialchars($name) . '</div>
+                    <div style="font-size:12.5px;">' . htmlspecialchars($name) . '</div>
                 </div>
             </td>';
     }
@@ -284,14 +284,14 @@ foreach ($groupedItems as $itemRowId => $data) {
 
     // Generate corresponding values for each item
     foreach ($items as $value) {
-        $html .= '<td><span style="font-size:12px;">$' . htmlspecialchars($value) . '</span></td>';
+        $html .= '<td><span style="font-size:12px;">' . htmlspecialchars($value) . '</span></td>';
     }
 
     $html .= '
                     </tr>
                 </table>
             </td>
-            <td>$' . array_sum($items) . '</td>
+            <td style="font-weight:bold;">$' . array_sum($items) . '</td>
         </tr>';
 }
 
@@ -304,17 +304,17 @@ $html .= '
 
                     <tr>
                         <th style="background:#f89c1c;  color:#011f7f;">Total</td>
-                        <td> ' . $sub_total . '</td>
+                        <td style="color:#011f7f; font-weight:bold;">$'. $sub_total .'</td>
                     </tr>
                 
                     <tr>
-                        <th> Tax Rate</td>
-                        <td> ' . $tax_rate . '</td>
+                     <th style="color:#011f7f;"> Tax Rate </td>
+                        <td style="color:#011f7f; font-weight:bold;">$'. $tax_rate .'</td>
                     </tr>
 
                     <tr>
                         <th style="background:#f89c1c;  color:#011f7f;"> Total Cost </td>
-                        <td> ' . $total_cost . '</td>
+                        <td style="color:#011f7f; font-weight:bold;">$'. $total_cost .'</td>
                     </tr>
                 </table>
 
