@@ -148,7 +148,12 @@ $html = '
             text-align: center;
             padding: 10px;
         }
-        .footer-text { }
+       
+
+        .footer-text ul {
+          list-style-type: none; 
+          text-align: center;
+        }
 
         .total-sumay
         {
@@ -181,6 +186,11 @@ $html = '
             padding: 10px;
             text-align: left;
         }
+        .service-items {
+          position: relative;
+           top: 60%;
+           left: 65%;
+       }
     </style>
 </head>
 <body>
@@ -189,37 +199,56 @@ $html = '
         
         <img src="assets/images/head.png"  style="width:100%" />
        
-           <h2 style=" margin-left:30px; margin-top:-100px; color:white">Invoice </h2>
-           <div style=" margin-top:0px; margin-left:30px; color:white"> <span class="label">Invoice #:</span> ' . $invoiceNo . '</div>
+           <h2 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h2>
+           <div style=" margin-top:0px; margin-left:30px; color:white"> <span class="label">Invoice No:</span> ' . $invoiceNo . '</div>
            <div style=" margin-top:50px; "> </div>
-
-           <h4 style=" margin-left:5px; color:#001f80">Bill To </h4>
+           <h2 style=" margin-left:5px; color:#001f80">Bill To </h2>
 
         <table class="bill-to">
             <tr>
                 <td><span class="label">Date:</span> ' . $date . '</td>
-                <td style="text-align:right"><span class="label">Invoice No:</span> ' . $invoiceNo . '</td>
+                <td style="text-align:right"><span class="label">FAB TRANSPORT SERVICES PTY LTD</span></td>
             </tr>
+
             <tr>
-                <td><span class="label">Company:</span> ' . $company . '</td>
-                <td style="text-align:right"><span class="label">Phone No:</span> ' . $phone . '</td>
+                <td><span class="label">Company Name:</span> ' . $company . '</td>
+                <td style="text-align:right"><span class="label">PHONE:0403729966</span></td>
             </tr>
+            
             <tr>
                 <td><span class="label">Address:</span> ' . $address . '</td>
-                <td style="text-align:right"><span class="label">ABN:</span> ' . $abn . ' &nbsp;&nbsp;&nbsp; <span class="label">Postal Code:</span> ' . $postalCode . '</td>
+                <td style="text-align:right"><span class="label">ABN:123 121 211 222 222</span></td>
             </tr>
+
+            <tr>
+                <td><span class="label">Phone:</span> ' . $phone . '</td>
+                <td style="text-align:right"><span class="label">ADDRESS: 5 LOUIS STREET DOVETON 3177 VIC</span></td>
+            </tr>
+
+             <tr>
+                <td><span class="label">ABN:</span>' . $abn . '</td>
+                 <td style="text-align:right">
+                  <div class="service-items">
+                  <h3>For:</h3>
+                 <ol>
+                 <li>Assembly</li>
+                 <li>Delivery</li>
+                 <li>Repairs</li>
+                </ol>
+             </div>
+          </td>
+
             <tr>
                 <td colspan="2"><span class="label">RunSheet No:</span> ' . $runSheetNo . '</td>
             </tr>
-        </table>
 
-        
+        </table>
 
         <!-- Description Table -->
         <table class="details">
             <thead>
                 <tr>
-                    <th>Customer INV No</th>
+                    <th>Customer Invoice No</th>
                     <th>Items Description</th>
                     <th>Amount</th>
                 </tr>
@@ -236,30 +265,78 @@ foreach ($groupedItems as $itemRowId => $data) {
             <td>
                 <table class="checkbox-table">
                     <tr>';
+    $allOptions = [
+        'DELIV+' => 'DELIV+',
+        'DISAS+' => 'DISAS+',
+        'ASSEM+' => 'ASSEM+',
+        'RUB+' => 'RUB+',
+        'UPST+' => 'UPST+',
+        'DOWNST+' => 'DOWNST+',
+        'PREM+' => 'PREM+',
+        'BRTrans+' => 'BRTrans+',
+        'Ins+' => 'Ins+',
+        'H/Dliv+' => 'H/Dliv+',
+        'Vol+' => 'Vol+',
+        'WaterCon+' => 'WaterCon+',
+        'Door/R+' => 'Door/R+',
 
-    // Generate each item name and its value
-    foreach ($items as $name => $value) {
+    ];
+
+    // Dynamically add P/UP options from 1 to 6
+    // for ($i = 1; $i <= 6; $i++) {
+    //     $allOptions["P/UP($i)"] = "P/UP($i)";
+    // }
+
+    // Check for any key matching P/UP(x)
+    $selectedPUP = null; // To store the matched P/UP key
+    foreach ($items as $key => $value) {
+        if (preg_match('/^P\/UP\(\d+\)$/', $key)) {
+            $selectedPUP = $key; // Match the first found P/UP key
+            break;
+        }
+    }
+
+    // If a P/UP key is found, add it dynamically
+    if ($selectedPUP) {
+        $allOptions[$selectedPUP] = $selectedPUP;
+    }
+    else
+    {
+        $pupKey = 'P/UP';
+        $allOptions[$pupKey] = 'P/UP';
+    }
+
+
+
+    // Loop through all options
+    foreach ($allOptions as $key => $label) {
+        $image = isset($items[$key]) ? 'assets/images/check.png' : 'assets/images/uncheck.png';
+        $value = isset($items[$key]) ? htmlspecialchars($items[$key]) : '-';
+
+        // For P/UP, display the selected value directly
         $html .= '
-            <td>
-                <div style="display:flex">
-                    <img src="assets/images/check.png" width="20" height="20" style="padding-top:5px; padding-bottom:5px;" />
-                    <div style="font-size:12px;">' . htmlspecialchars($name) . '</div>
-                </div>
-            </td>';
+    <td>
+        <div style="display:flex; align-items:center;">
+            <img src="' . $image . '" width="20" height="20" style="padding-top:5px; padding-bottom:5px;" />
+            <div style="font-size:12px; margin-left:5px;">' . htmlspecialchars($label) . '</div>
+        </div>
+    </td>';
     }
 
     $html .= '
-                    </tr>
-                    <tr>';
+        </tr>
+        <tr>';
 
-    // Generate corresponding values for each item
-    foreach ($items as $value) {
-        $html .= '<td><span style="font-size:12px;">$' . htmlspecialchars($value) . '</span></td>';
+    // Add a second row to display the values for each option
+    foreach ($allOptions as $key => $label) {
+        $value = isset($items[$key]) ? htmlspecialchars($items[$key]) : '0.00';
+
+        $html .= '<td><span style="font-size:12px;">$' . $value . '</span></td>';
     }
 
     $html .= '
-                    </tr>
-                </table>
+        </tr>
+    </table>
             </td>
             <td>$' . array_sum($items) . '</td>
         </tr>';
@@ -273,37 +350,33 @@ $html .= '
             <table class="summary" >
 
                     <tr>
-                        <th style="background:#f89c1c;  color:#011f7f;"> Sub Total</td>
-                        <td> ' . $sub_total . '</td>
+                        <th style="background:#f89c1c;  color:#011f7f;">Total</td>
+                        <td style="color:#011f7f; font-weight:bold;">$'. $sub_total .'</td>
                     </tr>
                 
                     <tr>
-                        <th> Tax Rate  </td>
-                        <td> ' . $tax_rate . '</td>
+                     <th style="color:#011f7f;"> Tax Rate </td>
+                        <td style="color:#011f7f; font-weight:bold;">$'. $tax_rate .'</td>
                     </tr>
-                    <tr>
-                        <th> Other Costs </td>
-                        <td> ' . $other_cost . '</td>
-                    </tr>
-                
+
                     <tr>
                         <th style="background:#f89c1c;  color:#011f7f;"> Total Cost </td>
-                        <td> ' . $total_cost . '</td>
+                        <td style="color:#011f7f; font-weight:bold;">$'. $total_cost .'</td>
                     </tr>
-                    
                 </table>
 
         <div class="footer">
             <div class="footer-text">
-
-                <p>Make All Cheques Payable To Fab Transport Services Pty Ltd</p>
-                <p>If You Have Any Questions Concerning This Invoice, Contact SAM</p>
-                <p>Phone: 0403729966 | Email: info@fabtransport.com.au</p>
-                <p>Thank You For Your Business!</p>
+                <p>Make all checks payable to "FAB TRANSPORT SERVICES PTY LTD"
+                        If you have any questions concerning about this invoice,
+                        use the following contact information</p>
+                    <ul>
+                        <li>Contact Name: John</li>
+                        <li>Phone: 8888 999 000</li>
+                        <li>Email: example@gmail.com</li>
+                    </ul>
+                    <h4>Thank You For Your Business!</h4>
             </div>
-
-             
-
         </div>
     </div>
 </body>
