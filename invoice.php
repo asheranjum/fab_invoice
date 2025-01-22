@@ -55,10 +55,10 @@ mysqli_close($conn);
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="date" class="form-label mb-0 me-2">Date:</label>
+                        <label for="date" class="form-label mb-0 me-2">DATE:</label>
                         <input type="date" name="date" class="form-control form-control-sm custom-width me-3" style=" font-size: 18px;" value="">
 
-                        <label for="invoice" class="form-label mb-0 me-2">Invoice No #</label>
+                        <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
 
                         <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" readonly>
 
@@ -67,12 +67,12 @@ mysqli_close($conn);
                     <h3 class="mt-1 mb-2 heading">Bill To:</h3>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="Company" class="form-label mb-0 me-3">Company Name:</label>
+                        <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>
                         <input type="text" name="company" class="form-control w-50" placeholder="Type Company Name" value="">
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="address" class="form-label mb-0 me-4">Address:</label>
+                        <label for="address" class="form-label mb-0 me-4">ADDREESS:</label>
                         <input type="text" name="address" class="form-control custom-width-2" placeholder="Enter Address Here" value="">
                     </div>
 
@@ -82,7 +82,7 @@ mysqli_close($conn);
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="phone" class="form-label mb-0 me-2">Phone No:</label>
+                        <label for="phone" class="form-label mb-0 me-2">PHONE NO:</label>
                         <input type="text" name="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="">
 
                         <!-- <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
@@ -92,7 +92,7 @@ mysqli_close($conn);
                     <div class="mb-0 d-flex align-items-center">
 
 
-                        <label for="runsheet" class="form-label mb-0 me-2">RunSheet No:</label>
+                        <label for="runsheet" class="form-label mb-0 me-2">RUNSHEET NO:</label>
                         <input type="text" name="runsheet" class="form-control custom-width-1" placeholder="Enter RunSheet Number" value="">
                     </div>
                 </form>
@@ -110,9 +110,9 @@ mysqli_close($conn);
 
                 <div class="service-items">
                     <h4>For:</h4>
-                    <h6>1. Assembly</h6>
-                    <h6>2. Delivery</h6>
-                    <h6>3. Repairs</h6>
+                    <h6>1. ASSEMBLY</h6>
+                    <h6>2. DELIVERY</h6>
+                    <h6>3. REPAIRS</h6>
                 </div>
             </div>
         </div>
@@ -122,9 +122,9 @@ mysqli_close($conn);
                 <table class="table table-bordered table-container">
                     <thead>
                         <tr>
-                            <th>Customer's Inv No</th>
-                            <th>Items Description</th>
-                            <th>Amount</th>
+                            <th>CUSTOMER'S INFO</th>
+                            <th>ITEMS DESCRIPTION AND CHARGES</th>
+                            <th>AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -234,15 +234,15 @@ mysqli_close($conn);
         <div class="row mt-1 footer-bg">
             <div class="col-md-8">
                 <div class="footer mt-3">
-                    <p>Make all checks payable to Fab Transport services pty ltd
-                        If you have any questions concerning this invoice,
-                        use the following contact information</p>
+                    <p>MAKE ALL CHECKS PAYABLE TO "FAB TRANSPORT SERVICES PTY LTD"
+                        IF YOU HAVE ANY QUESTIONS CONCERNING THIS INVOICE,
+                        USE THE FOLLOWING CONTACT INFORMATION</p>
                     <ul>
-                        <li>Contact Name: John</li>
-                        <li>Phone: 8888 999 000</li>
-                        <li>Email: example@gmail.com</li>
+                        <li>CONTACT NAME: SAM</li>
+                        <li>PHONE: 8888 999 000</li>
+                        <li>EMAIL: example@gmail.com</li>
                     </ul>
-                    <h4>Thank You For Your Business!</h4>
+                    <h4>THANK YOU FOR YOUR BUSINESS!</h4>
                 </div>
             </div>
 
@@ -251,21 +251,21 @@ mysqli_close($conn);
 
                     <div class="form-group table-2-width">
                         <tr>
-                            <td><strong><label for="sub_total" class="bold-label">Total</label></strong></td>
+                            <td><strong><label for="sub_total" class="bold-label">TOTAL</label></strong></td>
                             <td><strong> <input type="text" id="sub_total" name="sub_total" class="form-control" readonly placeholder="$0.00"></strong></td>
                         </tr>
                     </div>
 
                     <div class="form-group table-2-width">
                         <tr>
-                            <td><label for="tax_rate">Tax Rate</label></td>
+                            <td><label for="tax_rate">TAX RATE</label></td>
                             <td><input type="text" id="tax_rate" name="tax_rate" class="form-control" placeholder="$0.00"></td>
                         </tr>
                     </div>
 
                     <div class="form-group table-2-width">
                         <tr>
-                            <td><strong><label for="total_cost" class="bold-label">Total Cost</label></strong></td>
+                            <td><strong><label for="total_cost" class="bold-label">TOTAL COST</label></strong></td>
                             <td><strong> <input type="text" id="total_cost" name="total_cost" class="form-control" readonly placeholder="$0.00"></strong></td>
                         </tr>
                     </div>

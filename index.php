@@ -33,14 +33,20 @@ require 'session.php';
 
     <div class="row">
       <div class="col-md-4 mt-5">
-        <button type="button" class="btn btn-dark btn-lg create-btn" onclick="window.open('invoice.php', '_blank');">Create New Invoice</button>
+        <div class="dropdown">
+          <button class="btn btn-dark btn-lg dropdown-toggle create-btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"> Create Invoice </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="invoice.php" target="_blank">Bedding/Furniture</a></li>
+            <li><a class="dropdown-item" href="invoice.php" target="_blank">Electric</a></li>
+          </ul>
+        </div>
       </div>
     </div>
 
     <div class="row justify-content-end">
       <div class="col-md-3 d-flex mb-2">
         <form method="GET" action="index.php" class="d-flex w-100">
-          <input class="form-control" type="search" name="search" placeholder="Search By RunSheet Number" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" aria-label="Search">
+          <input class="form-control" type="search" name="search" placeholder="Search By Franchise Name" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" aria-label="Search">
           <button class="btn btn-dark" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
         </form>
       </div>
@@ -57,13 +63,13 @@ require 'session.php';
 
     $offset = ($current_page - 1) * $records_per_page;
 
-    $sql_count = "SELECT COUNT(*) AS total FROM invoice WHERE runsheet LIKE '%$search_query%'";
+    $sql_count = "SELECT COUNT(*) AS total FROM invoice WHERE company LIKE '%$search_query%'";
     $result_count = mysqli_query($conn, $sql_count);
     $row_count = mysqli_fetch_assoc($result_count);
     $total_records = $row_count['total'];
     $total_pages = ceil($total_records / $records_per_page);
 
-    $sql = "SELECT * FROM invoice WHERE runsheet LIKE '%$search_query%' LIMIT $offset, $records_per_page";
+    $sql = "SELECT * FROM invoice WHERE company LIKE '%$search_query%' LIMIT $offset, $records_per_page";
     $result = mysqli_query($conn, $sql);
     ?>
 
@@ -74,20 +80,20 @@ require 'session.php';
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Run Sheet No</th>
-                <th>Action</th>
+                <th>Franchise Name</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>
                   <td><?php echo htmlspecialchars($row['date']); ?></td>
-                  <td><?php echo htmlspecialchars($row['runsheet']); ?></td>
+                  <td><?php echo htmlspecialchars($row['company']); ?></td>
                   <td>
-                    <a href="pdf.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" style="font-size: 20px;" title="Download"> Download PDF</a>
-                    <a href="update_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-edit" style="font-size: 20px;" title="Edit"></a>
+                    <a href="pdf.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-download" style="font-size: 20px;" title="Download"></a>
+                    <a href="update_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-edit text-success" style="font-size: 20px;" title="Edit"></a>
                     <a href="delete_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-trash text-danger" style="font-size: 20px;" title="Delete" onclick="return confirm('Are you sure you want to delete this invoice?');"></a>
-                   
+
                   </td>
                 </tr>
               <?php endwhile; ?>
@@ -124,4 +130,5 @@ require 'session.php';
     ?>
   </div>
 </body>
+
 </html>

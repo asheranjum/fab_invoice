@@ -70,8 +70,6 @@ $tax_rate = $invoice['tax_rate'];
 $other_cost = $invoice['other_cost'];
 $total_cost = $invoice['total_cost'];
 
-
-
 $html = '
 <!DOCTYPE html>
 <html lang="en">
