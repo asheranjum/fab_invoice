@@ -52,8 +52,8 @@ mysqli_close($conn);
                         <button type="button" class="btn btn-primary add-button">Add Row</button>
                         <button type="button" class="btn btn-danger remove-button">Remove Row</button>
                         <button type="submit" class="btn btn-success export-button">Save Invoice</button>
-                        <button type="button" class="btn btn-secondary add-button add-bulk-button">Add Bulk Rows</button>
-                        <button type="button" class="btn btn-warning remove-button remove-bulk-button">Remove Bulk Rows</button>
+                        <button type="button" class="btn btn-secondary  add-bulk-button">Add Bulk Rows</button>
+                        <button type="button" class="btn btn-warning remove-bulk-button">Remove Bulk Rows</button>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -130,7 +130,7 @@ mysqli_close($conn);
                         </tr>
                     </thead>
                     <tbody>
-                    <thead>
+                    <!-- <thead>
                     <tr>
                          <th colspan="3">
                             <div  style=" padding:0px 10px; gap: 50px; display:flex">
@@ -139,7 +139,7 @@ mysqli_close($conn);
                             </div>
                         </th>				
                     </tr>
-                    </thead>
+                    </thead> -->
                         <tr>
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
