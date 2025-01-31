@@ -52,6 +52,8 @@ mysqli_close($conn);
                         <button type="button" class="btn btn-primary add-button">Add Row</button>
                         <button type="button" class="btn btn-danger remove-button">Remove Row</button>
                         <button type="submit" class="btn btn-success export-button">Save Invoice</button>
+                        <button type="button" class="btn btn-secondary add-button add-bulk-button">Add Bulk Rows</button>
+                        <button type="button" class="btn btn-warning remove-button remove-bulk-button">Remove Bulk Rows</button>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -275,107 +277,101 @@ mysqli_close($conn);
     </div>
 
     <script>
-        $(document).ready(function() {
-            const maxRows = 25;
+    $(document).ready(function() {
+        const maxRows = 25;
 
-            function calculateRowAmount(row) {
-                let amount = 0;
+        function calculateRowAmount(row) {
+            let amount = 0;
 
-                $(row).find(".form-checkboxes").each(function() {
-                    const inputField = $(this).closest(".form-check").find("input[type='text']");
-                    const value = parseFloat(inputField.val()) || 0;
+            $(row).find(".form-checkboxes").each(function() {
+                const inputField = $(this).closest(".form-check").find("input[type='text']");
+                const value = parseFloat(inputField.val()) || 0;
 
-                    if (this.checked) amount += value;
-                });
+                if (this.checked) amount += value;
+            });
 
-                // Include the select input value in the calculation
-                const selectField = $(row).find(".form-contro");
-                const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
-                amount += selectValue;
+            const selectField = $(row).find(".form-contro");
+            const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
+            amount += selectValue;
 
-                $(row).find(".amount-field").val(amount.toFixed(2));
-                calculateSubTotal();
-            }
+            $(row).find(".amount-field").val(amount.toFixed(2));
+            calculateSubTotal();
+        }
 
-            function calculateSubTotal() {
-                let subTotal = 0;
+        function calculateSubTotal() {
+            let subTotal = 0;
 
-                $(".amount-field").each(function() {
-                    subTotal += parseFloat($(this).val()) || 0;
-                });
+            $(".amount-field").each(function() {
+                subTotal += parseFloat($(this).val()) || 0;
+            });
 
-                const taxRate = parseFloat($("#tax_rate").val()) || 0;
-                const otherCost = parseFloat($("#other_cost").val()) || 0;
-                const total = subTotal + taxRate + otherCost;
+            const taxRate = parseFloat($("#tax_rate").val()) || 0;
+            const otherCost = parseFloat($("#other_cost").val()) || 0;
+            const total = subTotal + taxRate + otherCost;
 
-                $("#sub_total").val(subTotal.toFixed(2));
-                $("#total_cost").val(total.toFixed(2));
-            }
+            $("#sub_total").val(subTotal.toFixed(2));
+            $("#total_cost").val(total.toFixed(2));
+        }
 
-            function attachRowListeners(row) {
-                $(row).find(".form-checkboxes").off("change").on("change", function() {
-                    const inputField = $(this).closest(".form-check").find("input[type='text']");
-                    inputField.prop("disabled", !this.checked).val("");
-                    calculateRowAmount(row);
-                });
+        function attachRowListeners(row) {
+            $(row).find(".form-checkboxes").off("change").on("change", function() {
+                const inputField = $(this).closest(".form-check").find("input[type='text']");
+                inputField.prop("disabled", !this.checked).val("");
+                calculateRowAmount(row);
+            });
 
-                $(row).find(".form-contro").off("change").on("change", function() {
-                    const inputField = $(this).siblings("input[type='text']");
-
-                    // Enable the input if the selected value is not empty, otherwise disable and clear it
-                    if ($(this).val() !== "") {
-                        inputField.prop("disabled", false);
-                    } else {
-                        inputField.prop("disabled", true).val("");
-                    }
-
-                    calculateRowAmount($(this).closest("tr"));
-                });
-
-                $(row).find(".form-check input[type='text']").off("input").on("input", function() {
-                    calculateRowAmount(row);
-                });
-
-                // Validation to restrict input to numbers only
-                $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
-                    if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
-                        e.preventDefault();
-                    }
-                });
-
-                // Disable all input fields initially
-                $(row).find(".form-check input[type='text']").prop("disabled", true);
-                $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true); // Ensure select inputs are disabled initially
-            }
-
-            $(".add-button").click(function() {
-                const rows = $(".table-container tbody tr");
-                if (rows.length >= maxRows) {
-                    alert("You cannot add more than 25 rows.");
-                    return;
+            $(row).find(".form-contro").off("change").on("change", function() {
+                const inputField = $(this).siblings("input[type='text']");
+                if ($(this).val() !== "") {
+                    inputField.prop("disabled", false);
+                } else {
+                    inputField.prop("disabled", true).val("");
                 }
+                calculateRowAmount($(this).closest("tr"));
+            });
 
-                const lastRow = rows.last();
+            $(row).find(".form-check input[type='text']").off("input").on("input", function() {
+                calculateRowAmount(row);
+            });
+
+            $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
+                if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
+                    e.preventDefault();
+                }
+            });
+
+            $(row).find(".form-check input[type='text']").prop("disabled", true);
+            $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true);
+        }
+
+        function addRows(count) {
+            const rows = $(".table-container tbody tr");
+            let currentRows = rows.length;
+            let newRows = Math.min(count, maxRows - currentRows);
+
+            if (newRows <= 0) {
+                alert("You cannot add more than " + maxRows + " rows.");
+                return;
+            }
+
+            for (let i = 0; i < newRows; i++) {
+                const lastRow = $(".table-container tbody tr").last();
                 const newRow = lastRow.clone();
-                const rowIndex = rows.length; // Calculate new row index for naming
+                const rowIndex = $(".table-container tbody tr").length;
 
-                // Reset input values and update names for the cloned row
                 newRow.find("input, select").each(function() {
                     if (this.type === "checkbox") {
-                        this.checked = false; // Uncheck checkboxes
+                        this.checked = false;
                     } else {
-                        $(this).val("").prop("disabled", true); // Clear and disable inputs
+                        $(this).val("").prop("disabled", true);
                     }
-
                     if ($(this).hasClass("customer-inv-no")) {
                         $(this).prop("disabled", false).val("");
                     }
                 });
 
-                // Enable the select field in the duplicated row
                 newRow.find(".form-contro").prop("disabled", false);
 
-                // Update names dynamically
                 newRow.find(".form-check").each(function() {
                     const labelText = $(this).find("label").text().trim();
                     const baseName = labelText.toLowerCase();
@@ -399,111 +395,63 @@ mysqli_close($conn);
 
                 $(".table-container tbody").append(newRow);
                 attachRowListeners(newRow);
-            });
+            }
+        }
 
-            $(".remove-button").click(function() {
-                const rows = $(".table-container tbody tr");
-                if (rows.length <= 1) {
-                    alert("You cannot remove the last row.");
-                    return;
-                }
+        function removeRows(count) {
+            const rows = $(".table-container tbody tr");
+            let currentRows = rows.length;
 
-                if (confirm("Are you sure you want to remove this row?")) {
-                    rows.last().remove();
+            if (currentRows <= 1) {
+                alert("You cannot remove the last row.");
+                return;
+            }
+
+            let removeCount = Math.min(count, currentRows - 1);
+            if (removeCount > 0) {
+                if (confirm(`Are you sure you want to remove ${removeCount} row(s)?`)) {
+                    for (let i = 0; i < removeCount; i++) {
+                        $(".table-container tbody tr").last().remove();
+                    }
                     calculateSubTotal();
                 }
-            });
+            }
+        }
 
-            attachRowListeners($(".table-container tbody tr"));
-            $("#tax_rate, #other_cost").on("input", calculateSubTotal);
-            calculateSubTotal();
-
-            // Prevent page refresh and warn user
-            let isFormDirty = false;
-            $("#invoiceForm input, #invoiceForm select").on("input change", function() {
-                isFormDirty = true;
-            });
-
-            $(window).on("beforeunload", function(e) {
-                if (isFormDirty) {
-                    return "Are you sure you want to leave? Your changes will be lost.";
-                }
-            });
-
-            $("#invoiceForm").on("submit", function(e) {
-                e.preventDefault();
-
-                const formData = {
-                    date: $("input[name='date']").val(),
-                    invoice: $("input[name='invoice']").val(),
-                    company: $("input[name='company']").val(),
-                    address: $("input[name='address']").val(),
-                    phone: $("input[name='phone']").val(),
-                    postal_code: $("input[name='postal_code']").val(),
-                    abn: $("input[name='abn']").val(),
-                    runsheet: $("input[name='runsheet']").val(),
-                    sub_total: $("#sub_total").val(),
-                    tax_rate: $("#tax_rate").val(),
-                    other_cost: $("#other_cost").val(),
-                    total_cost: $("#total_cost").val(),
-                    items: []
-                };
-
-                $(".table-container tbody tr").each(function(index) {
-                    const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
-                    const amount = $(this).find(".amount-field").val() || 0;
-
-                    $(this).find(".form-check").each(function() {
-                        const checkbox = $(this).find("input[type='checkbox']");
-                        const inputField = $(this).find("input[type='text']");
-
-                        if (checkbox.prop("checked")) {
-                            formData.items.push({
-                                item_row_id: `${index + 1}`,
-                                customer_inv_no: customerInvoiceNo,
-                                item_name: $(this).find("label").text().trim(),
-                                item_value: inputField.val() || 0,
-                                amount: amount
-                            });
-                        }
-                    });
-
-                    const selectField = $(this).find(".form-contro");
-                    if (selectField.val() !== "") {
-                        formData.items.push({
-                            item_row_id: `${index + 1}`,
-                            customer_inv_no: customerInvoiceNo,
-                            item_name: selectField.find("option:selected").text().trim(),
-                            item_value: selectField.siblings("input[type='text']").val() || 0,
-                            amount: amount
-                        });
-                    }
-                });
-
-                fetch("save_invoice.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(formData),
-                    })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            alert(data.message);
-                            isFormDirty = false; // Reset dirty flag on successful submission
-                            window.location.href = "index.php";
-                        } else {
-                            alert("Error: " + data.message);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                        alert("An error occurred. Please try again.");
-                    });
-            });
+        $(".add-button").click(function() {
+            addRows(1);
         });
-    </script>
+
+        $(".add-bulk-button").click(function() {
+            let count = prompt("How many rows do you want to add? (1-25)", "1");
+            count = parseInt(count, 10);
+            if (!isNaN(count) && count > 0 && count <= 25) {
+                addRows(count);
+            } else {
+                alert("Please enter a valid number between 1 and 25.");
+            }
+        });
+
+        $(".remove-button").click(function() {
+            removeRows(1);
+        });
+
+        $(".remove-bulk-button").click(function() {
+            let count = prompt("How many rows do you want to remove?", "1");
+            count = parseInt(count, 10);
+            if (!isNaN(count) && count > 0) {
+                removeRows(count);
+            } else {
+                alert("Please enter a valid number.");
+            }
+        });
+
+        attachRowListeners($(".table-container tbody tr"));
+        $("#tax_rate, #other_cost").on("input", calculateSubTotal);
+        calculateSubTotal();
+    });
+</script>
+
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>
