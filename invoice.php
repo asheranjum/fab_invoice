@@ -54,6 +54,8 @@ mysqli_close($conn);
                         <button type="submit" class="btn btn-success export-button">Save Invoice</button>
                         <button type="button" class="btn btn-secondary  add-bulk-button">Add Bulk Rows</button>
                         <button type="button" class="btn btn-warning remove-bulk-button">Remove Bulk Rows</button>
+                        <button type="button" class="btn btn-info add-runsheet-button">Add Runsheet</button>
+
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -130,17 +132,17 @@ mysqli_close($conn);
                         </tr>
                     </thead>
                     <tbody>
-                    <!-- <thead>
-                    <tr>
-                         <th colspan="3">
-                            <div  style=" padding:0px 10px; gap: 50px; display:flex">
-                                 <strong> Runsheet No:   212312441  </strong>
-                                 <strong> Runsheet Date:  22/02/2025 </strong>
-                            </div>
-                        </th>				
-                    </tr>
-                    </thead> -->
+
                         <tr>
+                            <th colspan="3">
+                                <div style=" gap: 50px; display: flex;">
+                                    <strong>Runsheet No: </strong>
+                                    <strong>Runsheet Date: </strong>
+                                </div>
+                            </th>
+                        </tr>
+
+                        <tr id="tabletr">
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
                             </td>
@@ -287,180 +289,213 @@ mysqli_close($conn);
     </div>
 
     <script>
-    $(document).ready(function() {
-        const maxRows = 25;
+        $(document).ready(function() {
+            const maxRows = 25;
 
-        function calculateRowAmount(row) {
-            let amount = 0;
+            function calculateRowAmount(row) {
+                let amount = 0;
 
-            $(row).find(".form-checkboxes").each(function() {
-                const inputField = $(this).closest(".form-check").find("input[type='text']");
-                const value = parseFloat(inputField.val()) || 0;
+                $(row).find(".form-checkboxes").each(function() {
+                    const inputField = $(this).closest(".form-check").find("input[type='text']");
+                    const value = parseFloat(inputField.val()) || 0;
 
-                if (this.checked) amount += value;
-            });
+                    if (this.checked) amount += value;
+                });
 
-            const selectField = $(row).find(".form-contro");
-            const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
-            amount += selectValue;
+                const selectField = $(row).find(".form-contro");
+                const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
+                amount += selectValue;
 
-            $(row).find(".amount-field").val(amount.toFixed(2));
-            calculateSubTotal();
-        }
-
-        function calculateSubTotal() {
-            let subTotal = 0;
-
-            $(".amount-field").each(function() {
-                subTotal += parseFloat($(this).val()) || 0;
-            });
-
-            const taxRate = parseFloat($("#tax_rate").val()) || 0;
-            const otherCost = parseFloat($("#other_cost").val()) || 0;
-            const total = subTotal + taxRate + otherCost;
-
-            $("#sub_total").val(subTotal.toFixed(2));
-            $("#total_cost").val(total.toFixed(2));
-        }
-
-        function attachRowListeners(row) {
-            $(row).find(".form-checkboxes").off("change").on("change", function() {
-                const inputField = $(this).closest(".form-check").find("input[type='text']");
-                inputField.prop("disabled", !this.checked).val("");
-                calculateRowAmount(row);
-            });
-
-            $(row).find(".form-contro").off("change").on("change", function() {
-                const inputField = $(this).siblings("input[type='text']");
-                if ($(this).val() !== "") {
-                    inputField.prop("disabled", false);
-                } else {
-                    inputField.prop("disabled", true).val("");
-                }
-                calculateRowAmount($(this).closest("tr"));
-            });
-
-            $(row).find(".form-check input[type='text']").off("input").on("input", function() {
-                calculateRowAmount(row);
-            });
-
-            $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
-                if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
-                    e.preventDefault();
-                }
-            });
-
-            $(row).find(".form-check input[type='text']").prop("disabled", true);
-            $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true);
-        }
-
-        function addRows(count) {
-            const rows = $(".table-container tbody tr");
-            let currentRows = rows.length;
-            let newRows = Math.min(count, maxRows - currentRows);
-
-            if (newRows <= 0) {
-                alert("You cannot add more than " + maxRows + " rows.");
-                return;
+                $(row).find(".amount-field").val(amount.toFixed(2));
+                calculateSubTotal();
             }
 
-            for (let i = 0; i < newRows; i++) {
-                const lastRow = $(".table-container tbody tr").last();
-                const newRow = lastRow.clone();
-                const rowIndex = $(".table-container tbody tr").length;
+            function calculateSubTotal() {
+                let subTotal = 0;
 
-                newRow.find("input, select").each(function() {
-                    if (this.type === "checkbox") {
-                        this.checked = false;
+                $(".amount-field").each(function() {
+                    subTotal += parseFloat($(this).val()) || 0;
+                });
+
+                const taxRate = parseFloat($("#tax_rate").val()) || 0;
+                const otherCost = parseFloat($("#other_cost").val()) || 0;
+                const total = subTotal + taxRate + otherCost;
+
+                $("#sub_total").val(subTotal.toFixed(2));
+                $("#total_cost").val(total.toFixed(2));
+            }
+
+            function attachRowListeners(row) {
+                $(row).find(".form-checkboxes").off("change").on("change", function() {
+                    const inputField = $(this).closest(".form-check").find("input[type='text']");
+                    inputField.prop("disabled", !this.checked).val("");
+                    calculateRowAmount(row);
+                });
+
+                $(row).find(".form-contro").off("change").on("change", function() {
+                    const inputField = $(this).siblings("input[type='text']");
+                    if ($(this).val() !== "") {
+                        inputField.prop("disabled", false);
                     } else {
-                        $(this).val("").prop("disabled", true);
+                        inputField.prop("disabled", true).val("");
                     }
-                    if ($(this).hasClass("customer-inv-no")) {
-                        $(this).prop("disabled", false).val("");
+                    calculateRowAmount($(this).closest("tr"));
+                });
+
+                $(row).find(".form-check input[type='text']").off("input").on("input", function() {
+                    calculateRowAmount(row);
+                });
+
+                $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
+                    if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
+                        e.preventDefault();
                     }
                 });
 
-                newRow.find(".form-contro").prop("disabled", false);
+                $(row).find(".form-check input[type='text']").prop("disabled", true);
+                $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true);
+            }
 
-                newRow.find(".form-check").each(function() {
-                    const labelText = $(this).find("label").text().trim();
-                    const baseName = labelText.toLowerCase();
-                    const uniqueId = `${baseName}-${rowIndex}`;
+            function addRows(count) {
+                const rows = $(".table-container tbody tr#tabletr");
+                let currentRows = rows.length;
+                let newRows = Math.min(count, maxRows - currentRows);
 
-                    const checkbox = $(this).find("input[type='checkbox']");
-                    checkbox.attr({
-                        id: uniqueId,
-                        name: `item[${rowIndex}][${baseName}]`
+                if (newRows <= 0) {
+                    alert("You cannot add more than " + maxRows + " rows.");
+                    return;
+                }
+
+                for (let i = 0; i < newRows; i++) {
+                    const lastRow = $(".table-container tbody tr#tabletr").last();
+                    const newRow = lastRow.clone();
+                    const rowIndex = $(".table-container tbody tr#tabletr").length;
+
+                    newRow.find("input, select").each(function() {
+                        if (this.type === "checkbox") {
+                            this.checked = false;
+                        } else {
+                            $(this).val("").prop("disabled", true);
+                        }
+                        if ($(this).hasClass("customer-inv-no")) {
+                            $(this).prop("disabled", false).val("");
+                        }
                     });
 
-                    $(this).find("label").attr("for", uniqueId);
+                    newRow.find(".form-contro").prop("disabled", false);
 
-                    const inputField = $(this).find("input[type='text']");
-                    inputField.attr("name", `item[${rowIndex}][${baseName}_value]`);
-                });
+                    newRow.find(".form-check").each(function() {
+                        const labelText = $(this).find("label").text().trim();
+                        const baseName = labelText.toLowerCase();
+                        const uniqueId = `${baseName}-${rowIndex}`;
 
-                newRow.find(".form-contro").attr("name", `item[${rowIndex}][pup]`);
-                newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
-                newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
+                        const checkbox = $(this).find("input[type='checkbox']");
+                        checkbox.attr({
+                            id: uniqueId,
+                            name: `item[${rowIndex}][${baseName}]`
+                        });
 
-                $(".table-container tbody").append(newRow);
-                attachRowListeners(newRow);
+                        $(this).find("label").attr("for", uniqueId);
+
+                        const inputField = $(this).find("input[type='text']");
+                        inputField.attr("name", `item[${rowIndex}][${baseName}_value]`);
+                    });
+
+                    newRow.find(".form-contro").attr("name", `item[${rowIndex}][pup]`);
+                    newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
+                    newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
+
+                    $(".table-container tbody").append(newRow);
+                    attachRowListeners(newRow);
+                }
             }
-        }
 
-        function removeRows(count) {
-            const rows = $(".table-container tbody tr");
-            let currentRows = rows.length;
+            function removeRows(count) {
+                const rows = $(".table-container tbody tr#tabletr");
+                let currentRows = rows.length;
 
-            if (currentRows <= 1) {
-                alert("You cannot remove the last row.");
+                if (currentRows <= 1) {
+                    alert("You cannot remove the last row.");
+                    return;
+                }
+
+                let removeCount = Math.min(count, currentRows - 1);
+                if (removeCount > 0) {
+                    if (confirm(`Are you sure you want to remove ${removeCount} row(s)?`)) {
+                        for (let i = 0; i < removeCount; i++) {
+                            $(".table-container tbody tr#tabletr").last().remove();
+                        }
+                        calculateSubTotal();
+                    }
+                }
+            }
+
+            $(".add-button").click(function() {
+                addRows(1);
+            });
+
+            $(".add-bulk-button").click(function() {
+                let count = prompt("How many rows do you want to add? (1-25)", "1");
+                count = parseInt(count, 10);
+                if (!isNaN(count) && count > 0 && count <= 25) {
+                    addRows(count);
+                } else {
+                    alert("Please enter a valid number between 1 and 25.");
+                }
+            });
+
+            $(".remove-button").click(function() {
+                removeRows(1);
+            });
+
+            $(".remove-bulk-button").click(function() {
+                let count = prompt("How many rows do you want to remove?", "1");
+                count = parseInt(count, 10);
+                if (!isNaN(count) && count > 0) {
+                    removeRows(count);
+                } else {
+                    alert("Please enter a valid number.");
+                }
+            });
+
+            attachRowListeners($(".table-container tbody tr#tabletr"));
+            $("#tax_rate, #other_cost").on("input", calculateSubTotal);
+            calculateSubTotal();
+        });
+
+
+
+        $(".add-runsheet-button").click(function() {
+            // Get Runsheet details using prompt()
+            let runsheetNumber = prompt("Enter Runsheet Number:");
+            if (runsheetNumber === null || runsheetNumber.trim() === "") return; // Exit if empty or canceled
+
+            let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
+            if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
+
+            // Validate date format (basic check)
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
+                alert("Invalid date format. Please use YYYY-MM-DD.");
                 return;
             }
 
-            let removeCount = Math.min(count, currentRows - 1);
-            if (removeCount > 0) {
-                if (confirm(`Are you sure you want to remove ${removeCount} row(s)?`)) {
-                    for (let i = 0; i < removeCount; i++) {
-                        $(".table-container tbody tr").last().remove();
-                    }
-                    calculateSubTotal();
-                }
-            }
-        }
+            // Runsheet HTML template
+            let runsheetRow = `
+            
+                <tr>
+                    <th colspan="3">
+                        <div style=" gap: 50px; display: flex;">
+                            <strong>Runsheet No: ${runsheetNumber}</strong>
+                            <strong>Runsheet Date: ${runsheetDate}</strong>
+                        </div>
+                    </th>
+                </tr>
+           `;
 
-        $(".add-button").click(function() {
-            addRows(1);
+            // Append runsheet below the last item row
+            $(".table-container tbody").append(runsheetRow);
         });
-
-        $(".add-bulk-button").click(function() {
-            let count = prompt("How many rows do you want to add? (1-25)", "1");
-            count = parseInt(count, 10);
-            if (!isNaN(count) && count > 0 && count <= 25) {
-                addRows(count);
-            } else {
-                alert("Please enter a valid number between 1 and 25.");
-            }
-        });
-
-        $(".remove-button").click(function() {
-            removeRows(1);
-        });
-
-        $(".remove-bulk-button").click(function() {
-            let count = prompt("How many rows do you want to remove?", "1");
-            count = parseInt(count, 10);
-            if (!isNaN(count) && count > 0) {
-                removeRows(count);
-            } else {
-                alert("Please enter a valid number.");
-            }
-        });
-
-        attachRowListeners($(".table-container tbody tr"));
-        $("#tax_rate, #other_cost").on("input", calculateSubTotal);
-        calculateSubTotal();
-    });
-</script>
+    </script>
 
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
