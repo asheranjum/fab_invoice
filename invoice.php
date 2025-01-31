@@ -130,6 +130,16 @@ mysqli_close($conn);
                         </tr>
                     </thead>
                     <tbody>
+                    <thead>
+                    <tr>
+                         <th colspan="3">
+                            <div  style=" padding:0px 10px; gap: 50px; display:flex">
+                                 <strong> Runsheet No:   212312441  </strong>
+                                 <strong> Runsheet Date:  22/02/2025 </strong>
+                            </div>
+                        </th>				
+                    </tr>
+                    </thead>
                         <tr>
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
