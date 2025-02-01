@@ -136,8 +136,8 @@ mysqli_close($conn);
                         <tr>
                             <th colspan="3">
                                 <div style=" gap: 50px; display: flex;">
-                                    <strong>Runsheet No: </strong>
-                                    <strong>Runsheet Date: </strong>
+                                    <strong>Runsheet No: 1123 </strong>
+                                    <strong>Runsheet Date: 10-05-2025</strong>
                                 </div>
                             </th>
                         </tr>
@@ -291,6 +291,44 @@ mysqli_close($conn);
     <script>
         $(document).ready(function() {
             const maxRows = 25;
+            let currentRunsheet = null; // Store current runsheet data
+
+            $(".add-runsheet-button").click(function() {
+                // Get Runsheet details using prompt()
+                let runsheetNumber = prompt("Enter Runsheet Number:");
+                if (runsheetNumber === null || runsheetNumber.trim() === "") return; // Exit if empty or canceled
+
+                let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
+                if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
+
+                // Validate date format (basic check)
+                // if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
+                //     alert("Invalid date format. Please use YYYY-MM-DD.");
+                //     return;
+                // }
+
+                // Store current runsheet details for new rows
+                currentRunsheet = {
+                    number: runsheetNumber,
+                    date: runsheetDate
+                };
+
+                // Runsheet HTML template
+                let runsheetRow = `
+            
+                <tr>
+                    <th colspan="3">
+                        <div style=" gap: 50px; display: flex;">
+                            <strong>Runsheet No: ${runsheetNumber}</strong>
+                            <strong>Runsheet Date: ${runsheetDate}</strong>
+                        </div>
+                    </th>
+                </tr>
+           `;
+
+                // Append runsheet below the last item row
+                $(".table-container tbody").append(runsheetRow);
+            });
 
             function calculateRowAmount(row) {
                 let amount = 0;
@@ -405,6 +443,12 @@ mysqli_close($conn);
                     newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
                     newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
 
+                   
+                    if (currentRunsheet) {
+                        newRow.attr("data-runsheet-number", currentRunsheet.number);
+                        newRow.attr("data-runsheet-date", currentRunsheet.date);
+                    }
+
                     $(".table-container tbody").append(newRow);
                     attachRowListeners(newRow);
                 }
@@ -465,35 +509,86 @@ mysqli_close($conn);
 
 
 
-        $(".add-runsheet-button").click(function() {
-            // Get Runsheet details using prompt()
-            let runsheetNumber = prompt("Enter Runsheet Number:");
-            if (runsheetNumber === null || runsheetNumber.trim() === "") return; // Exit if empty or canceled
 
-            let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
-            if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
 
-            // Validate date format (basic check)
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
-                alert("Invalid date format. Please use YYYY-MM-DD.");
-                return;
-            }
 
-            // Runsheet HTML template
-            let runsheetRow = `
-            
-                <tr>
-                    <th colspan="3">
-                        <div style=" gap: 50px; display: flex;">
-                            <strong>Runsheet No: ${runsheetNumber}</strong>
-                            <strong>Runsheet Date: ${runsheetDate}</strong>
-                        </div>
-                    </th>
-                </tr>
-           `;
+        $("#invoiceForm").on("submit", function(e) {
+            e.preventDefault();
+            const formData = {
+                date: $("input[name='date']").val(),
+                invoice: $("input[name='invoice']").val(),
+                company: $("input[name='company']").val(),
+                address: $("input[name='address']").val(),
+                phone: $("input[name='phone']").val(),
+                postal_code: $("input[name='postal_code']").val(),
+                abn: $("input[name='abn']").val(),
+                runsheet: $("input[name='runsheet']").val(),
+                sub_total: $("#sub_total").val(),
+                tax_rate: $("#tax_rate").val(),
+                other_cost: $("#other_cost").val(),
+                total_cost: $("#total_cost").val(),
+                items: []
+            };
 
-            // Append runsheet below the last item row
-            $(".table-container tbody").append(runsheetRow);
+            $(".table-container tbody tr#tabletr").each(function(index) {
+                const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
+                const amount = $(this).find(".amount-field").val() || 0;
+                let row = $(this);
+                $(this).find(".form-check").each(function() {
+                    const checkbox = $(this).find("input[type='checkbox']");
+                    const inputField = $(this).find("input[type='text']");
+                 
+                    if (checkbox.prop("checked")) {
+                        console.log(row.attr("data-runsheet-number"));
+                        console.log(row.attr("data-runsheet-date"));
+                        formData.items.push({
+                            item_row_id: `${index + 1}`,
+                            customer_inv_no: customerInvoiceNo,
+                            item_name: $(this).find("label").text().trim(),
+                            item_value: inputField.val() || 0,
+                            amount: amount,
+                            runsheet_number: row.attr("data-runsheet-number") || "",
+                            runsheet_date: row.attr("data-runsheet-date") || ""
+                        });
+                    }
+                });
+
+                const selectField = $(this).find(".form-contro");
+                if (selectField.val() !== "") {
+                    formData.items.push({
+                        item_row_id: `${index + 1}`,
+                        customer_inv_no: customerInvoiceNo,
+                        item_name: selectField.find("option:selected").text().trim(),
+                        item_value: selectField.siblings("input[type='text']").val() || 0,
+                        amount: amount,
+                        runsheet_number: row.attr("data-runsheet-number") || "",
+                        runsheet_date: row.attr("data-runsheet-date") || ""
+                    });
+                }
+            });
+
+
+            fetch("save_invoice.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert(data.message);
+                        isFormDirty = false; // Reset dirty flag on successful submission
+                        window.location.href = "index.php";
+                    } else {
+                        alert("Error: " + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("An error occurred. Please try again.");
+                });
         });
     </script>
 

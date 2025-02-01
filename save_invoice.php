@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Save the invoice data in the database
         $sql = "INSERT INTO invoice (date, invoice, company, address, phone, postal_code, abn, runsheet, sub_total, tax_rate, other_cost, total_cost)
                 VALUES ('$inv_date', '$inv_invoice', '$inv_company', '$inv_address', '$inv_phone', '$inv_postal_code', '$inv_abn', '$inv_runsheet', '$sub_total', '$tax_rate', '$other_cost', '$total_cost')";
-        
+
         if (mysqli_query($conn, $sql)) {
             $invoiceId = mysqli_insert_id($conn);
 
@@ -35,9 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? ''); // Fetch item_row_id
                 $itemName = mysqli_real_escape_string($conn, $item['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $item['item_value'] ?? '0');
-            
-                $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_no, item_row_id, item_name, item_value)
-                            VALUES ('$invoiceId', '$customerInvoiceNo', '$invoiceId~$itemRowId', '$itemName', '$itemValue')";
+                $runsheetNumber = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
+                $runsheetDate = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
+
+                $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_no, item_name, item_value, runsheet_number, runsheet_date)
+                VALUES ('$invoiceId', '$customerInvoiceNo', '$itemName', '$itemValue', '$runsheetNumber', '$runsheetDate')";
                 mysqli_query($conn, $sqlItem);
             }
 
@@ -50,4 +52,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 echo json_encode($response);
 mysqli_close($conn);
-?>
