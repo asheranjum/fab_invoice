@@ -38,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $runsheetNumber = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
                 $runsheetDate = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
 
-                $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_no, item_name, item_value, runsheet_number, runsheet_date)
-                VALUES ('$invoiceId', '$customerInvoiceNo', '$itemName', '$itemValue', '$runsheetNumber', '$runsheetDate')";
+                $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_no, item_row_id, item_name, item_value, runsheet_number, runsheet_date)
+                VALUES ('$invoiceId', '$customerInvoiceNo' , '$invoiceId~$itemRowId', '$itemName', '$itemValue', '$runsheetNumber', '$runsheetDate')";
                 mysqli_query($conn, $sqlItem);
             }
 

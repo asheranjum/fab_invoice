@@ -136,8 +136,8 @@ mysqli_close($conn);
                         <tr>
                             <th colspan="3">
                                 <div style=" gap: 50px; display: flex;">
-                                    <strong>Runsheet No: 1123 </strong>
-                                    <strong>Runsheet Date: 10-05-2025</strong>
+                                    <strong>Runsheet No:    <span id="runsheet_no"></span> </strong>
+                                    <strong>Runsheet Date:  <span id="runsheet_date"></span> </strong>
                                 </div>
                             </th>
                         </tr>
@@ -290,6 +290,9 @@ mysqli_close($conn);
 
     <script>
         $(document).ready(function() {
+
+            $('#runsheet_no').append('adsadasd')
+            $('#runsheet_date').append('adsadasd')
             const maxRows = 25;
             let currentRunsheet = null; // Store current runsheet data
 
@@ -580,7 +583,7 @@ mysqli_close($conn);
                     if (data.success) {
                         alert(data.message);
                         isFormDirty = false; // Reset dirty flag on successful submission
-                        window.location.href = "index.php";
+                        // window.location.href = "index.php";
                     } else {
                         alert("Error: " + data.message);
                     }

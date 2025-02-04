@@ -251,7 +251,14 @@ $html = '
                     <th>Amount</th>
                 </tr>
             </thead>
-            <tbody>';
+            <tbody> <tr>
+                            <th colspan="3">
+                                <div style=" gap: 50px; display: flex;">
+                                    <strong>Runsheet No:    <span id="runsheet_no"></span> </strong>
+                                    <strong>Runsheet Date:  <span id="runsheet_date"></span> </strong>
+                                </div>
+                            </th>
+                        </tr>';
 // Dynamically generating rows from groupedItems
 foreach ($groupedItems as $itemRowId => $data) {
     $customInvoiceNo = $data['custom_invoice_no']; // Fetch custom invoice number
