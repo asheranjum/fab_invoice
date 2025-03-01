@@ -143,9 +143,12 @@ mysqli_close($conn);
                         </tr>
 
                         <tr id="tabletr">
+                          
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
+                                <input type="text" name="customer_inv_name[]" class="form-control customer-inv-name mt-2" placeholder="Enter Invoice Name">
                             </td>
+                            
                             <td>
                                 <div class="d-flex">
                                     <div class="form-check ">
@@ -416,7 +419,7 @@ mysqli_close($conn);
                         if (this.type === "checkbox") {
                             this.checked = false;
                         } else {
-                            $(this).val("").prop("disabled", true);
+                            // $(this).val("").prop("disabled", true);
                         }
                         if ($(this).hasClass("customer-inv-no")) {
                             $(this).prop("disabled", false).val("");
@@ -535,6 +538,7 @@ mysqli_close($conn);
 
             $(".table-container tbody tr#tabletr").each(function(index) {
                 const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
+                const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
                 const amount = $(this).find(".amount-field").val() || 0;
                 let row = $(this);
                 $(this).find(".form-check").each(function() {
@@ -547,6 +551,7 @@ mysqli_close($conn);
                         formData.items.push({
                             item_row_id: `${index + 1}`,
                             customer_inv_no: customerInvoiceNo,
+                            customer_inv_name: customer_inv_name,
                             item_name: $(this).find("label").text().trim(),
                             item_value: inputField.val() || 0,
                             amount: amount,
