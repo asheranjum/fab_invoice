@@ -566,6 +566,7 @@ mysqli_close($conn);
                     formData.items.push({
                         item_row_id: `${index + 1}`,
                         customer_inv_no: customerInvoiceNo,
+                        customer_inv_name: customer_inv_name,
                         item_name: selectField.find("option:selected").text().trim(),
                         item_value: selectField.siblings("input[type='text']").val() || 0,
                         amount: amount,

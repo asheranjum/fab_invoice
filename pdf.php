@@ -42,6 +42,7 @@ while ($row = $resultItems->fetch_assoc()) {
     $itemName = $row['item_name'];
     $itemValue = $row['item_value'];
     $customInvoiceNo = $row['customer_invoice_no'];
+    $customInvoiceName = $row['customer_invoice_name'];
 
     // Initialize runsheet group
     if (!isset($groupedItems[$runsheetNumber])) {
@@ -258,7 +259,7 @@ $html = '
         <table class="details">
             <thead>
                 <tr>
-                    <th>Customer Invoice No</th>
+                    <th>Customer Invoice </th>
                     <th>Items Description</th>
                     <th>Amount</th>
                 </tr>
@@ -280,7 +281,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         $html .= '
         <tr >
-            <td>' . htmlspecialchars($customInvoiceNo) . '</td>
+            <td style="text-align: left;"> Name:'.$customInvoiceName. '<br> No: '.htmlspecialchars($customInvoiceNo).' </td>
             <td style=" padding:0px">
                 <table class="checkbox-table">
                     <tr>';
@@ -327,7 +328,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
             $value = $checked ? '$' . number_format($items[$key], 2) : '-';
 
             $html .= '
-            <td  style="  padding:0px">
+            <td  style="  ">
                 <div style="display:flex; align-items:center;">
                     <img src="' . $image . '" width="20" height="20" style="padding-top:5px; padding-bottom:5px;" />
                     <div style="font-size:12px; margin-left:5px;">' . htmlspecialchars($label) . '</div>
@@ -398,12 +399,22 @@ $html .= '
 ';
 
 try {
-    $mpdf = new Mpdf([
-        'margin_top' => 0,
-        'margin_bottom' => 0,
-        'margin_left' => 0,
-        'margin_right' => 0,
-    ]);
+     // Estimate content height based on item count
+     $itemCount = count($groupedItems) * 20; // Approximate row height
+     $baseHeight = 297; // A4 standard height in mm
+     $maxHeight = $baseHeight + ($itemCount > 20 ? ($itemCount - 20) * 5 : 0); // Increase height dynamically
+ 
+     $mpdf = new Mpdf([
+         'mode' => 'utf-8',
+         'format' => [210, $maxHeight], // 210mm width, dynamic height
+         'margin_top' => 0,
+         'margin_bottom' => 0,
+         'margin_left' => 0,
+         'margin_right' => 0,
+     ]);
+ 
+     // Prevent page breaks
+     $mpdf->SetAutoPageBreak(false);
     $mpdf->WriteHTML($html);
     $mpdf->Output('invoice.pdf', 'I');
 } catch (Exception $e) {

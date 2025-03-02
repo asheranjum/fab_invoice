@@ -32,14 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Save items
             foreach ($items as $item) {
                 $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
+                $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
                 $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? ''); // Fetch item_row_id
                 $itemName = mysqli_real_escape_string($conn, $item['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $item['item_value'] ?? '0');
                 $runsheetNumber = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
                 $runsheetDate = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
 
-                $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_no, item_row_id, item_name, item_value, runsheet_number, runsheet_date)
-                VALUES ('$invoiceId', '$customerInvoiceNo' , '$invoiceId~$itemRowId', '$itemName', '$itemValue', '$runsheetNumber', '$runsheetDate')";
+                $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, item_row_id, item_name, item_value, runsheet_number, runsheet_date)
+                VALUES ('$invoiceId', '$customerInvoiceName', '$customerInvoiceNo' , '$invoiceId~$itemRowId', '$itemName', '$itemValue', '$runsheetNumber', '$runsheetDate')";
                 mysqli_query($conn, $sqlItem);
             }
 
