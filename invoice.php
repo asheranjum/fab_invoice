@@ -146,7 +146,7 @@ mysqli_close($conn);
                           
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
-                                <input type="text" name="customer_inv_name[]" class="form-control customer-inv-name mt-2" placeholder="Enter Invoice Name">
+                                <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Invoice Name">
                             </td>
                             
                             <td>
@@ -294,8 +294,13 @@ mysqli_close($conn);
     <script>
         $(document).ready(function() {
 
-            $('#runsheet_no').append('adsadasd')
-            $('#runsheet_date').append('adsadasd')
+            $('#runsheet_no').append(<?php echo $newInvoice;?>+'1001')
+
+            var today = new Date();
+            var formattedDate = today.toLocaleDateString(); // Format the date (e.g., "3/7/2025" in US format)
+
+            // Append the date to the element
+            $('#runsheet_date').append(formattedDate);
             const maxRows = 25;
             let currentRunsheet = null; // Store current runsheet data
 
@@ -392,6 +397,13 @@ mysqli_close($conn);
 
                 $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
                     if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
+                        e.preventDefault();
+                    }
+                });
+
+                $(row).find("#customer-inv-name").off("keypress").on("keypress", function(e) {
+                    // Allow all alphanumeric characters and special characters (including space)
+                    if (!/^[\w\s.,;!?()\-"'&@#$%^*+=<>_/|\\`~]+$/.test(e.key) && e.key !== "Backspace") {
                         e.preventDefault();
                     }
                 });
