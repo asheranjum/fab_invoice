@@ -90,8 +90,9 @@ require 'session.php';
                   <td><?php echo htmlspecialchars($row['date']); ?></td>
                   <td><?php echo htmlspecialchars($row['company']); ?></td>
                   <td>
-                    <a href="pdf.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-download" style="font-size: 20px;" title="Download"></a>
-                    <a href="update_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-edit text-success" style="font-size: 20px;" title="Edit"></a>
+                    <a href="pdf.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-download" style="font-size: 20px;" target="new" title="Download"></a>
+                    <a href="update_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-edit text-success" style="font-size: 20px;" target="new" title="Edit"></a>
+                    <a href="duplicate_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-clone text-danger" style="font-size: 20px;" title="Duplicate" onclick="return confirm('Are you sure you want to duplicate this invoice?');"></a>
                     <a href="delete_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-trash text-danger" style="font-size: 20px;" title="Delete" onclick="return confirm('Are you sure you want to delete this invoice?');"></a>
 
                   </td>

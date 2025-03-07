@@ -36,22 +36,34 @@ $groupedItems = [];
 
 
 while ($row = $resultItems->fetch_assoc()) {
-    $itemRowId = $row['item_row_id']; // e.g., 43~1
-    $itemName = $row['item_name'];    // e.g., DELIV
-    $itemValue = $row['item_value']; // e.g., 30.00
-    $customInvoiceNo = $row['customer_invoice_no']; // e.g., "INV001" (assuming it's in the table)
+    $runsheetNumber = $row['runsheet_number'];
+    $runsheetDate = $row['runsheet_date'];
+    $itemRowId = $row['item_row_id'];
+    $itemName = $row['item_name'];
+    $itemValue = $row['item_value'];
+    $customInvoiceNo = $row['customer_invoice_no'];
+    $customInvoiceName = $row['customer_invoice_name'];
 
-    // Initialize the group if not already present
-    if (!isset($groupedItems[$itemRowId])) {
-        $groupedItems[$itemRowId] = [
-            'custom_invoice_no' => $customInvoiceNo, // Add custom invoice number
-            'items' => [], // Initialize items array
+    // Initialize runsheet group
+    if (!isset($groupedItems[$runsheetNumber])) {
+        $groupedItems[$runsheetNumber] = [
+            'runsheet_date' => $runsheetDate,
+            'items' => []
         ];
     }
 
-    // Add the item and value to the group
-    $groupedItems[$itemRowId]['items'][$itemName] = $itemValue;
+    // Initialize item row
+    if (!isset($groupedItems[$runsheetNumber]['items'][$itemRowId])) {
+        $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
+            'custom_invoice_no' => $customInvoiceNo,
+            'items' => []
+        ];
+    }
+
+    // Add the item with its price
+    $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = $itemValue;
 }
+
 
 
 
@@ -90,12 +102,12 @@ $html = '
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .bill-to {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 0px;
             color: #011f7f;
         }
         .bill-to td {
@@ -189,6 +201,7 @@ $html = '
            top: 60%;
            left: 65%;
        }
+           .runsheet-header { background: #f89c1c; color: #011f7f; font-weight: bold; padding: 10px; }
     </style>
 </head>
 <body>
@@ -199,7 +212,7 @@ $html = '
        
            <h2 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h2>
            <div style=" margin-top:0px; margin-left:30px; color:white"> <span class="label">Invoice No:</span> ' . $invoiceNo . '</div>
-           <div style=" margin-top:50px; "> </div>
+           <div style=" margin-top:20px; "> </div>
            <h2 style=" margin-left:5px; color:#001f80">Bill To </h2>
 
         <table class="bill-to">
@@ -246,46 +259,51 @@ $html = '
         <table class="details">
             <thead>
                 <tr>
-                    <th>Customer Invoice No</th>
+                    <th>Customer Invoice </th>
                     <th>Items Description</th>
                     <th>Amount</th>
                 </tr>
             </thead>
-            <tbody>';
+            <tbody> ';
 // Dynamically generating rows from groupedItems
-foreach ($groupedItems as $itemRowId => $data) {
-    $customInvoiceNo = $data['custom_invoice_no']; // Fetch custom invoice number
-    $items = $data['items']; // Fetch items
+foreach ($groupedItems as $runsheetNumber => $runsheetData) {
+    $runsheetDate = $runsheetData['runsheet_date'];
 
+    // Add Runsheet Header
     $html .= '
-        <tr>
-            <td>' . htmlspecialchars($customInvoiceNo) . '</td> <!-- Display custom invoice number -->
-            <td>
+    <tr class="runsheet-header">
+        <td colspan="3">Runsheet No: ' . $runsheetNumber . ' | Runsheet Date: ' . $runsheetDate . '</td>
+    </tr>';
+
+    foreach ($runsheetData['items'] as $itemRowId => $data) {
+        $customInvoiceNo = $data['custom_invoice_no'];
+        $items = $data['items'];
+
+        $html .= '
+        <tr >
+            <td style="text-align: left;"> Name:'.$customInvoiceName. '<br> No: '.htmlspecialchars($customInvoiceNo).' </td>
+            <td style=" padding:0px">
                 <table class="checkbox-table">
                     <tr>';
-    $allOptions = [
-        'DELIV+' => 'DELIV+',
-        'DISAS+' => 'DISAS+',
-        'ASSEM+' => 'ASSEM+',
-        'RUB+' => 'RUB+',
-        'UPST+' => 'UPST+',
-        'DOWNST+' => 'DOWNST+',
-        'PREM+' => 'PREM+',
-        'BRTrans+' => 'BRTrans+',
-        'Ins+' => 'Ins+',
-        'H/Dliv+' => 'H/Dliv+',
-        'Vol+' => 'Vol+',
-        'WaterCon+' => 'WaterCon+',
-        'Door/R+' => 'Door/R+',
 
-    ];
+                    $allOptions = [
+                        'DELIV+' => 'DELIV+',
+                        'DISAS+' => 'DISAS+',
+                        'ASSEM+' => 'ASSEM+',
+                        'RUB+' => 'RUB+',
+                        'UPST+' => 'UPST+',
+                        'DOWNST+' => 'DOWNST+',
+                        'PREM+' => 'PREM+',
+                        'BRTRANS+' => 'BRTRANS+',
+                        'INST+' => 'INST+',
+                        'H/DLIV+' => 'H/DLIV+',
+                        'VOL+' => 'VOL+',
+                        'WATERCON+' => 'WATERCON+',
+                        'DOOR/R+' => 'DOOR/R+',
+                
+                    ];
 
-    // Dynamically add P/UP options from 1 to 6
-    // for ($i = 1; $i <= 6; $i++) {
-    //     $allOptions["P/UP($i)"] = "P/UP($i)";
-    // }
-
-    // Check for any key matching P/UP(x)
+                     // Check for any key matching P/UP(x)
     $selectedPUP = null; // To store the matched P/UP key
     foreach ($items as $key => $value) {
         if (preg_match('/^P\/UP\(\d+\)$/', $key)) {
@@ -303,25 +321,23 @@ foreach ($groupedItems as $itemRowId => $data) {
         $pupKey = 'P/UP';
         $allOptions[$pupKey] = 'P/UP';
     }
+    
+        foreach ($allOptions as $key => $label) {
+            $checked = isset($items[$key]);
+            $image = $checked ? 'assets/images/check.png' : 'assets/images/uncheck.png';
+            $value = $checked ? '$' . number_format($items[$key], 2) : '-';
 
-
-
-    // Loop through all options
-    foreach ($allOptions as $key => $label) {
-        $image = isset($items[$key]) ? 'assets/images/check.png' : 'assets/images/uncheck.png';
-        $value = isset($items[$key]) ? htmlspecialchars($items[$key]) : '-';
-
-        // For P/UP, display the selected value directly
+            $html .= '
+            <td  style="  ">
+                <div style="display:flex; align-items:center;">
+                    <img src="' . $image . '" width="20" height="20" style="padding-top:5px; padding-bottom:5px;" />
+                    <div style="font-size:12px; margin-left:5px;">' . htmlspecialchars($label) . '</div>
+                </div>
+               
+            </td>';
+        }
+        
         $html .= '
-    <td>
-        <div style="display:flex; align-items:center;">
-            <img src="' . $image . '" width="20" height="20" style="padding-top:5px; padding-bottom:5px;" />
-            <div style="font-size:12px; margin-left:5px;">' . htmlspecialchars($label) . '</div>
-        </div>
-    </td>';
-    }
-
-    $html .= '
         </tr>
         <tr>';
 
@@ -329,15 +345,16 @@ foreach ($groupedItems as $itemRowId => $data) {
     foreach ($allOptions as $key => $label) {
         $value = isset($items[$key]) ? htmlspecialchars($items[$key]) : '0.00';
 
-        $html .= '<td><span style="font-size:12px;">$' . $value . '</span></td>';
+        $html .= '<td style=""><span style="font-size:12px;">$' . $value . '</span></td>';
     }
 
-    $html .= '
-        </tr>
-    </table>
+        $html .= '
+                    </tr>
+                </table>
             </td>
-            <td>$' . array_sum($items) . '</td>
+            <td>$' . number_format(array_sum($items), 2) . '</td>
         </tr>';
+    }
 }
 
 $html .= '
@@ -382,12 +399,22 @@ $html .= '
 ';
 
 try {
-    $mpdf = new Mpdf([
-        'margin_top' => 0,
-        'margin_bottom' => 0,
-        'margin_left' => 0,
-        'margin_right' => 0,
-    ]);
+     // Estimate content height based on item count
+     $itemCount = count($groupedItems) * 20; // Approximate row height
+     $baseHeight = 297; // A4 standard height in mm
+     $maxHeight = $baseHeight + ($itemCount > 20 ? ($itemCount - 20) * 5 : 0); // Increase height dynamically
+ 
+     $mpdf = new Mpdf([
+         'mode' => 'utf-8',
+         'format' => [210, $maxHeight], // 210mm width, dynamic height
+         'margin_top' => 0,
+         'margin_bottom' => 0,
+         'margin_left' => 0,
+         'margin_right' => 0,
+     ]);
+ 
+     // Prevent page breaks
+     $mpdf->SetAutoPageBreak(false);
     $mpdf->WriteHTML($html);
     $mpdf->Output('invoice.pdf', 'I');
 } catch (Exception $e) {
