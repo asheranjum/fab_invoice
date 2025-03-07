@@ -216,25 +216,27 @@ $html = '
            <h2 style=" margin-left:5px; color:#001f80">Bill To </h2>
 
         <table class="bill-to">
-            
+
 
             <tr>
                 <td><span class="label">COMPANY NAME:</span> ' . $company . '</td>
+                <td style="text-align:right"><span class="label">FAB TRANSPORT SERVICES PTY LTD</span></td>
+            </tr>
+            
+
+            <tr>
+                <td><span class="label">ADDRESS:</span> ' . $address . '</td>
                 <td style="text-align:right"><span class="label">PHONE:0403729966</span></td>
             </tr>
             
             <tr>
-                <td><span class="label">ADDRESS:</span> ' . $address . '</td>
+                <td><span class="label">ABN:</span>' . $abn . '</td>
                 <td style="text-align:right"><span class="label">ABN:123 121 211 222 222</span></td>
             </tr>
 
             <tr>
-                <td><span class="label">ABN:</span>' . $abn . '</td>
-                <td style="text-align:right"><span class="label">ADDRESS: 5 LOUIS STREET DOVETON 3177 VIC</span></td>
-            </tr>
-
-            <tr>
                 <td><span class="label">PHONE:</span>' . $phone . '</td>
+                <td style="text-align:right"><span class="label">ADDRESS: 5 LOUIS STREET DOVETON 3177 VIC</span></td>
             </tr>
 
              <tr>
