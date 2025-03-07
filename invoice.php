@@ -86,19 +86,13 @@ mysqli_close($conn);
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="phone" class="form-label mb-0 me-2">PHONE NO:</label>
+                        <label for="phone" class="form-label mb-0 me-2">PHONE:</label>
                         <input type="text" name="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="">
 
                         <!-- <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
                         <input type="text" name="postal_code" class="form-control custom-width-3" placeholder="Postal Code" value=""> -->
                     </div>
 
-                    <div class="mb-0 d-flex align-items-center">
-
-
-                        <label for="runsheet" class="form-label mb-0 me-2">RUNSHEET NO:</label>
-                        <input type="text" name="runsheet" class="form-control custom-width-1" placeholder="Enter RunSheet Number" value="">
-                    </div>
                 </form>
             </div>
 

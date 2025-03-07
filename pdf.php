@@ -216,46 +216,46 @@ $html = '
            <h2 style=" margin-left:5px; color:#001f80">Bill To </h2>
 
         <table class="bill-to">
-            <tr>
-                <td><span class="label">Date:</span> ' . $date . '</td>
-                <td style="text-align:right"><span class="label">FAB TRANSPORT SERVICES PTY LTD</span></td>
-            </tr>
+            
 
             <tr>
-                <td><span class="label">Company Name:</span> ' . $company . '</td>
+                <td><span class="label">COMPANY NAME:</span> ' . $company . '</td>
                 <td style="text-align:right"><span class="label">PHONE:0403729966</span></td>
             </tr>
             
             <tr>
-                <td><span class="label">Address:</span> ' . $address . '</td>
+                <td><span class="label">ADDRESS:</span> ' . $address . '</td>
                 <td style="text-align:right"><span class="label">ABN:123 121 211 222 222</span></td>
             </tr>
 
             <tr>
-                <td><span class="label">Phone:</span> ' . $phone . '</td>
+                <td><span class="label">ABN:</span>' . $abn . '</td>
                 <td style="text-align:right"><span class="label">ADDRESS: 5 LOUIS STREET DOVETON 3177 VIC</span></td>
             </tr>
 
+            <tr>
+                <td><span class="label">PHONE:</span>' . $phone . '</td>
+            </tr>
+
              <tr>
-                <td><span class="label">ABN:</span>' . $abn . '</td>
+              <td><span class="label"></span> </td>
                  <td style="text-align:right">
                   <div class="service-items">
                   <h3>For:</h3>
                  <ol>
-                 <li>Assembly</li>
-                 <li>Delivery</li>
-                 <li>Repairs</li>
+                 <li>ASSEMBLY</li>
+                 <li>DELIVERY</li>
+                 <li>REPAIRS</li>
                 </ol>
              </div>
           </td>
-
-            <tr>
-                <td colspan="2"><span class="label">RunSheet No:</span> ' . $runSheetNo . '</td>
-            </tr>
+        </tr>
 
         </table>
 
+        
         <!-- Description Table -->
+
         <table class="details">
             <thead>
                 <tr>
@@ -281,47 +281,45 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         $html .= '
         <tr >
-            <td style="text-align: left;"> Name:'.$customInvoiceName. '<br> No: '.htmlspecialchars($customInvoiceNo).' </td>
+            <td style="text-align: left;"> Name:' . $customInvoiceName . '<br> No: ' . htmlspecialchars($customInvoiceNo) . ' </td>
             <td style=" padding:0px">
                 <table class="checkbox-table">
                     <tr>';
 
-                    $allOptions = [
-                        'DELIV+' => 'DELIV+',
-                        'DISAS+' => 'DISAS+',
-                        'ASSEM+' => 'ASSEM+',
-                        'RUB+' => 'RUB+',
-                        'UPST+' => 'UPST+',
-                        'DOWNST+' => 'DOWNST+',
-                        'PREM+' => 'PREM+',
-                        'BRTRANS+' => 'BRTRANS+',
-                        'INST+' => 'INST+',
-                        'H/DLIV+' => 'H/DLIV+',
-                        'VOL+' => 'VOL+',
-                        'WATERCON+' => 'WATERCON+',
-                        'DOOR/R+' => 'DOOR/R+',
-                
-                    ];
+        $allOptions = [
+            'DELIV+' => 'DELIV+',
+            'DISAS+' => 'DISAS+',
+            'ASSEM+' => 'ASSEM+',
+            'RUB+' => 'RUB+',
+            'UPST+' => 'UPST+',
+            'DOWNST+' => 'DOWNST+',
+            'PREM+' => 'PREM+',
+            'BRTRANS+' => 'BRTRANS+',
+            'INST+' => 'INST+',
+            'H/DLIV+' => 'H/DLIV+',
+            'VOL+' => 'VOL+',
+            'WATERCON+' => 'WATERCON+',
+            'DOOR/R+' => 'DOOR/R+',
 
-                     // Check for any key matching P/UP(x)
-    $selectedPUP = null; // To store the matched P/UP key
-    foreach ($items as $key => $value) {
-        if (preg_match('/^P\/UP\(\d+\)$/', $key)) {
-            $selectedPUP = $key; // Match the first found P/UP key
-            break;
+        ];
+
+        // Check for any key matching P/UP(x)
+        $selectedPUP = null; // To store the matched P/UP key
+        foreach ($items as $key => $value) {
+            if (preg_match('/^P\/UP\(\d+\)$/', $key)) {
+                $selectedPUP = $key; // Match the first found P/UP key
+                break;
+            }
         }
-    }
 
-    // If a P/UP key is found, add it dynamically
-    if ($selectedPUP) {
-        $allOptions[$selectedPUP] = $selectedPUP;
-    }
-    else
-    {
-        $pupKey = 'P/UP';
-        $allOptions[$pupKey] = 'P/UP';
-    }
-    
+        // If a P/UP key is found, add it dynamically
+        if ($selectedPUP) {
+            $allOptions[$selectedPUP] = $selectedPUP;
+        } else {
+            $pupKey = 'P/UP';
+            $allOptions[$pupKey] = 'P/UP';
+        }
+
         foreach ($allOptions as $key => $label) {
             $checked = isset($items[$key]);
             $image = $checked ? 'assets/images/check.png' : 'assets/images/uncheck.png';
@@ -336,17 +334,17 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                
             </td>';
         }
-        
+
         $html .= '
         </tr>
         <tr>';
 
-    // Add a second row to display the values for each option
-    foreach ($allOptions as $key => $label) {
-        $value = isset($items[$key]) ? htmlspecialchars($items[$key]) : '0.00';
+        // Add a second row to display the values for each option
+        foreach ($allOptions as $key => $label) {
+            $value = isset($items[$key]) ? htmlspecialchars($items[$key]) : '0.00';
 
-        $html .= '<td style=""><span style="font-size:12px;">$' . $value . '</span></td>';
-    }
+            $html .= '<td style=""><span style="font-size:12px;">$' . $value . '</span></td>';
+        }
 
         $html .= '
                     </tr>
@@ -366,17 +364,17 @@ $html .= '
 
                     <tr>
                         <th style="background:#f89c1c;  color:#011f7f;">Total</td>
-                        <td style="color:#011f7f; font-weight:bold;">$'. $sub_total .'</td>
+                        <td style="color:#011f7f; font-weight:bold;">$' . $sub_total . '</td>
                     </tr>
                 
                     <tr>
                      <th style="color:#011f7f;"> Tax Rate </td>
-                        <td style="color:#011f7f; font-weight:bold;">$'. $tax_rate .'</td>
+                        <td style="color:#011f7f; font-weight:bold;">$' . $tax_rate . '</td>
                     </tr>
 
                     <tr>
                         <th style="background:#f89c1c;  color:#011f7f;"> Total Cost </td>
-                        <td style="color:#011f7f; font-weight:bold;">$'. $total_cost .'</td>
+                        <td style="color:#011f7f; font-weight:bold;">$' . $total_cost . '</td>
                     </tr>
                 </table>
 
@@ -399,22 +397,22 @@ $html .= '
 ';
 
 try {
-     // Estimate content height based on item count
-     $itemCount = count($groupedItems) * 20; // Approximate row height
-     $baseHeight = 297; // A4 standard height in mm
-     $maxHeight = $baseHeight + ($itemCount > 20 ? ($itemCount - 20) * 5 : 0); // Increase height dynamically
- 
-     $mpdf = new Mpdf([
-         'mode' => 'utf-8',
-         'format' => [210, $maxHeight], // 210mm width, dynamic height
-         'margin_top' => 0,
-         'margin_bottom' => 0,
-         'margin_left' => 0,
-         'margin_right' => 0,
-     ]);
- 
-     // Prevent page breaks
-     $mpdf->SetAutoPageBreak(false);
+    // Estimate content height based on item count
+    $itemCount = count($groupedItems) * 20; // Approximate row height
+    $baseHeight = 297; // A4 standard height in mm
+    $maxHeight = $baseHeight + ($itemCount > 20 ? ($itemCount - 20) * 5 : 0); // Increase height dynamically
+
+    $mpdf = new Mpdf([
+        'mode' => 'utf-8',
+        'format' => [210, $maxHeight], // 210mm width, dynamic height
+        'margin_top' => 0,
+        'margin_bottom' => 0,
+        'margin_left' => 0,
+        'margin_right' => 0,
+    ]);
+
+    // Prevent page breaks
+    $mpdf->SetAutoPageBreak(false);
     $mpdf->WriteHTML($html);
     $mpdf->Output('invoice.pdf', 'I');
 } catch (Exception $e) {
