@@ -5,9 +5,12 @@ header('Content-Type: application/json');
 $response = ['success' => false, 'message' => 'Invalid request'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+   
     $input = json_decode(file_get_contents('php://input'), true);
-
-    if ($input) {
+   
+    if($input)
+    {
+        $invoiceId = mysqli_real_escape_string($conn, $input['invoice_id'] ?? '');
         $inv_date = mysqli_real_escape_string($conn, $input['date'] ?? '');
         $inv_invoice = mysqli_real_escape_string($conn, $input['invoice'] ?? '');
         $inv_company = mysqli_real_escape_string($conn, $input['company'] ?? '');
@@ -21,13 +24,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $other_cost = mysqli_real_escape_string($conn, $input['other_cost'] ?? '0');
         $total_cost = mysqli_real_escape_string($conn, $input['total_cost'] ?? '0');
         $items = $input['items'] ?? [];
+    }
 
-        // Save the invoice data in the database
-        $sql = "INSERT INTO invoice (date, invoice, company, address, phone, postal_code, abn, runsheet, sub_total, tax_rate, other_cost, total_cost)
-                VALUES ('$inv_date', '$inv_invoice', '$inv_company', '$inv_address', '$inv_phone', '$inv_postal_code', '$inv_abn', '$inv_runsheet', '$sub_total', '$tax_rate', '$other_cost', '$total_cost')";
+    
+    // Update invoice details
+    $sqlUpdate = "UPDATE invoice SET date=?, company=?, address=?, phone=?, postal_code =?, abn=?, runsheet=? WHERE invoice_id=?";
+    $stmt = $conn->prepare($sqlUpdate);
+    $stmt->bind_param("sssssssi", $inv_date, $inv_company, $inv_address, $inv_phone, $inv_postal_code , $inv_abn, $inv_runsheet, $invoiceId);
+  
+   
+    if ($stmt->execute()) {
 
-        if (mysqli_query($conn, $sql)) {
-            $invoiceId = mysqli_insert_id($conn);
+       
+        // Delete old items before inserting updated ones
+        // $sqlDelete = "DELETE FROM invoice_items WHERE invoice_id=?";
+        // $stmt = $conn->prepare($sqlDelete);
+        // $stmt->bind_param("i", $invoiceId);
+        // $stmt->execute();
+
+        // Insert updated items
 
             // Save items
             foreach ($items as $item) {
@@ -44,13 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mysqli_query($conn, $sqlItem);
             }
 
-            $response = ['success' => true, 'message' => 'Invoice saved successfully'];
-        } else {
-            $response = ['success' => false, 'message' => 'Database error: ' . mysqli_error($conn)];
-        }
+        $response = ['success' => true, 'message' => 'Invoice update successfully'];
+
+        
+    } else {
+        $response = ['success' => false, 'message' => 'Database error: ' . mysqli_error($conn)];
     }
 }
 
 echo json_encode($response);
-
 mysqli_close($conn);
+
+?>
