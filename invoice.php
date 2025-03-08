@@ -18,6 +18,8 @@ $newInvoice = ($lastInvoice > 0) ? $lastInvoice + 1 : $startingInvoice;
 
 // Close the connection
 mysqli_close($conn);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +33,7 @@ mysqli_close($conn);
     <link rel="stylesheet" href="assets/css/style-2.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 </head>
 
 <body>
@@ -297,7 +300,7 @@ mysqli_close($conn);
             $('#runsheet_date').append(formattedDate);
             const maxRows = 25;
             let currentRunsheet = null; // Store current runsheet data
-
+            let runsheetIndex = 0; // Unique identifier for runsheets
             $(".add-runsheet-button").click(function() {
                 // Get Runsheet details using prompt()
                 let runsheetNumber = prompt("Enter Runsheet Number:");
@@ -305,7 +308,7 @@ mysqli_close($conn);
 
                 let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
                 if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
-
+                runsheetIndex++; // Increment unique runsheet index
                 // Validate date format (basic check)
                 // if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
                 //     alert("Invalid date format. Please use YYYY-MM-DD.");
@@ -322,10 +325,11 @@ mysqli_close($conn);
                 let runsheetRow = `
             
                 <tr>
-                    <th colspan="3">
+                    <th colspan="3"  id="runsheet-${runsheetIndex}">
                         <div style=" gap: 50px; display: flex;">
                             <strong>Runsheet No: ${runsheetNumber}</strong>
                             <strong>Runsheet Date: ${runsheetDate}</strong>
+                            <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                         </div>
                     </th>
                 </tr>
@@ -335,6 +339,13 @@ mysqli_close($conn);
                 $(".table-container tbody").append(runsheetRow);
             });
 
+            // Event delegation for dynamically added "Remove" buttons
+            $(document).on("click", ".remove-runsheet", function() {
+                let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
+            
+                $("#" + runsheetId).remove(); // Remove the respective runsheet row
+            });
+            
             function calculateRowAmount(row) {
                 let amount = 0;
 

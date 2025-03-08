@@ -565,3 +565,9 @@ label {
 
     margin-bottom: 30px;
 }
+
+ .remove-runsheet
+{
+	background-color:#011F7F !important;
+    border-color: #011F7F !important;
+}

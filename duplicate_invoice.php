@@ -7,7 +7,7 @@ if (isset($_GET['invoice_id']) && is_numeric($_GET['invoice_id'])) {
     $invoice_id = $_GET['invoice_id']; // Get the invoice ID from the URL
 
     // Fetch the invoice details (excluding invoice_id)
-    $sqlFetch = "SELECT date, company, address, phone, abn, runsheet, sub_total, tax_rate, other_cost, total_cost 
+    $sqlFetch = "SELECT date, company, address, phone, abn, runsheet 
                  FROM invoice WHERE invoice_id = ?";
     $stmt = $conn->prepare($sqlFetch);
     $stmt->bind_param("i", $invoice_id);
@@ -28,22 +28,18 @@ if (isset($_GET['invoice_id']) && is_numeric($_GET['invoice_id'])) {
     $newInvoiceNumber = $lastInvoiceNumber + 1; // Generate next invoice number
 
     // Insert duplicate invoice with a new unique invoice number
-    $sqlInsert = "INSERT INTO invoice (date, invoice, company, address, phone, abn, runsheet, sub_total, tax_rate, other_cost, total_cost) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sqlInsert = "INSERT INTO invoice (date, invoice, company, address, phone, abn, runsheet) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sqlInsert);
     $stmt->bind_param(
-        "sssssssssss",
+        "sssssss",
         $invoiceData['date'],
         $newInvoiceNumber,
         $invoiceData['company'],
         $invoiceData['address'],
         $invoiceData['phone'],
         $invoiceData['abn'],
-        $invoiceData['runsheet'],
-        $invoiceData['sub_total'],
-        $invoiceData['tax_rate'],
-        $invoiceData['other_cost'],
-        $invoiceData['total_cost']
+        $invoiceData['runsheet']
     );
 
     if ($stmt->execute()) {
