@@ -3,7 +3,6 @@
 require 'session.php';
 require 'config/database.php';
 
-
 $invoiceId = isset($_GET['invoice_id']) ? intval($_GET['invoice_id']) : null;
 $invoiceData = null;
 
@@ -18,9 +17,9 @@ if ($invoiceId) {
 
 $newInvoice = $invoiceData['invoice'];
 
-// var_dump($invoiceData['items']);
-
 $groupedItems = [];
+
+// Group items by runsheet_number and item_row_id
 foreach ($invoiceData['items'] as $item) {
     $runsheetNumber = $item['runsheet_number'];
     $runsheetDate = $item['runsheet_date'];
@@ -29,6 +28,7 @@ foreach ($invoiceData['items'] as $item) {
     $itemValue = $item['item_value'];
     $customInvoiceNo = $item['customer_invoice_no'];
     $customInvoiceName = $item['customer_invoice_name'];
+    $createdAt = isset($item['created_at']) ? $item['created_at'] : null; // Check if created_at exists
 
     // Initialize runsheet group
     if (!isset($groupedItems[$runsheetNumber])) {
@@ -42,13 +42,41 @@ foreach ($invoiceData['items'] as $item) {
     if (!isset($groupedItems[$runsheetNumber]['items'][$itemRowId])) {
         $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
             'custom_invoice_no' => $customInvoiceNo,
+            'custom_invoice_name' => $customInvoiceName,
             'items' => []
         ];
     }
 
-    // Add the item with its price
-    $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = $itemValue;
+    // Add the item with its price and created_at timestamp (if available)
+    $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = [
+        'value' => $itemValue,
+        'created_at' => $createdAt
+    ];
 }
+
+// Sort the grouped items based on the created_at timestamp (ascending or descending)
+foreach ($groupedItems as $runsheetNumber => &$runsheetData) {
+    // Sort items by created_at in ascending order (if it exists)
+    usort($runsheetData['items'], function($a, $b) {
+        // Ensure 'created_at' exists before trying to access it
+        $createdAtA = isset($a['created_at']) ? strtotime($a['created_at']) : 0; // Default to 0 if not set
+        $createdAtB = isset($b['created_at']) ? strtotime($b['created_at']) : 0; // Default to 0 if not set
+        return $createdAtA - $createdAtB; // Compare timestamps
+    });
+}
+
+// If you want to sort in descending order, reverse the comparison:
+foreach ($groupedItems as $runsheetNumber => &$runsheetData) {
+    usort($runsheetData['items'], function($a, $b) {
+        $createdAtA = isset($a['created_at']) ? strtotime($a['created_at']) : 0;
+        $createdAtB = isset($b['created_at']) ? strtotime($b['created_at']) : 0;
+        return $createdAtB - $createdAtA; // Reverse order for descending
+    });
+}
+
+// If you want to sort the entire $groupedItems array by runsheet_number or any other field, use ksort or uksort
+ksort($groupedItems); // Sort by runsheetNumber in ascending order
+
 
 
 // var_export($groupedItems);
@@ -156,7 +184,7 @@ mysqli_close($conn);
             </div>
         </div>
 
-        <div class="row mt-3">
+        <div class="row mt-3" >
             <div class="col-md-12">
                 <table class="table table-bordered table-container">
                     <thead>
@@ -168,7 +196,7 @@ mysqli_close($conn);
                     </thead>
                     <tbody id="tbody">
 
-                        <tr>
+                        <tr style="display: none;">
                             <th colspan="3">
                                 <div style=" gap: 50px; display: flex;">
                                     <strong>Runsheet No: <span id="runsheet_no"></span> </strong>
@@ -177,7 +205,7 @@ mysqli_close($conn);
                             </th>
                         </tr>
 
-                        <tr id="tabletr">
+                        <tr id="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
@@ -278,82 +306,66 @@ mysqli_close($conn);
 
 
                         <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
+    <tr>
+        <th colspan="3">
+            <div style="gap: 50px; display: flex;">
+                <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?></strong>
+                <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?></strong>
+            </div>
+        </th>
+    </tr>
 
+    <?php foreach ($runsheetData['items'] as $itemRowId => $data): ?>
+        <tr data-item-row-id="<?= $itemRowId ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+            <td>
+                Name:
+                <input type="text" name="customer_invoice_name[]" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
+                No:
+                <input type="text" name="customer_invoice_no[]" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
+            </td>
+            <td style="padding:0px">
+                <table class="checkbox-table">
+                    <tr>
+                        <?php
+                        // Define all options
+                        $allOptions = [
+                            'DELIV+' => 'DELIV+',
+                            'DISAS+' => 'DISAS+',
+                            'ASSEM+' => 'ASSEM+',
+                            'RUB+' => 'RUB+',
+                            'UPST+' => 'UPST+',
+                            'DOWNST+' => 'DOWNST+',
+                            'PREM+' => 'PREM+',
+                            'BRTRANS+' => 'BRTRANS+',
+                            'INST+' => 'INST+',
+                            'H/DLIV+' => 'H/DLIV+',
+                            'VOL+' => 'VOL+',
+                            'WATERCON+' => 'WATERCON+',
+                            'DOOR/R+' => 'DOOR/R+',
+                        ];
+                        ?>
 
-                            <tr>
-                                <th colspan="3">
-                                    <div style=" gap: 50px; display: flex;">
-                                        <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?> </strong>
-                                        <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?> </strong>
-                                    </div>
-                                </th>
-                            </tr>
-
-                            <?php foreach ($runsheetData['items'] as $itemRowId => $data): ?>
-                                <tr>
-                                    <td style="text-align: left;">
-                                        Name: <?= isset($data['customer_invoice_name']) ? htmlspecialchars($data['customer_invoice_name']) : 'N/A' ?><br>
-                                        No: <?= isset($data['custom_invoice_no']) ? htmlspecialchars($data['custom_invoice_no']) : 'N/A' ?>
-                                    </td>
-                                    <td style="padding:0px">
-                                        <table class="checkbox-table">
-                                            <tr>
-                                                <?php
-                                                // Define all options
-                                                $allOptions = [
-                                                    'DELIV+' => 'DELIV+',
-                                                    'DISAS+' => 'DISAS+',
-                                                    'ASSEM+' => 'ASSEM+',
-                                                    'RUB+' => 'RUB+',
-                                                    'UPST+' => 'UPST+',
-                                                    'DOWNST+' => 'DOWNST+',
-                                                    'PREM+' => 'PREM+',
-                                                    'BRTRANS+' => 'BRTRANS+',
-                                                    'INST+' => 'INST+',
-                                                    'H/DLIV+' => 'H/DLIV+',
-                                                    'VOL+' => 'VOL+',
-                                                    'WATERCON+' => 'WATERCON+',
-                                                    'DOOR/R+' => 'DOOR/R+',
-                                                ];
-
-                                                // Check for any key matching P/UP(x)
-                                                $selectedPUP = null;
-                                                foreach ($data['items'] as $key => $value) {
-                                                    if (preg_match('/^P\/UP\(\d+\)$/', $key)) {
-                                                        $selectedPUP = $key;
-                                                        break;
-                                                    }
-                                                }
-
-                                                // If a P/UP key is found, add it dynamically
-                                                $pupKey = $selectedPUP ?: 'P/UP';
-                                                $allOptions[$pupKey] = $pupKey;
-                                                $allOptionsIndex = 0;
-                                                ?>
-
-                                                <?php foreach ($allOptions as $key => $label): ?>
-                                                    <td>
-                                                        <div class="d-flex">
-                                                            <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input form-checkboxes" id="<?= htmlspecialchars($label) ?>-<?php echo $allOptionsIndex; ?>" name="item[<?php echo $allOptionsIndex; ?>][<?= htmlspecialchars($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
-                                                                <label for="<?= htmlspecialchars($label) ?>-<?php echo $allOptionsIndex; ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
-                                                                <input type="text" name="item[<?php echo $allOptionsIndex; ?>][<?= htmlspecialchars($label) ?>_value]" class="form-control mt-1" disable placeholder="" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key], 2) : '0.00' ?>">
-                                                            </div>
-                                                        </div>
-
-
-
-                                                    </td>
-                                                <?php $allOptionsIndex++;
-                                                endforeach; ?>
-                                            </tr>
-
-                                        </table>
-                                    </td>
-                                    <td>$<?= number_format(array_sum($data['items']), 2) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
+                        <?php foreach ($allOptions as $key => $label): ?>
+                            <td>
+                                <div class="form-check">
+                                    <input type="hidden" name="existing_items[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
+                                    <input type="checkbox" class="form-check-input form-checkboxes" name="existing_items[<?= $itemRowId ?>][<?= $label ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
+                                    <label class="form-check-label"><?= htmlspecialchars($label) ?></label>
+                                    <input type="text" name="existing_items[<?= $itemRowId ?>][<?= $label ?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key], 2) : '0.00' ?>">
+                                </div>
+                            </td>
                         <?php endforeach; ?>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <input type="text" class="form-control amount-field" name="amount[]" value="<?= array_sum($data['items']) ?>" readonly>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+<?php endforeach; ?>
+
+
 
 
                     </tbody>
@@ -410,7 +422,7 @@ mysqli_close($conn);
     <script>
         $(document).ready(function() {
 
-            $('#runsheet_no').append(<?php echo $invoiceId;?>+'1001')
+            $('#runsheet_no').append(<?php echo $invoiceId; ?> + '1001')
 
             var today = new Date();
             var formattedDate = today.toLocaleDateString(); // Format the date (e.g., "3/7/2025" in US format)
@@ -463,6 +475,7 @@ mysqli_close($conn);
                 let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
                 $("#" + runsheetId).remove(); // Remove the respective runsheet row
             });
+
             function calculateRowAmount(row) {
                 let amount = 0;
 
@@ -537,6 +550,7 @@ mysqli_close($conn);
 
             function addRows(count) {
                 const rows = $(".table-container #tbody tr#tabletr");
+                
                 let currentRows = rows.length;
                 let newRows = Math.min(count, maxRows - currentRows);
 
@@ -548,6 +562,7 @@ mysqli_close($conn);
                 for (let i = 0; i < newRows; i++) {
                     const lastRow = $(".table-container #tbody tr#tabletr").last();
                     const newRow = lastRow.clone();
+                    newRow.removeAttr("style");
                     const rowIndex = $(".table-container #tbody tr#tabletr").length;
 
                     newRow.find("input, select").each(function() {
@@ -653,88 +668,118 @@ mysqli_close($conn);
 
 
 
-        $("#invoiceForm").on("submit", function(e) {
-            e.preventDefault();
-            const formData = {
-                invoice_id: <?php echo $invoiceId ?? ''; ?>,
-                date: $("input[name='date']").val(),
-                invoice: $("input[name='invoice']").val(),
-                company: $("input[name='company']").val(),
-                address: $("input[name='address']").val(),
-                phone: $("input[name='phone']").val(),
-                postal_code: $("input[name='postal_code']").val(),
-                abn: $("input[name='abn']").val(),
-                runsheet: $("input[name='runsheet']").val(),
-                sub_total: $("#sub_total").val(),
-                tax_rate: $("#tax_rate").val(),
-                other_cost: $("#other_cost").val(),
-                total_cost: $("#total_cost").val(),
-                items: []
-            };
+        $("#invoiceForm").on("submit", function (e) {
+    e.preventDefault();
 
-            $(".table-container #tbody tr#tabletr").each(function(index) {
-                const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
-                const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
-                const amount = $(this).find(".amount-field").val() || 0;
-                let row = $(this);
-                $(this).find(".form-check").each(function() {
-                    const checkbox = $(this).find("input[type='checkbox']");
-                    const inputField = $(this).find("input[type='text']");
+    const formData = {
+        invoice_id: <?php echo $invoiceId ?? ''; ?>,
+        date: $("input[name='date']").val(),
+        invoice: $("input[name='invoice']").val(),
+        company: $("input[name='company']").val(),
+        address: $("input[name='address']").val(),
+        phone: $("input[name='phone']").val(),
+        abn: $("input[name='abn']").val(),
+        runsheet: $("input[name='runsheet']").val(),
+        sub_total: $("#sub_total").val(),
+        tax_rate: $("#tax_rate").val(),
+        total_cost: $("#total_cost").val(),
+        existing_items: [],
+        new_items: []
+    };
 
-                    if (checkbox.prop("checked")) {
-                        console.log(row.attr("data-runsheet-number"));
-                        console.log(row.attr("data-runsheet-date"));
-                        formData.items.push({
-                            item_row_id: `${index + 1}`,
-                            customer_inv_no: customerInvoiceNo,
-                            customer_inv_name: customer_inv_name,
-                            item_name: $(this).find("label").text().trim(),
-                            item_value: inputField.val() || 0,
-                            amount: amount,
-                            runsheet_number: row.attr("data-runsheet-number") || "",
-                            runsheet_date: row.attr("data-runsheet-date") || ""
-                        });
-                    }
+    $(".table-container #tbody tr[data-item-row-id]").each(function () {
+        const row = $(this);
+        const itemRowId = row.attr("data-item-row-id"); 
+        const customerInvoiceNo = row.find(".customer-inv-no").val() || "";
+        const customerInvoiceName = row.find(".customer-inv-name").val() || "";
+        const amount = row.find(".amount-field").val() || 0;
+        let hasCheckedItem = false;
+        let updatedItems = [];
+
+        row.find(".form-check").each(function () {
+            const checkbox = $(this).find("input[type='checkbox']");
+            const inputField = $(this).find("input[type='text']");
+            const itemName = $(this).find("label").text().trim();
+
+            if (checkbox.prop("checked")) {
+                hasCheckedItem = true;
+                updatedItems.push({
+                    item_name: itemName,
+                    item_value: inputField.val() || "0"
                 });
-
-                const selectField = $(this).find(".form-contro");
-                if (selectField.val() !== "") {
-                    formData.items.push({
-                        item_row_id: `${index + 1}`,
-                        customer_inv_no: customerInvoiceNo,
-                        customer_inv_name: customer_inv_name,
-                        item_name: selectField.find("option:selected").text().trim(),
-                        item_value: selectField.siblings("input[type='text']").val() || 0,
-                        amount: amount,
-                        runsheet_number: row.attr("data-runsheet-number") || "",
-                        runsheet_date: row.attr("data-runsheet-date") || ""
-                    });
-                }
-            });
-
-
-            fetch("process_update_invoice.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData),
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        alert(data.message);
-                        isFormDirty = false; // Reset dirty flag on successful submission
-                        // window.location.href = "index.php";
-                    } else {
-                        alert("Error: " + data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                    alert("An error occurred. Please try again.");
-                });
+            }
         });
+
+        if (hasCheckedItem) {
+            formData.existing_items.push({
+                item_row_id: itemRowId,
+                customer_inv_no: customerInvoiceNo,
+                customer_inv_name: customerInvoiceName,
+                items: updatedItems,
+                amount: amount,
+                runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
+                runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+            });
+        }
+    });
+
+    $(".table-container #tbody tr#tabletr").each(function (index) {
+        const row = $(this);
+        const customerInvoiceNo = row.find(".customer-inv-no").val() || "";
+        const customerInvoiceName = row.find(".customer-inv-name").val() || "";
+        const amount = row.find(".amount-field").val() || 0;
+        let hasCheckedItem = false;
+        let newItem = [];
+
+        row.find(".form-check").each(function () {
+            const checkbox = $(this).find("input[type='checkbox']");
+            const inputField = $(this).find("input[type='text']");
+            const itemName = $(this).find("label").text().trim();
+
+            if (checkbox.prop("checked")) {
+                hasCheckedItem = true;
+                newItem.push({
+                    item_name: itemName,
+                    item_value: inputField.val() || "0"
+                });
+            }
+        });
+
+        if (hasCheckedItem) {
+            formData.new_items.push({
+                item_row_id: `${index + 1}`,
+                customer_inv_no: customerInvoiceNo,
+                customer_inv_name: customerInvoiceName,
+                items: newItem,
+                amount: amount,
+                runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
+                runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+            });
+        }
+    });
+
+    fetch("process_update_invoice.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+    });
+});
+
+
     </script>
 
 

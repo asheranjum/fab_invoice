@@ -291,6 +291,8 @@ mysqli_close($conn);
     <script>
         $(document).ready(function() {
 
+          
+
             $('#runsheet_no').append(<?php echo $newInvoice;?>+'1001')
 
             var today = new Date();
@@ -302,42 +304,50 @@ mysqli_close($conn);
             let currentRunsheet = null; // Store current runsheet data
             let runsheetIndex = 0; // Unique identifier for runsheets
             $(".add-runsheet-button").click(function() {
-                // Get Runsheet details using prompt()
-                let runsheetNumber = prompt("Enter Runsheet Number:");
-                if (runsheetNumber === null || runsheetNumber.trim() === "") return; // Exit if empty or canceled
 
-                let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
-                if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
-                runsheetIndex++; // Increment unique runsheet index
-                // Validate date format (basic check)
-                // if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
-                //     alert("Invalid date format. Please use YYYY-MM-DD.");
-                //     return;
-                // }
-
-                // Store current runsheet details for new rows
-                currentRunsheet = {
-                    number: runsheetNumber,
-                    date: runsheetDate
-                };
-
-                // Runsheet HTML template
-                let runsheetRow = `
-            
-                <tr>
-                    <th colspan="3"  id="runsheet-${runsheetIndex}">
-                        <div style=" gap: 50px; display: flex;">
-                            <strong>Runsheet No: ${runsheetNumber}</strong>
-                            <strong>Runsheet Date: ${runsheetDate}</strong>
-                            <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
-                        </div>
-                    </th>
-                </tr>
-           `;
-
-                // Append runsheet below the last item row
-                $(".table-container tbody").append(runsheetRow);
+                addRunSheetValues()
             });
+
+            // addRunSheetValues()
+            
+            function addRunSheetValues() {
+               
+               // Get Runsheet details using prompt()
+               let runsheetNumber = prompt("Enter Runsheet Number:");
+               if (runsheetNumber === null || runsheetNumber.trim() === "") return; // Exit if empty or canceled
+
+               let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
+               if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
+               runsheetIndex++; // Increment unique runsheet index
+               // Validate date format (basic check)
+               // if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
+               //     alert("Invalid date format. Please use YYYY-MM-DD.");
+               //     return;
+               // }
+
+               // Store current runsheet details for new rows
+               currentRunsheet = {
+                   number: runsheetNumber,
+                   date: runsheetDate
+               };
+
+               // Runsheet HTML template
+               let runsheetRow = `
+           
+               <tr>
+                   <th colspan="3"  id="runsheet-${runsheetIndex}">
+                       <div style=" gap: 50px; display: flex;">
+                           <strong>Runsheet No: ${runsheetNumber}</strong>
+                           <strong>Runsheet Date: ${runsheetDate}</strong>
+                           <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
+                       </div>
+                   </th>
+               </tr>
+               `;
+
+               // Append runsheet below the last item row
+               $(".table-container tbody").append(runsheetRow);
+           }
 
             // Event delegation for dynamically added "Remove" buttons
             $(document).on("click", ".remove-runsheet", function() {
@@ -428,10 +438,11 @@ mysqli_close($conn);
                 }
 
                 for (let i = 0; i < newRows; i++) {
+                   
                     const lastRow = $(".table-container tbody tr#tabletr").last();
                     const newRow = lastRow.clone();
                     const rowIndex = $(".table-container tbody tr#tabletr").length;
-
+                    
                     newRow.find("input, select").each(function() {
                         if (this.type === "checkbox") {
                             this.checked = false;
@@ -563,8 +574,6 @@ mysqli_close($conn);
                     const inputField = $(this).find("input[type='text']");
                  
                     if (checkbox.prop("checked")) {
-                        console.log(row.attr("data-runsheet-number"));
-                        console.log(row.attr("data-runsheet-date"));
                         formData.items.push({
                             item_row_id: `${index + 1}`,
                             customer_inv_no: customerInvoiceNo,
@@ -572,8 +581,8 @@ mysqli_close($conn);
                             item_name: $(this).find("label").text().trim(),
                             item_value: inputField.val() || 0,
                             amount: amount,
-                            runsheet_number: row.attr("data-runsheet-number") || "",
-                            runsheet_date: row.attr("data-runsheet-date") || ""
+                            runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
+                            runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
                         });
                     }
                 });
@@ -587,13 +596,13 @@ mysqli_close($conn);
                         item_name: selectField.find("option:selected").text().trim(),
                         item_value: selectField.siblings("input[type='text']").val() || 0,
                         amount: amount,
-                        runsheet_number: row.attr("data-runsheet-number") || "",
-                        runsheet_date: row.attr("data-runsheet-date") || ""
+                        runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
+                        runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
                     });
                 }
             });
 
-
+            console.log(formData)
             fetch("save_invoice.php", {
                     method: "POST",
                     headers: {
