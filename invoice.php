@@ -52,13 +52,12 @@ mysqli_close($conn);
 
                 <form id="invoiceForm" class="form-group p-1">
                     <div class="topbtngrp">
-                        <button type="button" class="btn btn-primary add-button">Add Row</button>
-                        <button type="button" class="btn btn-danger remove-button">Remove Row</button>
+                        <!-- <button type="button" class="btn btn-primary add-button">Add Row</button> -->
+                        <!-- <button type="button" class="btn btn-danger remove-button">Remove Row</button> -->
+                        <button type="button" class="btn btn-dark  add-bulk-button">Add Row</button>
+                        <button type="button" class="btn btn-dark remove-bulk-button">Remove Row</button>
+                        <button type="button" class="btn btn-dark add-runsheet-button">Add Runsheet</button>
                         <button type="submit" class="btn btn-success export-button">Save Invoice</button>
-                        <button type="button" class="btn btn-secondary  add-bulk-button">Add Bulk Rows</button>
-                        <button type="button" class="btn btn-warning remove-bulk-button">Remove Bulk Rows</button>
-                        <button type="button" class="btn btn-info add-runsheet-button">Add Runsheet</button>
-
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -130,14 +129,14 @@ mysqli_close($conn);
                     </thead>
                     <tbody>
 
-                        <tr>
+                        <!-- <tr>
                             <th colspan="3">
                                 <div style=" gap: 50px; display: flex;">
                                     <strong>Runsheet No:    <span id="runsheet_no"></span> </strong>
                                     <strong>Runsheet Date:  <span id="runsheet_date"></span> </strong>
                                 </div>
                             </th>
-                        </tr>
+                        </tr> -->
 
                         <tr id="tabletr">
                           
