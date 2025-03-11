@@ -25,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $newItems = $input['new_items'] ?? [];
     }
 
+    // print_r($items);
+    // die();
         
     // Update invoice details
     $sqlUpdate = "UPDATE invoice SET date=?, company=?, address=?, phone=?, postal_code =?, abn=?, runsheet=? WHERE invoice_id=?";
@@ -44,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
             $runsheet_number = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
             $runsheet_date = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
-           
+          
             foreach ($item['items'] as $entry) {
                 $itemName = mysqli_real_escape_string($conn, $entry['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $entry['item_value'] ?? '0');
@@ -55,7 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmtCheck->bind_param("iis", $invoiceId, $itemRowId, $itemName);
                 $stmtCheck->execute();
                 $result = $stmtCheck->get_result()->fetch_assoc();
-    
+                // print_r($result['count']);
+                // die();
                 if ($result['count'] > 0) {
                   
                     // **Update existing item**

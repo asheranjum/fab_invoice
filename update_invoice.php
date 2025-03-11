@@ -43,6 +43,7 @@ foreach ($invoiceData['items'] as $item) {
         $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
             'custom_invoice_no' => $customInvoiceNo,
             'custom_invoice_name' => $customInvoiceName,
+            'item_row_id' => $itemRowId,
             'items' => []
         ];
     }
@@ -77,7 +78,8 @@ foreach ($groupedItems as $runsheetNumber => &$runsheetData) {
 // If you want to sort the entire $groupedItems array by runsheet_number or any other field, use ksort or uksort
 ksort($groupedItems); // Sort by runsheetNumber in ascending order
 
-
+// print_r($groupedItems);
+// die();
 
 // var_export($groupedItems);
 // die();
@@ -315,8 +317,8 @@ mysqli_close($conn);
         </th>
     </tr>
 
-    <?php foreach ($runsheetData['items'] as $itemRowId => $data): ?>
-        <tr data-item-row-id="<?= $itemRowId ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+    <?php foreach ($runsheetData['items'] as $itemRowId => $data):  ?>
+        <tr data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
             <td>
                 Name:
                 <input type="text" name="customer_invoice_name[]" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
@@ -690,6 +692,7 @@ mysqli_close($conn);
     $(".table-container #tbody tr[data-item-row-id]").each(function () {
         const row = $(this);
         const itemRowId = row.attr("data-item-row-id"); 
+        // console.log('itemRowId',itemRowId)
         const customerInvoiceNo = row.find(".customer-inv-no").val() || "";
         const customerInvoiceName = row.find(".customer-inv-name").val() || "";
         const amount = row.find(".amount-field").val() || 0;
