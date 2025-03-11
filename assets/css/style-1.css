@@ -21,11 +21,27 @@
 
 .create-btn{
    color: #fff;
+   background: #011f7f;
    font-weight: bold;
    bottom: 10px !important;
    left: 0px !important;
+
+&:hover{
+   background: #011f7f;
+   color: #fff;
 }
 
+}
+
+.search-icon{
+    background: #fc9d01;
+    color: #fff;
+
+    &:hover{
+        background: #fc9d01;
+        color: #fff;
+     }
+}
 /* Table */
 
 .table-container {
@@ -37,11 +53,50 @@
 .table thead th {
     position: sticky;
     top: 0;
-    background-color: #000000;
-    color: #fff;
+    background: #fc9d01;
+    color: #011f7f;
     font-size:18px;
     font-weight: bold;
     z-index: 1;
+}
+
+.action-btn{
+    background: #011f7f;
+    color: #fff;
+
+   &:hover{
+    background: #fc9d01;
+   } 
+}
+
+
+.page-controls{
+    background: #fc9d01 !important;
+    color: #fff !important;
+
+    &:hover {
+        background: #011f7f!important;
+    } 
+ }
+ 
+
+/* Default pagination item */
+.page-item.page-indexing a {
+    color: #fff !important;
+    background: #011f7f!important;;
+    border: 1px solid #fff;
+}
+
+/* Hover state */
+.page-item.page-indexing a:hover {
+    background: #fc9d01 !important;
+}
+
+/* Active state */
+.page-item.active a,
+.page-item.page-indexing.active a {
+    background: #fc9d01!important;
+    border-color: #fff !important;
 }
 
 

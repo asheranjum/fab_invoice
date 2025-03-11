@@ -34,7 +34,7 @@ require 'session.php';
     <div class="row">
       <div class="col-md-4 mt-5">
         <div class="dropdown">
-          <button class="btn btn-dark btn-lg dropdown-toggle create-btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"> Create Invoice </button>
+          <button class="btn btn-lg create-btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"> Create Invoice </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a class="dropdown-item" href="invoice.php" target="_blank">Bedding/Furniture</a></li>
             <li><a class="dropdown-item" href="invoice.php" target="_blank">Electric</a></li>
@@ -47,7 +47,7 @@ require 'session.php';
       <div class="col-md-3 d-flex mb-2">
         <form method="GET" action="index.php" class="d-flex w-100">
           <input class="form-control" type="search" name="search" placeholder="Search By Franchise Name" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" aria-label="Search">
-          <button class="btn btn-dark" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          <button class="btn search-icon" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
         </form>
       </div>
     </div>
@@ -87,14 +87,13 @@ require 'session.php';
             <tbody>
               <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>
-                  <td><?php echo htmlspecialchars($row['date']); ?></td>
-                  <td><?php echo htmlspecialchars($row['company']); ?></td>
+                  <td style="color:#011f7f;"><?php echo htmlspecialchars($row['date']); ?></td>
+                  <td style="color:#011f7f;"><?php echo htmlspecialchars($row['company']); ?></td>
                   <td>
-                    <a href="pdf.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-download" style="font-size: 20px;" target="new" title="Download"></a>
-                    <a href="update_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-edit text-success" style="font-size: 20px;" target="new" title="Edit"></a>
-                    <a href="duplicate_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-clone text-danger" style="font-size: 20px;" title="Duplicate" onclick="return confirm('Are you sure you want to duplicate this invoice?');"></a>
-                    <a href="delete_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>" class="fa fa-trash text-danger" style="font-size: 20px;" title="Delete" onclick="return confirm('Are you sure you want to delete this invoice?');"></a>
-
+                    <button type="button" class="btn action-btn" onclick="window.open('pdf.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>', '_blank')">Download PDF</button>
+                    <button type="button" class="btn action-btn" onclick="window.open('update_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>', '_blank')">Edit</button>
+                    <button type="button" class="btn action-btn" onclick="location.href='duplicate_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>'">Duplicate</button>
+                    <button type="button" class="btn action-btn" onclick="if(confirm('Are you sure you want to delete this invoice?')) location.href='delete_invoice.php?invoice_id=<?php echo urlencode($row['invoice_id']); ?>'">Delete</button>
                   </td>
                 </tr>
               <?php endwhile; ?>
@@ -107,16 +106,16 @@ require 'session.php';
         <div class="col-md-12 ml-3 mt-5">
           <nav>
             <ul class="pagination justify-content-center">
-              <li class="page-item <?php echo ($current_page == 1) ? 'disabled' : ''; ?>">
-                <a class="page-link" href="index.php?page=<?php echo ($current_page - 1); ?><?php echo $search_query ? '&search=' . urlencode($search_query) : ''; ?>" tabindex="-1">Previous</a>
+              <li class="page-item <?php echo ($current_page == 1) ? '' : ''; ?>">
+                <a class="page-link page-controls" href="index.php?page=<?php echo ($current_page - 1); ?><?php echo $search_query ? '&search=' . urlencode($search_query) : ''; ?>" tabindex="-1">Previous</a>
               </li>
               <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <li class="page-item <?php echo ($i == $current_page) ? 'active' : ''; ?>">
-                  <a class="page-link" href="index.php?page=<?php echo $i; ?><?php echo $search_query ? '&search=' . urlencode($search_query) : ''; ?>"><?php echo $i; ?></a>
+                <li class="page-item page-indexing<?php echo ($i == $current_page) ? 'active' : ''; ?>">
+                  <a class="page-link page-indexing" href="index.php?page=<?php echo $i; ?><?php echo $search_query ? '&search=' . urlencode($search_query) : ''; ?>"><?php echo $i; ?></a>
                 </li>
               <?php endfor; ?>
-              <li class="page-item <?php echo ($current_page == $total_pages) ? 'disabled' : ''; ?>">
-                <a class="page-link" href="index.php?page=<?php echo ($current_page + 1); ?><?php echo $search_query ? '&search=' . urlencode($search_query) : ''; ?>">Next</a>
+              <li class="page-item <?php echo ($current_page == $total_pages) ? '' : ''; ?>">
+                <a class="page-link page-controls" href="index.php?page=<?php echo ($current_page + 1); ?><?php echo $search_query ? '&search=' . urlencode($search_query) : ''; ?>">Next</a>
               </li>
             </ul>
           </nav>
