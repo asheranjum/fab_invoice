@@ -129,14 +129,14 @@ mysqli_close($conn);
                     </thead>
                     <tbody>
 
-                        <!-- <tr>
+                        <tr>
                             <th colspan="3">
                                 <div style=" gap: 50px; display: flex;">
                                     <strong>Runsheet No:    <span id="runsheet_no"></span> </strong>
                                     <strong>Runsheet Date:  <span id="runsheet_date"></span> </strong>
                                 </div>
                             </th>
-                        </tr> -->
+                        </tr>
 
                         <tr id="tabletr">
                           
