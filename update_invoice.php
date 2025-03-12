@@ -320,10 +320,9 @@ mysqli_close($conn);
                             <?php foreach ($runsheetData['items'] as $itemRowId => $data):  ?>
                                 <tr id="tabletr" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
-                                        Name:
-                                        <input type="text" name="customer_invoice_name[]" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
-                                        No:
-                                        <input type="text" name="customer_invoice_no[]" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
+                                        <input type="text" name="customer_invoice_name[]" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
+                                      
+                                        <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
                                     </td>
                                     <td style="padding:0px">
                                         <table class="checkbox-table">
@@ -345,6 +344,40 @@ mysqli_close($conn);
                                                     'WATERCON+' => 'WATERCON+',
                                                     'DOOR/R+' => 'DOOR/R+',
                                                 ];
+                                                $pupOptions = [
+                                                    '1' => 'P/UP(1)',
+                                                    '2' => 'P/UP(2)',
+                                                    '3' => 'P/UP(3)',
+                                                    '4' => 'P/UP(4)',
+                                                    '5' => 'P/UP(5)',
+                                                    '6' => 'P/UP(6)',
+                                                    '7' => 'P/UP(7)',
+                                                    '8' => 'P/UP(8)',
+                                                    '9' => 'P/UP(9)',
+                                                    '10' => 'P/UP(10)'
+                                                ];
+                                                 // Check for any key matching P/UP(x)
+                                                $selectedPUP = null; // To store the matched P/UP key
+
+                                                // print_r($selectedPUP);
+
+                                                foreach ($data as $key => $value) {
+                                                 
+                                                
+                                                    if (preg_match('/^P\/UP\(\d+\)$/', $key)) {
+                                                        $selectedPUP = $key; // Match the first found P/UP key
+                                                        break;
+                                                    }
+                                                }
+                                               
+                                                // If a P/UP key is found, add it dynamically
+                                                if ($selectedPUP) {
+                                                    $allOptions[$selectedPUP] = $selectedPUP;
+                                                } else {
+                                                    $pupKey = 'P/UP';
+                                                    $allOptions[$pupKey] = 'P/UP';
+                                                }
+                                               
                                                 ?>
 
                                                 <?php $totalValue = 0; 
@@ -352,14 +385,35 @@ mysqli_close($conn);
                                                         $value = isset($data['items'][$key]) ? (float)$data['items'][$key]['value'] : 0.00;
                                                         $totalValue += $value;
                                                 ?>
+                                                    
+
                                                     <td>
-                                                        <div class="form-check">
-                                                            <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
-                                                            <input type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemRowId ?>][<?=  strtolower($label)  ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
-                                                            <label class="form-check-label"><?= htmlspecialchars($label) ?></label>
-                                                            <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label)?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
-                                                        </div>
+                                                        <?php if (strpos($key, 'P/UP') === 0): ?>
+                                                            <!-- Select Dropdown for P/UP options -->
+                                                            <select id="pup-<?= $key ?>" name="item[<?= $key ?>][pup]" class="form-contro" style="width:85px;">
+                                                                <?php foreach ($pupOptions as $id => $label): ?>
+                                                                    <option value="<?= $id ?>" <?= isset($data['items'][$id]) ? 'selected' : '' ?>>
+                                                                        <?= $label ?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+
+                                                            <input type="text" name="item[<?= $id ?>][pup_value]" value="<?= $data['items'][$key.'(2)']['value'] ?>" class="form-control mt-1" disabled placeholder="">
+                                                        <?php else: ?>
+                                                            
+                                                            
+                                                                <div class="form-check">
+                                                                    <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
+                                                                    <input type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemRowId ?>][<?=  strtolower($label)  ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
+                                                                    <label class="form-check-label"><?= htmlspecialchars($label) ?></label>
+                                                                    <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label)?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
+                                                                </div>
+                                                           
+
+                                                        <?php endif; ?>
                                                     </td>
+
+                                                    
                                                 <?php endforeach; ?>
                                             </tr>
                                         </table>
