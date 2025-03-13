@@ -318,11 +318,11 @@ mysqli_close($conn);
                             </tr>
 
                             <?php foreach ($runsheetData['items'] as $itemRowId => $data):  ?>
-                                <tr id="tablet" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                <tr id="tablet"   data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
-                                        <input type="text" name="customer_invoice_name[]" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
-                                      
                                         <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
+                                        <input type="text" name="customer_invoice_name[]" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
+
                                     </td>
                                     <td style="padding:0px">
                                         <table class="checkbox-table">
@@ -356,22 +356,22 @@ mysqli_close($conn);
                                                     '9' => 'P/UP(9)',
                                                     '10' => 'P/UP(10)'
                                                 ];
-                                                 // Check for any key matching P/UP(x)
+                                                // Check for any key matching P/UP(x)
                                                 $selectedPUP = null; // To store the matched P/UP key
 
                                                 // print_r($selectedPUP);
 
                                                 foreach ($data as $key => $value) {
-                                                 
-                                                
+
+
                                                     foreach ($data['items'] as $key => $item) {
-                                                        if (strpos($key, 'P/UP') === 0) { 
+                                                        if (strpos($key, 'P/UP') === 0) {
                                                             $selectedPUP = $key;
                                                             break;
                                                         }
                                                     }
                                                 }
-                                               
+
                                                 // If a P/UP key is found, add it dynamically
                                                 if ($selectedPUP) {
                                                     $allOptions[$selectedPUP] = $selectedPUP;
@@ -379,15 +379,15 @@ mysqli_close($conn);
                                                     $pupKey = 'P/UP';
                                                     $allOptions[$pupKey] = 'P/UP';
                                                 }
-                                               
+
                                                 ?>
 
-                                                <?php $totalValue = 0; 
-                                                    foreach ($allOptions as $key => $label): 
-                                                        $value = isset($data['items'][$key]) ? (float)$data['items'][$key]['value'] : 0.00;
-                                                        $totalValue += $value;
+                                                <?php $totalValue = 0;
+                                                foreach ($allOptions as $key => $label):
+                                                    $value = isset($data['items'][$key]) ? (float)$data['items'][$key]['value'] : 0.00;
+                                                    $totalValue += $value;
                                                 ?>
-                                                    
+
 
                                                     <td>
                                                         <?php if (strpos($key, 'P/UP') === 0): ?>
@@ -402,18 +402,18 @@ mysqli_close($conn);
 
                                                             <input type="text" name="item[<?= $itemRowId ?>][pup_value]" value="<?= isset($data['items'][$selectedPUP]) ? number_format((float)$data['items'][$selectedPUP]['value'], 2) : '' ?>" class="form-control mt-1">
                                                         <?php else: ?>
-                                                            
-                                                                <div class="form-check">
-                                                                    <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
-                                                                    <input id="<?= $label.'-'.$itemRowId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemRowId ?>][<?=  strtolower($label)  ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
-                                                                    <label for="<?= $label.'-'.$itemRowId ?>"  class="form-check-label"><?= htmlspecialchars($label) ?></label>
-                                                                    <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label)?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
-                                                                </div>
-                                                           
+
+                                                            <div class="form-check">
+                                                                <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
+                                                                <input id="<?= $label . '-' . $itemRowId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemRowId ?>][<?= strtolower($label)  ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
+                                                                <label for="<?= $label . '-' . $itemRowId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
+                                                                <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
+                                                            </div>
+
                                                         <?php endif; ?>
                                                     </td>
 
-                                                    
+
                                                 <?php endforeach; ?>
                                             </tr>
                                         </table>
@@ -482,13 +482,13 @@ mysqli_close($conn);
     <script>
         $(document).ready(function() {
 
-            $('#runsheet_no').append(<?php echo $invoiceId; ?> + '1001')
+            // $('#runsheet_no').append(<?php echo $invoiceId; ?> + '1001')
 
-            var today = new Date();
-            var formattedDate = today.toLocaleDateString(); // Format the date (e.g., "3/7/2025" in US format)
+            // var today = new Date();
+            // var formattedDate = today.toLocaleDateString(); // Format the date (e.g., "3/7/2025" in US format)
 
             // Append the date to the element
-            $('#runsheet_date').append(formattedDate);
+            // $('#runsheet_date').append(formattedDate);
 
             const maxRows = 25;
             let currentRunsheet = null; // Store current runsheet data
@@ -638,12 +638,6 @@ mysqli_close($conn);
                         } else if (this.type === "text" || this.type === "number") {
                             $(this).val(""); // Clear text or number inputs
                             $(this).prop("disabled", false); // Enable text inputs
-                        } 
-                        else {
-                            // $(this).val("").prop("disabled", true);
-                        }
-                        if ($(this).hasClass("customer-inv-no")) {
-                            $(this).prop("disabled", false).val("");
                         }
                     });
 
@@ -669,17 +663,27 @@ mysqli_close($conn);
                     newRow.find(".form-contro").attr("name", `item[${rowIndex}][pup]`);
                     newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
                     newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
-
-
+                    
+                    
+                    // Ensure new row gets Runsheet data
                     if (currentRunsheet) {
                         newRow.attr("data-runsheet-number", currentRunsheet.number);
                         newRow.attr("data-runsheet-date", currentRunsheet.date);
+                    } else {
+                        // Set default values if no runsheet is assigned
+                        newRow.attr("data-runsheet-number", "");
+                        newRow.attr("data-runsheet-date", "");
                     }
 
                     $(".table-container #tbody").append(newRow);
                     attachRowListeners(newRow);
+
+                    
+
+
                 }
             }
+            
 
             function removeRows(count) {
                 const rows = $(".table-container #tbody tr#tabletr");
@@ -744,27 +748,32 @@ mysqli_close($conn);
 
             const formData = {
                 invoice_id: <?php echo $invoiceId ?? ''; ?>,
-                date: $("input[name='date']").val(),
-                invoice: $("input[name='invoice']").val(),
-                company: $("input[name='company']").val(),
-                address: $("input[name='address']").val(),
-                phone: $("input[name='phone']").val(),
-                abn: $("input[name='abn']").val(),
-                runsheet: $("input[name='runsheet']").val(),
-                sub_total: $("#sub_total").val(),
-                tax_rate: $("#tax_rate").val(),
-                total_cost: $("#total_cost").val(),
+                date: $("input[name='date']").val().trim(),
+                invoice: $("input[name='invoice']").val().trim(),
+                company: $("input[name='company']").val().trim(),
+                address: $("input[name='address']").val().trim(),
+                phone: $("input[name='phone']").val().trim(),
+                abn: $("input[name='abn']").val().trim(),
+                runsheet: $("input[name='runsheet']").val().trim(),
+                sub_total: $("#sub_total").val().trim(),
+                tax_rate: $("#tax_rate").val().trim(),
+                total_cost: $("#total_cost").val().trim(),
                 existing_items: [],
                 new_items: []
             };
 
+            let currentRunsheetNumber = $("#runsheet_no").text().trim();
+            let currentRunsheetDate = $("#runsheet_date").text().trim();
+
+            /** --------------------
+             * ✅ Collect Existing Items
+             * -------------------- **/
             $(".table-container #tbody tr[data-item-row-id]").each(function() {
                 const row = $(this);
                 const itemRowId = row.attr("data-item-row-id");
-                // console.log('itemRowId',itemRowId)
-                const customerInvoiceNo = row.find(".customer-inv-no").val() || "";
-                const customerInvoiceName = row.find(".customer-inv-name").val() || "";
-                const amount = row.find(".amount-field").val() || 0;
+                const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
+                const customerInvoiceName = row.find(".customer-inv-name").val().trim() || "";
+                const amount = row.find(".amount-field").val().trim() || "0";
                 let hasCheckedItem = false;
                 let updatedItems = [];
 
@@ -777,24 +786,24 @@ mysqli_close($conn);
                         hasCheckedItem = true;
                         updatedItems.push({
                             item_name: itemName,
-                            item_value: inputField.val() || "0"
+                            item_value: inputField.val().trim() || "0"
                         });
                     }
                 });
 
-                     //  Handle Select Dropdown for P/UP**
                 row.find("select").each(function() {
                     const select = $(this);
                     const selectedValue = select.val();
-                    const itemName = select.find("option:selected").text().trim();
 
-                    hasCheckedItem = true; // Mark item as checked
-                    updatedItems.push({
-                        item_name: itemName,
-                        item_value: selectedValue
-                    });
+                    if (selectedValue && selectedValue !== "0") {
+                        hasCheckedItem = true;
+                        updatedItems.push({
+                            item_name: select.find("option:selected").text().trim(),
+                            item_value: select.siblings("input[type='text']").val().trim() || "0"
+                        });
+                    }
                 });
-
+               
                 if (hasCheckedItem) {
                     formData.existing_items.push({
                         item_row_id: itemRowId,
@@ -802,17 +811,20 @@ mysqli_close($conn);
                         customer_inv_name: customerInvoiceName,
                         items: updatedItems,
                         amount: amount,
-                        runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
-                        runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+                        runsheet_number: row.attr("data-runsheet-number") || currentRunsheetNumber,
+                        runsheet_date: row.attr("data-runsheet-date") || currentRunsheetDate
                     });
                 }
             });
 
+            /** --------------------
+             * ✅ Collect New Items
+             * -------------------- **/
             $(".table-container #tbody tr#tabletr").each(function(index) {
                 const row = $(this);
-                const customerInvoiceNo = row.find(".customer-inv-no").val() || "";
-                const customerInvoiceName = row.find(".customer-inv-name").val() || "";
-                const amount = row.find(".amount-field").val() || 0;
+                const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
+                const customerInvoiceName = row.find(".customer-inv-name").val().trim() || "";
+                const amount = row.find(".amount-field").val().trim() || "0";
                 let hasCheckedItem = false;
                 let newItem = [];
 
@@ -825,35 +837,62 @@ mysqli_close($conn);
                         hasCheckedItem = true;
                         newItem.push({
                             item_name: itemName,
-                            item_value: inputField.val() || "0"
+                            item_value: inputField.val().trim() || "0"
                         });
                     }
                 });
-                        // **FIX: Capture Select Dropdown Values**
-        row.find("select").each(function() {
-            const select = $(this);
-            const selectedValue = select.val();
-            const itemName = select.find("option:selected").text().trim();
 
-            hasCheckedItem = true; // Mark item as checked
-            newItem.push({
-                item_name: itemName,
-                item_value: selectedValue
-            });
-        });
-                if (hasCheckedItem) {
+                row.find("select").each(function() {
+                    const select = $(this);
+                    const selectedValue = select.val();
+
+                    if (selectedValue && selectedValue !== "0") {
+                        hasCheckedItem = true;
+                        newItem.push({
+                            item_name: select.find("option:selected").text().trim(),
+                            item_value: select.siblings("input[type='text']").val().trim() || "0"
+                        });
+                    }
+                });
+
+                
+                if (hasCheckedItem && newItem.length > 0) {
                     formData.new_items.push({
-                        item_row_id: `${index + 1}`,
+                        item_row_id: `new_${index + 1}`,
                         customer_inv_no: customerInvoiceNo,
                         customer_inv_name: customerInvoiceName,
                         items: newItem,
                         amount: amount,
-                        runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
-                        runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+                        runsheet_number: row.attr("data-runsheet-number") || 0,
+                        runsheet_date: row.attr("data-runsheet-date") || 0
                     });
                 }
             });
 
+            /** --------------------
+             * ✅ Validation: Ensure Required Fields Are Filled
+             * -------------------- **/
+            if (!formData.invoice_id || !formData.date || !formData.invoice || !formData.company) {
+                alert("Please fill in all required invoice details.");
+                return;
+            }
+
+            // if (
+            //     formData.existing_items.some(item => !item.runsheet_number || !item.runsheet_date) ||
+            //     formData.new_items.some(item => !item.runsheet_number || !item.runsheet_date)
+            // ) {
+            //     alert("Each item must have a Runsheet Number and Runsheet Date.");
+            //     return;
+            // }
+
+            /** --------------------
+             * ✅ Debugging: Log the Data Before Sending
+             * -------------------- **/
+            console.log("Final Form Data:", JSON.stringify(formData, null, 2));
+
+            /** --------------------
+             * ✅ Submit Data to API
+             * -------------------- **/
             fetch("process_update_invoice.php", {
                     method: "POST",
                     headers: {
@@ -864,14 +903,15 @@ mysqli_close($conn);
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
+                        alert("Invoice successfully updated!");
+                        // location.reload(); // Refresh page after successful submission
                     } else {
-                        alert("Error: " + data.message);
+                        alert("Error: " + (data.message || "Unknown error"));
                     }
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    alert("An error occurred. Please try again.");
+                    alert("An error occurred while submitting. Please try again.");
                 });
         });
     </script>
