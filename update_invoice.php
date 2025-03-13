@@ -318,7 +318,7 @@ mysqli_close($conn);
                             </tr>
 
                             <?php foreach ($runsheetData['items'] as $itemRowId => $data):  ?>
-                                <tr id="tabletr" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                <tr id="tablet" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
                                         <input type="text" name="customer_invoice_name[]" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
                                       
@@ -364,9 +364,11 @@ mysqli_close($conn);
                                                 foreach ($data as $key => $value) {
                                                  
                                                 
-                                                    if (preg_match('/^P\/UP\(\d+\)$/', $key)) {
-                                                        $selectedPUP = $key; // Match the first found P/UP key
-                                                        break;
+                                                    foreach ($data['items'] as $key => $item) {
+                                                        if (strpos($key, 'P/UP') === 0) { 
+                                                            $selectedPUP = $key;
+                                                            break;
+                                                        }
                                                     }
                                                 }
                                                
@@ -392,24 +394,22 @@ mysqli_close($conn);
                                                             <!-- Select Dropdown for P/UP options -->
                                                             <select id="pup-<?= $key ?>" name="item[<?= $key ?>][pup]" class="form-contro" style="width:85px;">
                                                                 <?php foreach ($pupOptions as $id => $label): ?>
-                                                                    <option value="<?= $id ?>" <?= isset($data['items'][$id]) ? 'selected' : '' ?>>
+                                                                    <option value="<?= $id ?>" <?= ($selectedPUP === "P/UP($id)") ? 'selected' : '' ?>>
                                                                         <?= $label ?>
                                                                     </option>
                                                                 <?php endforeach; ?>
                                                             </select>
 
-                                                            <input type="text" name="item[<?= $id ?>][pup_value]" value="<?= $data['items'][$key.'(2)']['value'] ?>" class="form-control mt-1" disabled placeholder="">
+                                                            <input type="text" name="item[<?= $itemRowId ?>][pup_value]" value="<?= isset($data['items'][$selectedPUP]) ? number_format((float)$data['items'][$selectedPUP]['value'], 2) : '' ?>" class="form-control mt-1">
                                                         <?php else: ?>
-                                                            
                                                             
                                                                 <div class="form-check">
                                                                     <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
-                                                                    <input type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemRowId ?>][<?=  strtolower($label)  ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
-                                                                    <label class="form-check-label"><?= htmlspecialchars($label) ?></label>
+                                                                    <input id="<?= $label.'-'.$itemRowId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemRowId ?>][<?=  strtolower($label)  ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
+                                                                    <label for="<?= $label.'-'.$itemRowId ?>"  class="form-check-label"><?= htmlspecialchars($label) ?></label>
                                                                     <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label)?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
                                                                 </div>
                                                            
-
                                                         <?php endif; ?>
                                                     </td>
 
@@ -782,6 +782,19 @@ mysqli_close($conn);
                     }
                 });
 
+                     //  Handle Select Dropdown for P/UP**
+                row.find("select").each(function() {
+                    const select = $(this);
+                    const selectedValue = select.val();
+                    const itemName = select.find("option:selected").text().trim();
+
+                    hasCheckedItem = true; // Mark item as checked
+                    updatedItems.push({
+                        item_name: itemName,
+                        item_value: selectedValue
+                    });
+                });
+
                 if (hasCheckedItem) {
                     formData.existing_items.push({
                         item_row_id: itemRowId,
@@ -816,7 +829,18 @@ mysqli_close($conn);
                         });
                     }
                 });
+                        // **FIX: Capture Select Dropdown Values**
+        row.find("select").each(function() {
+            const select = $(this);
+            const selectedValue = select.val();
+            const itemName = select.find("option:selected").text().trim();
 
+            hasCheckedItem = true; // Mark item as checked
+            newItem.push({
+                item_name: itemName,
+                item_value: selectedValue
+            });
+        });
                 if (hasCheckedItem) {
                     formData.new_items.push({
                         item_row_id: `${index + 1}`,
