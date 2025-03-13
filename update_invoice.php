@@ -318,7 +318,7 @@ mysqli_close($conn);
                             </tr>
 
                             <?php foreach ($runsheetData['items'] as $itemRowId => $data):  ?>
-                                <tr id="tablet"   data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                <tr id="tabletr" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
                                         <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
                                         <input type="text" name="customer_invoice_name[]" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
@@ -617,7 +617,6 @@ mysqli_close($conn);
 
             function addRows(count) {
                 const rows = $(".table-container #tbody tr#tabletr");
-
                 let currentRows = rows.length;
                 let newRows = Math.min(count, maxRows - currentRows);
 
@@ -628,8 +627,19 @@ mysqli_close($conn);
 
                 for (let i = 0; i < newRows; i++) {
                     const lastRow = $(".table-container #tbody tr#tabletr").last();
+
+                    if (lastRow.length === 0) {
+                        alert("No existing rows found to clone.");
+                        return;
+                    }
+
+                    // ✅ Get Runsheet Data from Last Row
+                    const lastRunsheetNumber = lastRow.attr("data-runsheet-number") || "";
+                    const lastRunsheetDate = lastRow.attr("data-runsheet-date") || "";
+
                     const newRow = lastRow.clone();
                     newRow.removeAttr("style");
+
                     const rowIndex = $(".table-container #tbody tr#tabletr").length;
 
                     newRow.find("input, select").each(function() {
@@ -663,27 +673,28 @@ mysqli_close($conn);
                     newRow.find(".form-contro").attr("name", `item[${rowIndex}][pup]`);
                     newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
                     newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
-                    
-                    
-                    // Ensure new row gets Runsheet data
+
+                    // // ✅ Set Runsheet Data for the New Row
+                    // newRow.attr("data-runsheet-number", lastRunsheetNumber);
+                    // newRow.attr("data-runsheet-date", lastRunsheetDate);
+
+                    // ✅ Use latest runsheet data if available
                     if (currentRunsheet) {
                         newRow.attr("data-runsheet-number", currentRunsheet.number);
                         newRow.attr("data-runsheet-date", currentRunsheet.date);
                     } else {
-                        // Set default values if no runsheet is assigned
-                        newRow.attr("data-runsheet-number", "");
-                        newRow.attr("data-runsheet-date", "");
+                        // Default to empty if no runsheet has been added
+                        newRow.attr("data-runsheet-number", lastRunsheetNumber);
+                        newRow.attr("data-runsheet-date", lastRunsheetDate);
                     }
+        
 
                     $(".table-container #tbody").append(newRow);
                     attachRowListeners(newRow);
-
-                    
-
-
                 }
             }
-            
+
+
 
             function removeRows(count) {
                 const rows = $(".table-container #tbody tr#tabletr");
@@ -773,6 +784,7 @@ mysqli_close($conn);
                 const itemRowId = row.attr("data-item-row-id");
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
                 const customerInvoiceName = row.find(".customer-inv-name").val().trim() || "";
+
                 const amount = row.find(".amount-field").val().trim() || "0";
                 let hasCheckedItem = false;
                 let updatedItems = [];
@@ -803,7 +815,7 @@ mysqli_close($conn);
                         });
                     }
                 });
-               
+
                 if (hasCheckedItem) {
                     formData.existing_items.push({
                         item_row_id: itemRowId,
@@ -855,7 +867,7 @@ mysqli_close($conn);
                     }
                 });
 
-                
+
                 if (hasCheckedItem && newItem.length > 0) {
                     formData.new_items.push({
                         item_row_id: `new_${index + 1}`,
