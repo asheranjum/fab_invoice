@@ -33,7 +33,7 @@ mysqli_close($conn);
     <link rel="stylesheet" href="assets/css/style-2.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
 </head>
 
 <body>
@@ -132,19 +132,19 @@ mysqli_close($conn);
                         <tr>
                             <th colspan="3">
                                 <div style=" gap: 50px; display: flex;">
-                                    <strong>Runsheet No:    <span id="runsheet_no"></span> </strong>
-                                    <strong>Runsheet Date:  <span id="runsheet_date"></span> </strong>
+                                    <strong>Runsheet No: <span id="runsheet_no"></span> </strong>
+                                    <strong>Runsheet Date: <span id="runsheet_date"></span> </strong>
                                 </div>
                             </th>
                         </tr>
 
                         <tr id="tabletr">
-                          
+
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Invoice Name">
                             </td>
-                            
+
                             <td>
                                 <div class="d-flex">
                                     <div class="form-check ">
@@ -289,84 +289,76 @@ mysqli_close($conn);
 
     <script>
         $(document).ready(function() {
-
-          
-
-            $('#runsheet_no').append(<?php echo $newInvoice;?>+'1001')
-
-            var today = new Date();
-            var formattedDate = today.toLocaleDateString(); // Format the date (e.g., "3/7/2025" in US format)
-
-            // Append the date to the element
-            $('#runsheet_date').append(formattedDate);
             const maxRows = 25;
-            let currentRunsheet = null; // Store current runsheet data
-            let runsheetIndex = 0; // Unique identifier for runsheets
-            $(".add-runsheet-button").click(function() {
+            let currentRunsheet = null;
+            let runsheetIndex = 0;
 
-                addRunSheetValues()
-            });
+            initializePage();
 
-            // addRunSheetValues()
-            
+            $(".add-runsheet-button").click(addRunSheetValues);
+            $(".add-button").click(() => addRows(1));
+            $(".add-bulk-button").click(() => addRows(promptForRowCount("add")));
+            $(".remove-button").click(() => removeRows(1));
+            $(".remove-bulk-button").click(() => removeRows(promptForRowCount("remove")));
+
+            $("#invoiceForm").on("submit", handleFormSubmit);
+            $("#tax_rate, #other_cost").on("input", calculateSubTotal);
+
+            function initializePage() {
+                $('#runsheet_no').append(<?php echo $newInvoice; ?> + '1001');
+                $('#runsheet_date').append(new Date().toLocaleDateString());
+                attachRowListeners($(".table-container tbody tr#tabletr"));
+                calculateSubTotal();
+            }
+
+            function promptForRowCount(action) {
+                let count = prompt(`How many rows do you want to ${action}? (1-25)`, "1");
+                count = parseInt(count, 10);
+                if (isNaN(count) || count <= 0 || count > 25) {
+                    alert("Please enter a valid number between 1 and 25.");
+                    return 0;
+                }
+                return count;
+            }
+
             function addRunSheetValues() {
-               
-               // Get Runsheet details using prompt()
-               let runsheetNumber = prompt("Enter Runsheet Number:");
-               if (runsheetNumber === null || runsheetNumber.trim() === "") return; // Exit if empty or canceled
+                let runsheetNumber = prompt("Enter Runsheet Number:");
+                if (!runsheetNumber || runsheetNumber.trim() === "") return;
 
-               let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
-               if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
-               runsheetIndex++; // Increment unique runsheet index
-               // Validate date format (basic check)
-               // if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
-               //     alert("Invalid date format. Please use YYYY-MM-DD.");
-               //     return;
-               // }
+                let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
+                if (!runsheetDate || runsheetDate.trim() === "") return;
 
-               // Store current runsheet details for new rows
-               currentRunsheet = {
-                   number: runsheetNumber,
-                   date: runsheetDate
-               };
+                runsheetIndex++;
+                currentRunsheet = {
+                    number: runsheetNumber,
+                    date: runsheetDate
+                };
 
-               // Runsheet HTML template
-               let runsheetRow = `
-           
-               <tr>
-                   <th colspan="3"  id="runsheet-${runsheetIndex}">
-                       <div style=" gap: 50px; display: flex;">
-                           <strong>Runsheet No: ${runsheetNumber}</strong>
-                           <strong>Runsheet Date: ${runsheetDate}</strong>
-                           <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
-                       </div>
-                   </th>
-               </tr>
-               `;
+                let runsheetRow = `
+            <tr>
+                <th colspan="3" id="runsheet-${runsheetIndex}">
+                    <div style="gap: 50px; display: flex;">
+                        <strong>Runsheet No: ${runsheetNumber}</strong>
+                        <strong>Runsheet Date: ${runsheetDate}</strong>
+                        <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
+                    </div>
+                </th>
+            </tr>`;
+                $(".table-container tbody").append(runsheetRow);
+            }
 
-               // Append runsheet below the last item row
-               $(".table-container tbody").append(runsheetRow);
-           }
-
-            // Event delegation for dynamically added "Remove" buttons
             $(document).on("click", ".remove-runsheet", function() {
-                let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
-            
-                $("#" + runsheetId).remove(); // Remove the respective runsheet row
+                $("#" + $(this).attr("data-id")).remove();
             });
-            
+
             function calculateRowAmount(row) {
                 let amount = 0;
-
-                $(row).find(".form-checkboxes").each(function() {
-                    const inputField = $(this).closest(".form-check").find("input[type='text']");
-                    const value = parseFloat(inputField.val()) || 0;
-
-                    if (this.checked) amount += value;
+                $(row).find(".form-checkboxes:checked").each(function() {
+                    const value = parseFloat($(this).closest(".form-check").find("input[type='text']").val()) || 0;
+                    amount += value;
                 });
 
-                const selectField = $(row).find(".form-contro");
-                const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
+                const selectValue = parseFloat($(row).find(".form-contro").siblings("input[type='text']").val()) || 0;
                 amount += selectValue;
 
                 $(row).find(".amount-field").val(amount.toFixed(2));
@@ -375,48 +367,40 @@ mysqli_close($conn);
 
             function calculateSubTotal() {
                 let subTotal = 0;
-
                 $(".amount-field").each(function() {
                     subTotal += parseFloat($(this).val()) || 0;
                 });
 
                 const taxRate = parseFloat($("#tax_rate").val()) || 0;
                 const otherCost = parseFloat($("#other_cost").val()) || 0;
-                const total = subTotal + taxRate + otherCost;
-
                 $("#sub_total").val(subTotal.toFixed(2));
-                $("#total_cost").val(total.toFixed(2));
+                $("#total_cost").val((subTotal + taxRate + otherCost).toFixed(2));
             }
 
             function attachRowListeners(row) {
-                $(row).find(".form-checkboxes").off("change").on("change", function() {
+                $(row).find(".form-checkboxes").change(function() {
                     const inputField = $(this).closest(".form-check").find("input[type='text']");
                     inputField.prop("disabled", !this.checked).val("");
                     calculateRowAmount(row);
                 });
 
-                $(row).find(".form-contro").off("change").on("change", function() {
+                $(row).find(".form-contro").change(function() {
                     const inputField = $(this).siblings("input[type='text']");
-                    if ($(this).val() !== "") {
-                        inputField.prop("disabled", false);
-                    } else {
-                        inputField.prop("disabled", true).val("");
-                    }
+                    inputField.prop("disabled", !$(this).val()).val("");
                     calculateRowAmount($(this).closest("tr"));
                 });
 
-                $(row).find(".form-check input[type='text']").off("input").on("input", function() {
+                $(row).find(".form-check input[type='text']").on("input", function() {
                     calculateRowAmount(row);
                 });
 
-                $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
+                $(row).find("input[type='text']").keypress(function(e) {
                     if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
                         e.preventDefault();
                     }
                 });
 
-                $(row).find("#customer-inv-name").off("keypress").on("keypress", function(e) {
-                    // Allow all alphanumeric characters and special characters (including space)
+                $(row).find("#customer-inv-name").keypress(function(e) {
                     if (!/^[\w\s.,;!?()\-"'&@#$%^*+=<>_/|\\`~]+$/.test(e.key) && e.key !== "Backspace") {
                         e.preventDefault();
                     }
@@ -427,27 +411,21 @@ mysqli_close($conn);
             }
 
             function addRows(count) {
-                const rows = $(".table-container tbody tr#tabletr");
-                let currentRows = rows.length;
+                if (count <= 0) return;
+                let currentRows = $(".table-container tbody tr#tabletr").length;
                 let newRows = Math.min(count, maxRows - currentRows);
 
                 if (newRows <= 0) {
-                    alert("You cannot add more than " + maxRows + " rows.");
+                    alert(`You cannot add more than ${maxRows} rows.`);
                     return;
                 }
 
                 for (let i = 0; i < newRows; i++) {
-                   
-                    const lastRow = $(".table-container tbody tr#tabletr").last();
-                    const newRow = lastRow.clone();
+                    const newRow = $(".table-container tbody tr#tabletr").last().clone();
                     const rowIndex = $(".table-container tbody tr#tabletr").length;
-                    
+
                     newRow.find("input, select").each(function() {
-                        if (this.type === "checkbox") {
-                            this.checked = false;
-                        } else {
-                            // $(this).val("").prop("disabled", true);
-                        }
+                        if (this.type === "checkbox") this.checked = false;
                         if ($(this).hasClass("customer-inv-no")) {
                             $(this).prop("disabled", false).val("");
                         }
@@ -476,7 +454,6 @@ mysqli_close($conn);
                     newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
                     newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
 
-                   
                     if (currentRunsheet) {
                         newRow.attr("data-runsheet-number", currentRunsheet.number);
                         newRow.attr("data-runsheet-date", currentRunsheet.date);
@@ -488,8 +465,8 @@ mysqli_close($conn);
             }
 
             function removeRows(count) {
-                const rows = $(".table-container tbody tr#tabletr");
-                let currentRows = rows.length;
+                if (count <= 0) return;
+                let currentRows = $(".table-container tbody tr#tabletr").length;
 
                 if (currentRows <= 1) {
                     alert("You cannot remove the last row.");
@@ -507,78 +484,55 @@ mysqli_close($conn);
                 }
             }
 
-            $(".add-button").click(function() {
-                addRows(1);
-            });
+            function handleFormSubmit(e) {
+                e.preventDefault();
+                const formData = {
+                    date: $("input[name='date']").val(),
+                    invoice: $("input[name='invoice']").val(),
+                    company: $("input[name='company']").val(),
+                    address: $("input[name='address']").val(),
+                    phone: $("input[name='phone']").val(),
+                    postal_code: $("input[name='postal_code']").val(),
+                    abn: $("input[name='abn']").val(),
+                    runsheet: $("input[name='runsheet']").val(),
+                    sub_total: $("#sub_total").val(),
+                    tax_rate: $("#tax_rate").val(),
+                    other_cost: $("#other_cost").val(),
+                    total_cost: $("#total_cost").val(),
+                    items: []
+                };
 
-            $(".add-bulk-button").click(function() {
-                let count = prompt("How many rows do you want to add? (1-25)", "1");
-                count = parseInt(count, 10);
-                if (!isNaN(count) && count > 0 && count <= 25) {
-                    addRows(count);
-                } else {
-                    alert("Please enter a valid number between 1 and 25.");
-                }
-            });
+                $(".table-container tbody tr#tabletr").each(function(index) {
+                    const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
+                    const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
+                    const amount = $(this).find(".amount-field").val() || 0;
+                    let row = $(this);
+                    $(this).find(".form-check").each(function() {
+                        const checkbox = $(this).find("input[type='checkbox']");
+                        const inputField = $(this).find("input[type='text']");
 
-            $(".remove-button").click(function() {
-                removeRows(1);
-            });
+                        if (checkbox.prop("checked")) {
+                            formData.items.push({
+                                item_row_id: `${index + 1}`,
+                                customer_inv_no: customerInvoiceNo,
+                                customer_inv_name: customer_inv_name,
+                                item_name: $(this).find("label").text().trim(),
+                                item_value: inputField.val() || 0,
+                                amount: amount,
+                                runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
+                                runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+                            });
+                        }
+                    });
 
-            $(".remove-bulk-button").click(function() {
-                let count = prompt("How many rows do you want to remove?", "1");
-                count = parseInt(count, 10);
-                if (!isNaN(count) && count > 0) {
-                    removeRows(count);
-                } else {
-                    alert("Please enter a valid number.");
-                }
-            });
-
-            attachRowListeners($(".table-container tbody tr#tabletr"));
-            $("#tax_rate, #other_cost").on("input", calculateSubTotal);
-            calculateSubTotal();
-        });
-
-
-
-
-
-
-        $("#invoiceForm").on("submit", function(e) {
-            e.preventDefault();
-            const formData = {
-                date: $("input[name='date']").val(),
-                invoice: $("input[name='invoice']").val(),
-                company: $("input[name='company']").val(),
-                address: $("input[name='address']").val(),
-                phone: $("input[name='phone']").val(),
-                postal_code: $("input[name='postal_code']").val(),
-                abn: $("input[name='abn']").val(),
-                runsheet: $("input[name='runsheet']").val(),
-                sub_total: $("#sub_total").val(),
-                tax_rate: $("#tax_rate").val(),
-                other_cost: $("#other_cost").val(),
-                total_cost: $("#total_cost").val(),
-                items: []
-            };
-
-            $(".table-container tbody tr#tabletr").each(function(index) {
-                const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
-                const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
-                const amount = $(this).find(".amount-field").val() || 0;
-                let row = $(this);
-                $(this).find(".form-check").each(function() {
-                    const checkbox = $(this).find("input[type='checkbox']");
-                    const inputField = $(this).find("input[type='text']");
-                 
-                    if (checkbox.prop("checked")) {
+                    const selectField = $(this).find(".form-contro");
+                    if (selectField.val() !== "") {
                         formData.items.push({
                             item_row_id: `${index + 1}`,
                             customer_inv_no: customerInvoiceNo,
                             customer_inv_name: customer_inv_name,
-                            item_name: $(this).find("label").text().trim(),
-                            item_value: inputField.val() || 0,
+                            item_name: selectField.find("option:selected").text().trim(),
+                            item_value: selectField.siblings("input[type='text']").val() || 0,
                             amount: amount,
                             runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
                             runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
@@ -586,43 +540,27 @@ mysqli_close($conn);
                     }
                 });
 
-                const selectField = $(this).find(".form-contro");
-                if (selectField.val() !== "") {
-                    formData.items.push({
-                        item_row_id: `${index + 1}`,
-                        customer_inv_no: customerInvoiceNo,
-                        customer_inv_name: customer_inv_name,
-                        item_name: selectField.find("option:selected").text().trim(),
-                        item_value: selectField.siblings("input[type='text']").val() || 0,
-                        amount: amount,
-                        runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
-                        runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+                console.log(formData);
+                fetch("save_invoice.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(formData),
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            alert(data.message);
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred. Please try again.");
                     });
-                }
-            });
-
-            console.log(formData)
-            fetch("save_invoice.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData),
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        alert(data.message);
-                        isFormDirty = false; // Reset dirty flag on successful submission
-                        // window.location.href = "index.php";
-                    } else {
-                        alert("Error: " + data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                    alert("An error occurred. Please try again.");
-                });
+            }
         });
     </script>
 

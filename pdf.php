@@ -13,7 +13,7 @@ if ($invoiceId <= 0) {
 }
 
 // Fetch Invoice Data
-$sqlInvoice = "SELECT * FROM invoice WHERE invoice_id = ?";
+$sqlInvoice = "SELECT * FROM invoices WHERE id = ?";
 $stmt = $conn->prepare($sqlInvoice);
 $stmt->bind_param("i", $invoiceId);
 $stmt->execute();
@@ -69,13 +69,13 @@ while ($row = $resultItems->fetch_assoc()) {
 
 // Dynamic Values
 $date = $invoice['date'];
-$invoiceNo = $invoice['invoice'];
-$company = $invoice['company'];
+$invoiceNo = $invoice['invoice_number'];
+$company = $invoice['company_name'];
 $address = $invoice['address'];
 $phone = $invoice['phone'];
 $abn = $invoice['abn'];
 $postalCode = $invoice['postal_code'];
-$runSheetNo = $invoice['runsheet'];
+$runSheetNo = $invoice['runsheet_number'];
 
 $sub_total = $invoice['sub_total'];
 $tax_rate = $invoice['tax_rate'];

@@ -1,5 +1,4 @@
 <?php
-
 require 'session.php';
 require 'config/database.php';
 
@@ -15,63 +14,48 @@ if ($invoiceId) {
     $invoiceData = $invoiceData['invoice'];
 }
 
-$newInvoice = $invoiceData['invoice'];
+$newInvoice = $invoiceData['invoice'] ?? '';
 
 $groupedItems = [];
 
-foreach ($invoiceData['items'] as $item) {
-    $runsheetNumber = $item['runsheet_number'];
-    $runsheetDate = $item['runsheet_date'];
-    $itemRowId = $item['item_row_id'];
-    $itemName = $item['item_name'];
-    $itemValue = $item['item_value'];
-    $customInvoiceNo = $item['customer_invoice_no'];
-    $customInvoiceName = $item['customer_invoice_name'];
-    $createdAt = isset($item['created_at']) ? $item['created_at'] : null;
-    $rowOrder = isset($item['row_order']) ? $item['row_order'] : 0;
+if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
+    foreach ($invoiceData['items'] as $item) {
+        $runsheetNumber = $item['runsheet_number'];
+        $runsheetDate = $item['runsheet_date'];
+        $itemRowId = $item['item_row_id'];
+        $itemName = $item['item_name'];
+        $itemValue = $item['item_value'];
+        $customInvoiceNo = $item['customer_invoice_no'];
+        $customInvoiceName = $item['customer_invoice_name'];
+        $createdAt = isset($item['created_at']) ? $item['created_at'] : null;
 
-    // Initialize runsheet group
-    if (!isset($groupedItems[$runsheetNumber])) {
-        $groupedItems[$runsheetNumber] = [
-            'runsheet_date' => $runsheetDate,
-            'row_order' => $rowOrder, // Assign row_order to the runsheet level
-            'items' => []
+        // Initialize runsheet group
+        if (!isset($groupedItems[$runsheetNumber])) {
+            $groupedItems[$runsheetNumber] = [
+                'runsheet_date' => $runsheetDate,
+                'items' => []
+            ];
+        }
+
+        // Initialize item row
+        if (!isset($groupedItems[$runsheetNumber]['items'][$itemRowId])) {
+            $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
+                'custom_invoice_no' => $customInvoiceNo,
+                'custom_invoice_name' => $customInvoiceName,
+                'item_row_id' => $itemRowId,
+                'items' => []
+            ];
+        }
+
+        // Add the item with value and created_at timestamp
+        $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = [
+            'value' => $itemValue,
+            'created_at' => $createdAt
         ];
     }
-
-    // Initialize item row
-    if (!isset($groupedItems[$runsheetNumber]['items'][$itemRowId])) {
-        $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
-            'custom_invoice_no' => $customInvoiceNo,
-            'custom_invoice_name' => $customInvoiceName,
-            'item_row_id' => $itemRowId,
-            'items' => [],
-            'row_order' => $rowOrder // Store row_order
-        ];
-    }
-
-    // Add the item with value and created_at timestamp
-    $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = [
-        'value' => $itemValue,
-        'created_at' => $createdAt
-    ];
 }
-
-// Sort grouped items by `row_order` in descending order
-foreach ($groupedItems as $runsheetNumber => &$runsheetData) {
-    usort($runsheetData['items'], function ($a, $b) {
-        return $b['row_order'] - $a['row_order'];
-    });
-}
-
-unset($runsheetData); // Unset reference after sorting
-
-// print_r(json_encode($groupedItems));
-// die();
-
-// var_export($groupedItems);
-// die();
-
+print_r($groupedItems);
+die();
 // Close the connection
 mysqli_close($conn);
 ?>
@@ -104,35 +88,31 @@ mysqli_close($conn);
         <div class="row mt-3">
             <div class="col-md-8">
 
-                <form id="invoiceForm" class="form-group p-1">
+            <form id="invoiceForm" class="form-group p-1">
                     <div class="topbtngrp">
                         <button type="submit" class="btn btn-success export-button">Update Invoice</button>
-                        <button type="button" class="btn btn-secondary  add-bulk-button">Add Bulk Rows</button>
+                        <button type="button" class="btn btn-secondary add-bulk-button">Add Bulk Rows</button>
                         <button type="button" class="btn btn-warning remove-bulk-button">Remove Bulk Rows</button>
                         <button type="button" class="btn btn-info add-runsheet-button">Add Runsheet</button>
-
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <input type="hidden" name="invoice_id" value="<?php echo $invoiceId ?? ''; ?>">
                         <label for="date" class="form-label mb-0 me-2">DATE:</label>
-                        <input type="date" name="date" class="form-control form-control-sm custom-width me-3" style=" font-size: 18px;" value="<?php echo $invoiceData['date'] ?? ''; ?>">
-
+                        <input type="date" name="date" class="form-control form-control-sm custom-width me-3" style="font-size: 18px;" value="<?php echo $invoiceData['date'] ?? ''; ?>">
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
-
                         <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" readonly>
-
                     </div>
 
                     <h3 class="mt-1 mb-2 heading">Bill To:</h3>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>
-                        <input type="text" name="company" class="form-control w-50" placeholder="Type Company Name" value="<?php echo $invoiceData['company'] ?? ''; ?>">
+                        <input type="text" name="company" class="form-control w-50" placeholder="Type Company Name" value="<?php echo $invoiceData['company_name'] ?? ''; ?>">
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="address" class="form-label mb-0 me-4">ADDREESS:</label>
+                        <label for="address" class="form-label mb-0 me-4">ADDRESS:</label>
                         <input type="text" name="address" class="form-control custom-width-2" placeholder="Enter Address Here" value="<?php echo $invoiceData['address'] ?? ''; ?>">
                     </div>
 
@@ -144,9 +124,6 @@ mysqli_close($conn);
                     <div class="mb-2 d-flex align-items-center">
                         <label for="phone" class="form-label mb-0 me-2">PHONE NO:</label>
                         <input type="text" name="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="<?php echo $invoiceData['phone'] ?? ''; ?>">
-
-                        <!-- <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
-                        <input type="text" name="postal_code" class="form-control custom-width-3" placeholder="Postal Code" value=""> -->
                     </div>
 
                     <div class="mb-0 d-flex align-items-center">
@@ -296,10 +273,10 @@ mysqli_close($conn);
                         </tr>
 
 
-                        <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
+                        <?php foreach ($groupedItems as $runsheetNumber => $runsheetData):  ?>
 
                             <tr>
-                                <th colspan="3" data-order="<?= $runsheetData['row_order']; ?>">
+                                <th colspan="3" >
                                     <div style="gap: 50px; display: flex;">
                                         <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?></strong>
                                         <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?></strong>
@@ -308,6 +285,7 @@ mysqli_close($conn);
                             </tr>
 
                             <?php foreach ($runsheetData['items'] as $itemRowId => $data):  ?>
+                                
                                 <tr id="table_exitisng" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
                                         <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
@@ -862,7 +840,7 @@ mysqli_close($conn);
 
                 if (hasCheckedItem && newItem.length > 0) {
                     formData.new_items.push({
-                        item_row_id: `<?php echo $invoiceId ?? ''; ?>~${index + 1}`,
+                        item_row_id: `${index + 1}`,
                         customer_inv_no: customerInvoiceNo,
                         customer_inv_name: customerInvoiceName,
                         items: newItem,
@@ -876,10 +854,10 @@ mysqli_close($conn);
             /** --------------------
              * ✅ Validation: Ensure Required Fields Are Filled
              * -------------------- **/
-            if (!formData.invoice_id || !formData.date || !formData.invoice || !formData.company) {
-                alert("Please fill in all required invoice details.");
-                return;
-            }
+            // if (!formData.invoice_id || !formData.date || !formData.invoice || !formData.company) {
+            //     alert("Please fill in all required invoice details.");
+            //     return;
+            // }
 
             // if (
             //     formData.existing_items.some(item => !item.runsheet_number || !item.runsheet_date) ||
@@ -897,26 +875,26 @@ mysqli_close($conn);
             /** --------------------
              * ✅ Submit Data to API
              * -------------------- **/
-            // fetch("process_update_invoice.php", {
-            //         method: "POST",
-            //         headers: {
-            //             "Content-Type": "application/json"
-            //         },
-            //         body: JSON.stringify(formData),
-            //     })
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         if (data.success) {
-            //             alert("Invoice successfully updated!");
-            //             // location.reload(); // Refresh page after successful submission
-            //         } else {
-            //             alert("Error: " + (data.message || "Unknown error"));
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.error("Error:", error);
-            //         alert("An error occurred while submitting. Please try again.");
-            //     });
+            fetch("process_update_invoice.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Invoice successfully updated!");
+                        // location.reload(); // Refresh page after successful submission
+                    } else {
+                        alert("Error: " + (data.message || "Unknown error"));
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred while submitting. Please try again.");
+                });
         });
     </script>
 

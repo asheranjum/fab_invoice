@@ -29,9 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // die();
 
     // Update invoice details
-    $sqlUpdate = "UPDATE invoice SET date=?, company=?, address=?, phone=?, postal_code =?, abn=?, runsheet=? WHERE invoice_id=?";
+    $sqlUpdate = "UPDATE invoices SET date=?, company_name=?, address=?, phone=?, postal_code =?, abn=? WHERE id=?";
     $stmt = $conn->prepare($sqlUpdate);
-    $stmt->bind_param("sssssssi", $inv_date, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $inv_runsheet, $invoiceId);
+    $stmt->bind_param("ssssssi", $inv_date, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $invoiceId);
 
 
 
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         foreach ($items as $item) {
             $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
-            $itemRowIdC = $invoiceId . '~' . $itemRowId;
+            
 
             $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
             $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($newItems as $item) {
 
             $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
-            $itemRowIdC = $invoiceId . '~' . $itemRowId;
+      
 
             $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
             $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, item_row_id, item_name, item_value, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?, ?,?,?,?)";
                 $stmtInsert = $conn->prepare($sqlInsertItem);
-                $stmtInsert->bind_param("isssssss", $invoiceId, $customerInvoiceName, $customerInvoiceNo, $itemRowIdC, $itemName, $itemValue, $runsheet_number, $runsheet_date);
+                $stmtInsert->bind_param("isssssss", $invoiceId, $customerInvoiceName, $customerInvoiceNo, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date);
                 $stmtInsert->execute();
             }
         }

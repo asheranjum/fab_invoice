@@ -22,57 +22,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $total_cost = mysqli_real_escape_string($conn, $input['total_cost'] ?? '0');
         $items = $input['items'] ?? [];
 
-        // Save the invoice data in the database
-        $sql = "INSERT INTO invoice (date, invoice, company, address, phone, postal_code, abn, runsheet, sub_total, tax_rate, other_cost, total_cost)
-                VALUES ('$inv_date', '$inv_invoice', '$inv_company', '$inv_address', '$inv_phone', '$inv_postal_code', '$inv_abn', '$inv_runsheet', '$sub_total', '$tax_rate', '$other_cost', '$total_cost')";
+        $conn->begin_transaction();
 
-        if (mysqli_query($conn, $sql)) {
-            $invoiceId = mysqli_insert_id($conn);
+        try {
+            // Insert new invoice
+            $sqlInvoice = "INSERT INTO invoices (date, invoice_number, company_name, address, phone, postal_code, abn, runsheet_number, sub_total, tax_rate, other_cost, total_cost) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sqlInvoice);
+            if (!$stmt) {
+                throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+            }
+            $stmt->bind_param('ssssssssdddd', $inv_date, $inv_invoice, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $inv_runsheet, $sub_total, $tax_rate, $other_cost, $total_cost);
+            $stmt->execute();
+            $invoiceId = $stmt->insert_id;
+            $stmt->close();
 
-            // Save items
+            // Insert items
+            $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, item_row_id, item_name, item_value, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmtItem = $conn->prepare($sqlItem);
+            if (!$stmtItem) {
+                throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+            }
             foreach ($items as $item) {
                 $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
                 $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
-                $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? ''); // Fetch item_row_id
+                $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
                 $itemName = mysqli_real_escape_string($conn, $item['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $item['item_value'] ?? '0');
                 $runsheetNumber = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
                 $runsheetDate = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
 
-                $sqlItem = "INSERT INTO invoice_items (
-                    invoice_id, 
-                    customer_invoice_name, 
-                    customer_invoice_no, 
-                    item_row_id, 
-                    item_name, 
-                    item_value, 
-                    runsheet_number, 
-                    runsheet_date, 
-                    created_at, 
-                    updated_at
-                ) VALUES (
-                    '$invoiceId', 
-                    '$customerInvoiceName', 
-                    '$customerInvoiceNo', 
-                    '$invoiceId~$itemRowId', 
-                    '$itemName', 
-                    '$itemValue', 
-                    '$runsheetNumber', 
-                    '$runsheetDate', 
-                    NOW(), 
-                    NOW()
-                )";
-
-                mysqli_query($conn, $sqlItem);
+                $stmtItem->bind_param('isssssss', $invoiceId, $customerInvoiceName, $customerInvoiceNo, $itemRowId, $itemName, $itemValue, $runsheetNumber, $runsheetDate);
+                $stmtItem->execute();
             }
+            $stmtItem->close();
 
+            $conn->commit();
             $response = ['success' => true, 'message' => 'Invoice saved successfully'];
-        } else {
-            $response = ['success' => false, 'message' => 'Database error: ' . mysqli_error($conn)];
+        } catch (Exception $e) {
+            $conn->rollback();
+            $response = ['success' => false, 'message' => 'Database error: ' . $e->getMessage()];
         }
     }
 }
 
 echo json_encode($response);
-
-mysqli_close($conn);
+$conn->close();
+?>
