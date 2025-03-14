@@ -19,7 +19,6 @@ $newInvoice = $invoiceData['invoice'];
 
 $groupedItems = [];
 
-// Group items by runsheet_number and item_row_id
 foreach ($invoiceData['items'] as $item) {
     $runsheetNumber = $item['runsheet_number'];
     $runsheetDate = $item['runsheet_date'];
@@ -28,12 +27,14 @@ foreach ($invoiceData['items'] as $item) {
     $itemValue = $item['item_value'];
     $customInvoiceNo = $item['customer_invoice_no'];
     $customInvoiceName = $item['customer_invoice_name'];
-    $createdAt = isset($item['created_at']) ? $item['created_at'] : null; // Check if created_at exists
+    $createdAt = isset($item['created_at']) ? $item['created_at'] : null;
+    $rowOrder = isset($item['row_order']) ? $item['row_order'] : 0;
 
     // Initialize runsheet group
     if (!isset($groupedItems[$runsheetNumber])) {
         $groupedItems[$runsheetNumber] = [
             'runsheet_date' => $runsheetDate,
+            'row_order' => $rowOrder, // Assign row_order to the runsheet level
             'items' => []
         ];
     }
@@ -44,41 +45,28 @@ foreach ($invoiceData['items'] as $item) {
             'custom_invoice_no' => $customInvoiceNo,
             'custom_invoice_name' => $customInvoiceName,
             'item_row_id' => $itemRowId,
-            'items' => []
+            'items' => [],
+            'row_order' => $rowOrder // Store row_order
         ];
     }
 
-    // Add the item with its price and created_at timestamp (if available)
+    // Add the item with value and created_at timestamp
     $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = [
         'value' => $itemValue,
         'created_at' => $createdAt
     ];
 }
 
-// Sort the grouped items based on the created_at timestamp (ascending or descending)
+// Sort grouped items by `row_order` in descending order
 foreach ($groupedItems as $runsheetNumber => &$runsheetData) {
-    // Sort items by created_at in ascending order (if it exists)
     usort($runsheetData['items'], function ($a, $b) {
-        // Ensure 'created_at' exists before trying to access it
-        $createdAtA = isset($a['created_at']) ? strtotime($a['created_at']) : 0; // Default to 0 if not set
-        $createdAtB = isset($b['created_at']) ? strtotime($b['created_at']) : 0; // Default to 0 if not set
-        return $createdAtA - $createdAtB; // Compare timestamps
+        return $b['row_order'] - $a['row_order'];
     });
 }
 
-// If you want to sort in descending order, reverse the comparison:
-foreach ($groupedItems as $runsheetNumber => &$runsheetData) {
-    usort($runsheetData['items'], function ($a, $b) {
-        $createdAtA = isset($a['created_at']) ? strtotime($a['created_at']) : 0;
-        $createdAtB = isset($b['created_at']) ? strtotime($b['created_at']) : 0;
-        return $createdAtB - $createdAtA; // Reverse order for descending
-    });
-}
+unset($runsheetData); // Unset reference after sorting
 
-// If you want to sort the entire $groupedItems array by runsheet_number or any other field, use ksort or uksort
-ksort($groupedItems); // Sort by runsheetNumber in ascending order
-
-// print_r($groupedItems);
+// print_r(json_encode($groupedItems));
 // die();
 
 // var_export($groupedItems);
@@ -87,6 +75,7 @@ ksort($groupedItems); // Sort by runsheetNumber in ascending order
 // Close the connection
 mysqli_close($conn);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -207,7 +196,7 @@ mysqli_close($conn);
                             </th>
                         </tr>
 
-                        <tr id="tabletr" style="display: none;">
+                        <tr id="tabletr" class="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
@@ -308,8 +297,9 @@ mysqli_close($conn);
 
 
                         <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
+
                             <tr>
-                                <th colspan="3">
+                                <th colspan="3" data-order="<?= $runsheetData['row_order']; ?>">
                                     <div style="gap: 50px; display: flex;">
                                         <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?></strong>
                                         <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?></strong>
@@ -318,7 +308,7 @@ mysqli_close($conn);
                             </tr>
 
                             <?php foreach ($runsheetData['items'] as $itemRowId => $data):  ?>
-                                <tr id="tabletr" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                <tr id="table_exitisng" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
                                         <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
                                         <input type="text" name="customer_invoice_name[]" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
@@ -687,14 +677,12 @@ mysqli_close($conn);
                         newRow.attr("data-runsheet-number", lastRunsheetNumber);
                         newRow.attr("data-runsheet-date", lastRunsheetDate);
                     }
-        
+
 
                     $(".table-container #tbody").append(newRow);
                     attachRowListeners(newRow);
                 }
             }
-
-
 
             function removeRows(count) {
                 const rows = $(".table-container #tbody tr#tabletr");
@@ -745,6 +733,7 @@ mysqli_close($conn);
             });
 
             attachRowListeners($(".table-container #tbody tr#tabletr"));
+            attachRowListeners($(".table-container #tbody tr#table_exitisng"));
             $("#tax_rate, #other_cost").on("input", calculateSubTotal);
             calculateSubTotal();
         });
@@ -779,7 +768,7 @@ mysqli_close($conn);
             /** --------------------
              * ✅ Collect Existing Items
              * -------------------- **/
-            $(".table-container #tbody tr[data-item-row-id]").each(function() {
+            $(".table-container #tbody tr#table_exitisng").each(function() {
                 const row = $(this);
                 const itemRowId = row.attr("data-item-row-id");
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
@@ -833,6 +822,9 @@ mysqli_close($conn);
              * ✅ Collect New Items
              * -------------------- **/
             $(".table-container #tbody tr#tabletr").each(function(index) {
+               
+                console.log(index);
+
                 const row = $(this);
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
                 const customerInvoiceName = row.find(".customer-inv-name").val().trim() || "";
@@ -870,7 +862,7 @@ mysqli_close($conn);
 
                 if (hasCheckedItem && newItem.length > 0) {
                     formData.new_items.push({
-                        item_row_id: `new_${index + 1}`,
+                        item_row_id: `<?php echo $invoiceId ?? ''; ?>~${index + 1}`,
                         customer_inv_no: customerInvoiceNo,
                         customer_inv_name: customerInvoiceName,
                         items: newItem,
@@ -900,31 +892,31 @@ mysqli_close($conn);
             /** --------------------
              * ✅ Debugging: Log the Data Before Sending
              * -------------------- **/
-            console.log("Final Form Data:", JSON.stringify(formData, null, 2));
+            console.log("Final Form Data:", formData);
 
             /** --------------------
              * ✅ Submit Data to API
              * -------------------- **/
-            fetch("process_update_invoice.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Invoice successfully updated!");
-                        // location.reload(); // Refresh page after successful submission
-                    } else {
-                        alert("Error: " + (data.message || "Unknown error"));
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("An error occurred while submitting. Please try again.");
-                });
+            // fetch("process_update_invoice.php", {
+            //         method: "POST",
+            //         headers: {
+            //             "Content-Type": "application/json"
+            //         },
+            //         body: JSON.stringify(formData),
+            //     })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         if (data.success) {
+            //             alert("Invoice successfully updated!");
+            //             // location.reload(); // Refresh page after successful submission
+            //         } else {
+            //             alert("Error: " + (data.message || "Unknown error"));
+            //         }
+            //     })
+            //     .catch(error => {
+            //         console.error("Error:", error);
+            //         alert("An error occurred while submitting. Please try again.");
+            //     });
         });
     </script>
 
