@@ -23,6 +23,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $runsheetNumber = $item['runsheet_number'];
         $runsheetDate = $item['runsheet_date'];
         $itemRowId = $item['item_row_id'];
+        $itemId = $item['id'];
         $itemName = $item['item_name'];
         $itemValue = $item['item_value'];
         $customInvoiceNo = $item['customer_invoice_no'];
@@ -47,15 +48,17 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
             ];
         }
 
-        // Add the item with value and created_at timestamp
+        // Add the item with value, created_at timestamp, and item_id
         $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = [
             'value' => $itemValue,
-            'created_at' => $createdAt
+            'created_at' => $createdAt,
+            'item_id' => $itemId
         ];
     }
 }
-print_r($groupedItems);
-die();
+
+// print_r(json_encode($groupedItems));
+// die();
 // Close the connection
 mysqli_close($conn);
 ?>
@@ -273,125 +276,121 @@ mysqli_close($conn);
                         </tr>
 
 
-                        <?php foreach ($groupedItems as $runsheetNumber => $runsheetData):  ?>
+                        <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
 
-                            <tr>
-                                <th colspan="3" >
-                                    <div style="gap: 50px; display: flex;">
-                                        <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?></strong>
-                                        <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?></strong>
-                                    </div>
-                                </th>
-                            </tr>
+<tr>
+    <th colspan="3">
+        <div style="gap: 50px; display: flex;">
+            <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?></strong>
+            <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?></strong>
+        </div>
+    </th>
+</tr>
 
-                            <?php foreach ($runsheetData['items'] as $itemRowId => $data):  ?>
-                                
-                                <tr id="table_exitisng" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
-                                    <td>
-                                        <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
-                                        <input type="text" name="customer_invoice_name[]" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
+<?php foreach ($runsheetData['items'] as $itemRowId => $data): 
+    
+    $itemId = $data['items'][$itemName]['item_id'] ?? null;
+    ?>
+    
+    <tr id="table_exitisng" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+        <td>
+            <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
+            <input type="text" name="customer_invoice_name[]" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
+        </td>
+        <td style="padding:0px">
+            <table class="checkbox-table">
+                <tr>
+                    <?php
+                    // Define all options
+                    $allOptions = [
+                        'DELIV+' => 'DELIV+',
+                        'DISAS+' => 'DISAS+',
+                        'ASSEM+' => 'ASSEM+',
+                        'RUB+' => 'RUB+',
+                        'UPST+' => 'UPST+',
+                        'DOWNST+' => 'DOWNST+',
+                        'PREM+' => 'PREM+',
+                        'BRTRANS+' => 'BRTRANS+',
+                        'INST+' => 'INST+',
+                        'H/DLIV+' => 'H/DLIV+',
+                        'VOL+' => 'VOL+',
+                        'WATERCON+' => 'WATERCON+',
+                        'DOOR/R+' => 'DOOR/R+',
+                    ];
+                    $pupOptions = [
+                        '1' => 'P/UP(1)',
+                        '2' => 'P/UP(2)',
+                        '3' => 'P/UP(3)',
+                        '4' => 'P/UP(4)',
+                        '5' => 'P/UP(5)',
+                        '6' => 'P/UP(6)',
+                        '7' => 'P/UP(7)',
+                        '8' => 'P/UP(8)',
+                        '9' => 'P/UP(9)',
+                        '10' => 'P/UP(10)'
+                    ];
+                    // Check for any key matching P/UP(x)
+                    $selectedPUP = null; // To store the matched P/UP key
 
-                                    </td>
-                                    <td style="padding:0px">
-                                        <table class="checkbox-table">
-                                            <tr>
-                                                <?php
-                                                // Define all options
-                                                $allOptions = [
-                                                    'DELIV+' => 'DELIV+',
-                                                    'DISAS+' => 'DISAS+',
-                                                    'ASSEM+' => 'ASSEM+',
-                                                    'RUB+' => 'RUB+',
-                                                    'UPST+' => 'UPST+',
-                                                    'DOWNST+' => 'DOWNST+',
-                                                    'PREM+' => 'PREM+',
-                                                    'BRTRANS+' => 'BRTRANS+',
-                                                    'INST+' => 'INST+',
-                                                    'H/DLIV+' => 'H/DLIV+',
-                                                    'VOL+' => 'VOL+',
-                                                    'WATERCON+' => 'WATERCON+',
-                                                    'DOOR/R+' => 'DOOR/R+',
-                                                ];
-                                                $pupOptions = [
-                                                    '1' => 'P/UP(1)',
-                                                    '2' => 'P/UP(2)',
-                                                    '3' => 'P/UP(3)',
-                                                    '4' => 'P/UP(4)',
-                                                    '5' => 'P/UP(5)',
-                                                    '6' => 'P/UP(6)',
-                                                    '7' => 'P/UP(7)',
-                                                    '8' => 'P/UP(8)',
-                                                    '9' => 'P/UP(9)',
-                                                    '10' => 'P/UP(10)'
-                                                ];
-                                                // Check for any key matching P/UP(x)
-                                                $selectedPUP = null; // To store the matched P/UP key
+                    foreach ($data['items'] as $key => $item) {
+                        if (strpos($key, 'P/UP') === 0) {
+                            $selectedPUP = $key;
+                            break;
+                        }
+                    }
 
-                                                // print_r($selectedPUP);
+                    // If a P/UP key is found, add it dynamically
+                    if ($selectedPUP) {
+                        $allOptions[$selectedPUP] = $selectedPUP;
+                    } else {
+                        $pupKey = 'P/UP';
+                        $allOptions[$pupKey] = 'P/UP';
+                    }
 
-                                                foreach ($data as $key => $value) {
+                    
 
+                    ?>
 
-                                                    foreach ($data['items'] as $key => $item) {
-                                                        if (strpos($key, 'P/UP') === 0) {
-                                                            $selectedPUP = $key;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
+                    <?php $totalValue = 0;
+                    foreach ($allOptions as $key => $label):
+                        $value = isset($data['items'][$key]) ? (float)$data['items'][$key]['value'] : 0.00;
+                        $totalValue += $value;
+                    ?>
 
-                                                // If a P/UP key is found, add it dynamically
-                                                if ($selectedPUP) {
-                                                    $allOptions[$selectedPUP] = $selectedPUP;
-                                                } else {
-                                                    $pupKey = 'P/UP';
-                                                    $allOptions[$pupKey] = 'P/UP';
-                                                }
+                        <td>
+                            <?php if (strpos($key, 'P/UP') === 0): ?>
+                                <!-- Select Dropdown for P/UP options -->
+                                <select id="pup-<?= $key ?>" name="item[<?= $itemId ?>][pup]" class="form-contro" style="width:85px;">
+                                    <?php foreach ($pupOptions as $id => $label): ?>
+                                        <option value="<?= $id ?>" <?= ($selectedPUP === "P/UP($id)") ? 'selected' : '' ?>>
+                                            <?= $label ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
 
-                                                ?>
+                                <input type="text" name="item[<?= $itemId ?>][pup_value]" value="<?= isset($data['items'][$selectedPUP]) ? number_format((float)$data['items'][$selectedPUP]['value'], 2) : '' ?>" class="form-control mt-1">
+                            <?php else: ?>
 
-                                                <?php $totalValue = 0;
-                                                foreach ($allOptions as $key => $label):
-                                                    $value = isset($data['items'][$key]) ? (float)$data['items'][$key]['value'] : 0.00;
-                                                    $totalValue += $value;
-                                                ?>
+                                <div class="form-check">
+                                    <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
+                                    <input id="<?= $label . '-' . $itemId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemId ?>][<?= strtolower($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
+                                    <label for="<?= $label . '-' . $itemId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
+                                    <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
+                                </div>
 
+                            <?php endif; ?>
+                        </td>
 
-                                                    <td>
-                                                        <?php if (strpos($key, 'P/UP') === 0): ?>
-                                                            <!-- Select Dropdown for P/UP options -->
-                                                            <select id="pup-<?= $key ?>" name="item[<?= $key ?>][pup]" class="form-contro" style="width:85px;">
-                                                                <?php foreach ($pupOptions as $id => $label): ?>
-                                                                    <option value="<?= $id ?>" <?= ($selectedPUP === "P/UP($id)") ? 'selected' : '' ?>>
-                                                                        <?= $label ?>
-                                                                    </option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-
-                                                            <input type="text" name="item[<?= $itemRowId ?>][pup_value]" value="<?= isset($data['items'][$selectedPUP]) ? number_format((float)$data['items'][$selectedPUP]['value'], 2) : '' ?>" class="form-control mt-1">
-                                                        <?php else: ?>
-
-                                                            <div class="form-check">
-                                                                <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
-                                                                <input id="<?= $label . '-' . $itemRowId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemRowId ?>][<?= strtolower($label)  ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
-                                                                <label for="<?= $label . '-' . $itemRowId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
-                                                                <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
-                                                            </div>
-
-                                                        <?php endif; ?>
-                                                    </td>
-
-
-                                                <?php endforeach; ?>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control amount-field" name="amount[]" value="<?= number_format($totalValue, 2) ?>" readonly>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </tr>
+            </table>
+        </td>
+        <td>
+            <input type="text" class="form-control amount-field" name="amount[]" value="<?= number_format($totalValue, 2) ?>" readonly>
+        </td>
+    </tr>
+<?php endforeach; ?>
+<?php endforeach; ?>
 
 
 
