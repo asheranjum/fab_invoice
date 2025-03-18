@@ -91,7 +91,7 @@ mysqli_close($conn);
         <div class="row mt-3">
             <div class="col-md-8">
 
-            <form id="invoiceForm" class="form-group p-1">
+                <form id="invoiceForm" class="form-group p-1">
                     <div class="topbtngrp">
                         <button type="submit" class="btn btn-success export-button">Update Invoice</button>
                         <button type="button" class="btn btn-secondary add-bulk-button">Add Bulk Rows</button>
@@ -278,119 +278,122 @@ mysqli_close($conn);
 
                         <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
 
-<tr>
-    <th colspan="3">
-        <div style="gap: 50px; display: flex;">
-            <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?></strong>
-            <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?></strong>
-        </div>
-    </th>
-</tr>
+                            <tr>
+                                <th colspan="3">
+                                    <div style="gap: 50px; display: flex;">
+                                        <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?></strong>
+                                        <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?></strong>
+                                    </div>
+                                </th>
+                            </tr>
 
-<?php foreach ($runsheetData['items'] as $itemRowId => $data): 
-    
-    $itemId = $data['items'][$itemName]['item_id'] ?? null;
-    ?>
-    
-    <tr id="table_exitisng" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
-        <td>
-            <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
-            <input type="text" name="customer_invoice_name[]" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
-        </td>
-        <td style="padding:0px">
-            <table class="checkbox-table">
-                <tr>
-                    <?php
-                    // Define all options
-                    $allOptions = [
-                        'DELIV+' => 'DELIV+',
-                        'DISAS+' => 'DISAS+',
-                        'ASSEM+' => 'ASSEM+',
-                        'RUB+' => 'RUB+',
-                        'UPST+' => 'UPST+',
-                        'DOWNST+' => 'DOWNST+',
-                        'PREM+' => 'PREM+',
-                        'BRTRANS+' => 'BRTRANS+',
-                        'INST+' => 'INST+',
-                        'H/DLIV+' => 'H/DLIV+',
-                        'VOL+' => 'VOL+',
-                        'WATERCON+' => 'WATERCON+',
-                        'DOOR/R+' => 'DOOR/R+',
-                    ];
-                    $pupOptions = [
-                        '1' => 'P/UP(1)',
-                        '2' => 'P/UP(2)',
-                        '3' => 'P/UP(3)',
-                        '4' => 'P/UP(4)',
-                        '5' => 'P/UP(5)',
-                        '6' => 'P/UP(6)',
-                        '7' => 'P/UP(7)',
-                        '8' => 'P/UP(8)',
-                        '9' => 'P/UP(9)',
-                        '10' => 'P/UP(10)'
-                    ];
-                    // Check for any key matching P/UP(x)
-                    $selectedPUP = null; // To store the matched P/UP key
+                            <?php foreach ($runsheetData['items'] as $itemRowId => $data):
 
-                    foreach ($data['items'] as $key => $item) {
-                        if (strpos($key, 'P/UP') === 0) {
-                            $selectedPUP = $key;
-                            break;
-                        }
-                    }
+                                $itemId = $data['items'][$itemName]['item_id'] ?? null;
+                            ?>
 
-                    // If a P/UP key is found, add it dynamically
-                    if ($selectedPUP) {
-                        $allOptions[$selectedPUP] = $selectedPUP;
-                    } else {
-                        $pupKey = 'P/UP';
-                        $allOptions[$pupKey] = 'P/UP';
-                    }
+                                <tr id="table_exitisng" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                    <td>
+                                        <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
+                                        <input type="text" name="customer_invoice_name[]" id="customer-inv-name" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
+                                    </td>
+                                    <td style="padding:0px">
+                                        <table class="checkbox-table">
+                                            <tr>
+                                                <?php
+                                                // Define all options
+                                                $allOptions = [
+                                                    'DELIV+' => 'DELIV+',
+                                                    'DISAS+' => 'DISAS+',
+                                                    'ASSEM+' => 'ASSEM+',
+                                                    'RUB+' => 'RUB+',
+                                                    'UPST+' => 'UPST+',
+                                                    'DOWNST+' => 'DOWNST+',
+                                                    'PREM+' => 'PREM+',
+                                                    'BRTRANS+' => 'BRTRANS+',
+                                                    'INST+' => 'INST+',
+                                                    'H/DLIV+' => 'H/DLIV+',
+                                                    'VOL+' => 'VOL+',
+                                                    'WATERCON+' => 'WATERCON+',
+                                                    'DOOR/R+' => 'DOOR/R+',
+                                                ];
+                                                $pupOptions = [
+                                                    '1' => 'P/UP(1)',
+                                                    '2' => 'P/UP(2)',
+                                                    '3' => 'P/UP(3)',
+                                                    '4' => 'P/UP(4)',
+                                                    '5' => 'P/UP(5)',
+                                                    '6' => 'P/UP(6)',
+                                                    '7' => 'P/UP(7)',
+                                                    '8' => 'P/UP(8)',
+                                                    '9' => 'P/UP(9)',
+                                                    '10' => 'P/UP(10)'
+                                                ];
+                                                // Check for any key matching P/UP(x)
+                                                $selectedPUP = null; // To store the matched P/UP key
 
-                    
+                                                foreach ($data['items'] as $key => $item) {
+                                                    if (strpos($key, 'P/UP') === 0) {
+                                                        $selectedPUP = $key;
+                                                        break;
+                                                    }
+                                                }
 
-                    ?>
+                                                // If a P/UP key is found, add it dynamically
+                                                if ($selectedPUP) {
+                                                    $allOptions[$selectedPUP] = $selectedPUP;
+                                                } else {
+                                                    $pupKey = 'P/UP';
+                                                    $allOptions[$pupKey] = 'P/UP';
+                                                }
 
-                    <?php $totalValue = 0;
-                    foreach ($allOptions as $key => $label):
-                        $value = isset($data['items'][$key]) ? (float)$data['items'][$key]['value'] : 0.00;
-                        $totalValue += $value;
-                    ?>
 
-                        <td>
-                            <?php if (strpos($key, 'P/UP') === 0): ?>
-                                <!-- Select Dropdown for P/UP options -->
-                                <select id="pup-<?= $key ?>" name="item[<?= $itemId ?>][pup]" class="form-contro" style="width:85px;">
-                                    <?php foreach ($pupOptions as $id => $label): ?>
-                                        <option value="<?= $id ?>" <?= ($selectedPUP === "P/UP($id)") ? 'selected' : '' ?>>
-                                            <?= $label ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
 
-                                <input type="text" name="item[<?= $itemId ?>][pup_value]" value="<?= isset($data['items'][$selectedPUP]) ? number_format((float)$data['items'][$selectedPUP]['value'], 2) : '' ?>" class="form-control mt-1">
-                            <?php else: ?>
+                                                ?>
 
-                                <div class="form-check">
-                                    <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
-                                    <input id="<?= $label . '-' . $itemId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemId ?>][<?= strtolower($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
-                                    <label for="<?= $label . '-' . $itemId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
-                                    <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
-                                </div>
+                                                <?php $totalValue = 0;
+                                                foreach ($allOptions as $key => $label):
+                                                    $value = isset($data['items'][$key]) ? (float)$data['items'][$key]['value'] : 0.00;
+                                                    $totalValue += $value;
+                                                ?>
 
-                            <?php endif; ?>
-                        </td>
+                                                    <td>
 
-                    <?php endforeach; ?>
-                </tr>
-            </table>
-        </td>
-        <td>
-            <input type="text" class="form-control amount-field" name="amount[]" value="<?= number_format($totalValue, 2) ?>" readonly>
-        </td>
-    </tr>
-<?php endforeach; ?>
-<?php endforeach; ?>
+                                                        <?php if (strpos($key, 'P/UP') === 0): ?>
+                                                            <!-- Select Dropdown for P/UP options -->
+                                                            <input type="hidden" name="item_id" value="<?= isset($data['items'][$key]['item_id']) ? $data['items'][$key]['item_id'] : '' ?>">
+                                                            <select id="pup-<?= $key ?>" name="item[<?= $itemId ?>][pup]" class="form-contro" style="width:85px;">
+                                                                <?php foreach ($pupOptions as $id => $label): ?>
+                                                                    <option value="<?= $id ?>" <?= ($selectedPUP === "P/UP($id)") ? 'selected' : '' ?>>
+                                                                        <?= $label ?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+
+                                                            <input type="text" name="item[<?= $itemId ?>][pup_value]" value="<?= isset($data['items'][$selectedPUP]) ? number_format((float)$data['items'][$selectedPUP]['value'], 2) : '' ?>" class="form-control mt-1">
+                                                        <?php else: ?>
+
+                                                            <div class="form-check">
+                                                                <input type="hidden" name="item_id" value="<?= isset($data['items'][$key]['item_id']) ? $data['items'][$key]['item_id'] : '' ?>">
+                                                                <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
+                                                                <input id="<?= $label . '-' . $itemId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemId ?>][<?= strtolower($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
+                                                                <label for="<?= $label . '-' . $itemId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
+                                                                <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
+                                                            </div>
+
+                                                        <?php endif; ?>
+                                                    </td>
+
+                                                <?php endforeach; ?>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control amount-field" name="amount[]" value="<?= number_format($totalValue, 2) ?>" readonly>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endforeach; ?>
 
 
 
@@ -570,6 +573,7 @@ mysqli_close($conn);
                     }
                 });
 
+
                 // $(row).find(".form-check input[type='text']").prop("disabled", true);
 
                 $(row).find(".form-check input[type='text']").each(function() {
@@ -736,7 +740,8 @@ mysqli_close($conn);
                 tax_rate: $("#tax_rate").val().trim(),
                 total_cost: $("#total_cost").val().trim(),
                 existing_items: [],
-                new_items: []
+                new_items: [],
+                unchecked_items: [] // New array for unchecked items
             };
 
             let currentRunsheetNumber = $("#runsheet_no").text().trim();
@@ -755,51 +760,58 @@ mysqli_close($conn);
                 let hasCheckedItem = false;
                 let updatedItems = [];
 
+
                 row.find(".form-check").each(function() {
                     const checkbox = $(this).find("input[type='checkbox']");
                     const inputField = $(this).find("input[type='text']");
                     const itemName = $(this).find("label").text().trim();
+                    const itemId = $(this).find("input[type='hidden']").val();
 
                     if (checkbox.prop("checked")) {
                         hasCheckedItem = true;
                         updatedItems.push({
                             item_name: itemName,
-                            item_value: inputField.val().trim() || "0"
+                            item_value: inputField.val().trim() || "0",
+                            item_id: itemId
                         });
+                    } else if (itemId) {
+                        formData.unchecked_items.push(itemId);
                     }
                 });
 
                 row.find("select").each(function() {
                     const select = $(this);
                     const selectedValue = select.val();
+                    const itemId = select.siblings("input[type='hidden']").val();
 
                     if (selectedValue && selectedValue !== "0") {
                         hasCheckedItem = true;
                         updatedItems.push({
                             item_name: select.find("option:selected").text().trim(),
-                            item_value: select.siblings("input[type='text']").val().trim() || "0"
+                            item_value: select.siblings("input[type='text']").val().trim() || "0",
+                            item_id: itemId
                         });
+                    } else if (itemId) {
+                        formData.unchecked_items.push(itemId);
                     }
                 });
 
-                if (hasCheckedItem) {
-                    formData.existing_items.push({
-                        item_row_id: itemRowId,
-                        customer_inv_no: customerInvoiceNo,
-                        customer_inv_name: customerInvoiceName,
-                        items: updatedItems,
-                        amount: amount,
-                        runsheet_number: row.attr("data-runsheet-number") || currentRunsheetNumber,
-                        runsheet_date: row.attr("data-runsheet-date") || currentRunsheetDate
-                    });
-                }
+                formData.existing_items.push({
+                    item_row_id: itemRowId,
+                    customer_inv_no: customerInvoiceNo,
+                    customer_inv_name: customerInvoiceName,
+                    items: updatedItems,
+                    amount: amount,
+                    runsheet_number: row.attr("data-runsheet-number") || currentRunsheetNumber,
+                    runsheet_date: row.attr("data-runsheet-date") || currentRunsheetDate
+                });
             });
 
             /** --------------------
              * ✅ Collect New Items
              * -------------------- **/
             $(".table-container #tbody tr#tabletr").each(function(index) {
-               
+
                 console.log(index);
 
                 const row = $(this);

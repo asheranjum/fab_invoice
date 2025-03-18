@@ -9,7 +9,7 @@ if (isset($_GET['invoice_id']) && !empty($_GET['invoice_id'])) {
     // Ensure the ID is numeric to prevent SQL injection
     if (is_numeric($invoice_id)) {
         // SQL query to delete the invoice
-        $sql = "DELETE FROM invoice WHERE invoice_id = {$invoice_id}";
+        $sql = "DELETE FROM invoices WHERE id = {$invoice_id}";
 
         // Execute the query
         if (mysqli_query($conn, $sql)) {
