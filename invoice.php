@@ -4,7 +4,7 @@ require 'session.php';
 require 'config/database.php';
 
 // Fetch the last invoice number
-$sql = "SELECT MAX(CAST(invoice AS UNSIGNED)) AS last_invoice FROM invoice";
+$sql = "SELECT MAX(CAST(invoice_number AS UNSIGNED)) AS last_invoice FROM invoices";
 $result = mysqli_query($conn, $sql);
 
 $lastInvoice = 0;
@@ -12,12 +12,15 @@ if ($result && $row = mysqli_fetch_assoc($result)) {
     $lastInvoice = (int)$row['last_invoice']; // Get the last invoice number
 }
 
+
 // Set starting invoice number if no records exist
 $startingInvoice = 10001;
 $newInvoice = ($lastInvoice > 0) ? $lastInvoice + 1 : $startingInvoice;
 
 // Close the connection
 mysqli_close($conn);
+
+
 
 
 ?>
