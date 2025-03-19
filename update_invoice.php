@@ -78,6 +78,63 @@ mysqli_close($conn);
 </head>
 
 <body>
+
+    <!-- Edit Runsheet Modal -->
+    <div class="modal fade" id="runsheetModal" tabindex="-1" aria-labelledby="runsheetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="runsheetModalLabel">Edit Runsheet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="runsheetForm">
+                        <div class="mb-3">
+                            <label for="runsheetNumber" class="form-label">Runsheet Number</label>
+                            <input type="number" class="form-control" id="runsheetNumber" name="runsheetNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="runsheetDate" class="form-label">Runsheet Date</label>
+                            <input type="date" class="form-control" id="runsheetDate" name="runsheetDate" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveRunsheet">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Runsheet Modal -->
+    <div class="modal fade" id="addRunsheetModal" tabindex="-1" aria-labelledby="addRunsheetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRunsheetModalLabel">Add Runsheet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addRunsheetForm">
+                        <div class="mb-3">
+                            <label for="addRunsheetNumber" class="form-label">Runsheet Number</label>
+                            <input type="number" class="form-control" id="addRunsheetNumber" name="addRunsheetNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addRunsheetDate" class="form-label">Runsheet Date</label>
+                            <input type="date" class="form-control" id="addRunsheetDate" name="addRunsheetDate" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="addRunsheet">Add Runsheet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container invoice-container mb-5">
 
         <div class="row">
@@ -283,6 +340,11 @@ mysqli_close($conn);
                                     <div style="gap: 50px; display: flex;">
                                         <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?></strong>
                                         <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?></strong>
+                                        <button type="button" class="btn btn-warning btn-sm edit-runsheet-button"
+                                            data-run-number="<?= htmlspecialchars($runsheetNumber) ?>"
+                                            data-run-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                            Edit
+                                        </button>
                                     </div>
                                 </th>
                             </tr>
@@ -463,42 +525,85 @@ mysqli_close($conn);
             const maxRows = 25;
             let currentRunsheet = null; // Store current runsheet data
             let runsheetIndex = 0; // Unique identifier for runsheets
+            //     $(".add-runsheet-button").click(function() {
+            //         // Get Runsheet details using prompt()
+            //         let runsheetNumber = prompt("Enter Runsheet Number:");
+            //         if (runsheetNumber === null || runsheetNumber.trim() === "") return; // Exit if empty or canceled
+
+            //         let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
+            //         if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
+            //         runsheetIndex++; // Increment unique runsheet index
+            //         // Validate date format (basic check)
+            //         if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
+            //             alert("Invalid date format. Please use YYYY-MM-DD.");
+            //             return;
+            //         }
+
+            //         // Store current runsheet details for new rows
+            //         currentRunsheet = {
+            //             number: runsheetNumber,
+            //             date: runsheetDate
+            //         };
+
+            //         // Runsheet HTML template
+            //         let runsheetRow = `
+
+            //         <tr>
+            //             <th colspan="3"  id="runsheet-${runsheetIndex}">
+            //                 <div style=" gap: 50px; display: flex;">
+            //                     <strong>Runsheet No: ${runsheetNumber}</strong>
+            //                     <strong>Runsheet Date: ${runsheetDate}</strong>
+            //                     <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
+            //                 </div>
+            //             </th>
+            //         </tr>
+            //    `;
+            //         // Append runsheet below the last item row
+            //         $(".table-container #tbody").append(runsheetRow);
+            //     });
+
+            // Show Add Runsheet Modal
             $(".add-runsheet-button").click(function() {
-                // Get Runsheet details using prompt()
-                let runsheetNumber = prompt("Enter Runsheet Number:");
-                if (runsheetNumber === null || runsheetNumber.trim() === "") return; // Exit if empty or canceled
+                $("#addRunsheetNumber").val("");
+                $("#addRunsheetDate").val("");
+                $("#addRunsheetModal").modal("show");
+            });
 
-                let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
-                if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
-                runsheetIndex++; // Increment unique runsheet index
+            $("#addRunsheet").click(function() {
+                const runsheetNumber = $("#addRunsheetNumber").val();
+                const runsheetDate = $("#addRunsheetDate").val();
+
+                // Validate inputs
+                if (!runsheetNumber || !runsheetDate) {
+                    alert("Please fill in both Runsheet Number and Runsheet Date.");
+                    return;
+                }
+
                 // Validate date format (basic check)
-                // if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
-                //     alert("Invalid date format. Please use YYYY-MM-DD.");
-                //     return;
-                // }
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
+                    alert("Invalid date format. Please use YYYY-MM-DD.");
+                    return;
+                }
 
-                // Store current runsheet details for new rows
-                currentRunsheet = {
-                    number: runsheetNumber,
-                    date: runsheetDate
-                };
-
-                // Runsheet HTML template
-                let runsheetRow = `
-            
-                <tr>
-                    <th colspan="3"  id="runsheet-${runsheetIndex}">
-                        <div style=" gap: 50px; display: flex;">
-                            <strong>Runsheet No: ${runsheetNumber}</strong>
-                            <strong>Runsheet Date: ${runsheetDate}</strong>
-                            <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
-                        </div>
-                    </th>
-                </tr>
-           `;
+                // Create new runsheet row
+                const runsheetIndex = new Date().getTime(); // Unique index based on timestamp
+                const runsheetRow = `
+            <tr>
+                <th colspan="3" id="runsheet-${runsheetIndex}">
+                    <div style="gap: 50px; display: flex;">
+                        <strong>Runsheet No: ${runsheetNumber}</strong>
+                        <strong>Runsheet Date: ${runsheetDate}</strong>
+                        <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
+                    </div>
+                </th>
+            </tr>
+        `;
 
                 // Append runsheet below the last item row
                 $(".table-container #tbody").append(runsheetRow);
+
+                // Close modal
+                $("#addRunsheetModal").modal("hide");
             });
 
             $(document).on("click", ".remove-runsheet", function() {
@@ -722,8 +827,6 @@ mysqli_close($conn);
 
 
 
-
-
         $("#invoiceForm").on("submit", function(e) {
             e.preventDefault();
 
@@ -906,6 +1009,68 @@ mysqli_close($conn);
                     console.error("Error:", error);
                     alert("An error occurred while submitting. Please try again.");
                 });
+        });
+
+
+
+        $(document).ready(function() {
+
+            // Edit Runsheet Modal
+            let currentRunsheetNumber;
+            let currentRunsheetDate;
+
+            // Show Modal with existing runsheet data
+            $(document).on("click", ".edit-runsheet-button", function() {
+                currentRunsheetNumber = $(this).data("run-number");
+                currentRunsheetDate = $(this).data("run-date");
+
+                $("#runsheetNumber").val(currentRunsheetNumber);
+                $("#runsheetDate").val(currentRunsheetDate);
+
+                $("#runsheetModal").modal("show");
+            });
+
+            // Save Runsheet Changes
+            $("#saveRunsheet").click(function() {
+                const runsheetNumber = $("#runsheetNumber").val();
+                const runsheetDate = $("#runsheetDate").val();
+
+                const runsheetData = {
+                    oldNumber: currentRunsheetNumber,
+                    oldDate: currentRunsheetDate,
+                    newNumber: runsheetNumber,
+                    newDate: runsheetDate
+                };
+
+                $.ajax({
+                    url: "edit_runsheet_api.php",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(runsheetData),
+                    success: function(response) {
+                        if (response.success) {
+                            alert("Runsheet updated successfully!");
+                            location.reload(); // Refresh page after successful update
+                        } else {
+                            alert("Error: " + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        alert("An error occurred while updating the runsheet. Please try again.");
+                    }
+                });
+
+                $("#runsheetModal").modal("hide");
+            });
+
+            // // Add Runsheet Button Click Handler
+            // $(".add-runsheet-button").click(function() {
+            //     $("#runsheetNumber").val("");
+            //     $("#runsheetDate").val("");
+            //     $("#runsheetModal").modal("show");
+            // });
+
         });
     </script>
 
