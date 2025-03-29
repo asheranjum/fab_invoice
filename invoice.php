@@ -40,6 +40,36 @@ mysqli_close($conn);
 </head>
 
 <body>
+
+
+    <!-- Add Runsheet Modal -->
+    <div class="modal fade" id="addRunsheetModal" tabindex="-1" aria-labelledby="addRunsheetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRunsheetModalLabel">Add Runsheet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addRunsheetForm">
+                        <div class="mb-3">
+                            <label for="addRunsheetNumber" class="form-label">Runsheet Number</label>
+                            <input type="text" class="form-control" id="addRunsheetNumber" name="addRunsheetNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addRunsheetDate" class="form-label">Runsheet Date</label>
+                            <input type="date" class="form-control" id="addRunsheetDate" name="addRunsheetDate" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="addRunsheet">Add Runsheet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container invoice-container mb-5">
 
         <div class="row">
@@ -65,7 +95,8 @@ mysqli_close($conn);
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="date" class="form-label mb-0 me-2">DATE:</label>
-                        <input type="date" name="date" class="form-control form-control-sm custom-width me-3" style=" font-size: 18px;" value="">
+                        <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3">
+                        <div class="invalid-feedback">Invoice date is required.</div>
 
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
 
@@ -77,23 +108,28 @@ mysqli_close($conn);
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>
-                        <input type="text" name="company" class="form-control w-50" placeholder="Type Company Name" value="">
+                        <input type="text" name="company" id="company_name" class="form-control w-50" placeholder="Type Company Name" value="">
+                        <div class="invalid-feedback">Company name is required.</div>
+
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="address" class="form-label mb-0 me-4">ADDREESS:</label>
+                        <label for="address" class="form-label mb-0 me-4" id="company_address">ADDREESS:</label>
                         <input type="text" name="address" class="form-control custom-width-2" placeholder="Enter Address Here" value="">
+                        <div class="invalid-feedback">Address is required.</div>
+
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="abn" class="form-label mb-0 me-5">ABN:</label>
-                        <input type="text" name="abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="">
+                        <input type="text" name="abn" id="company_abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="">
+                        <div class="invalid-feedback">ABN is required.</div>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="phone" class="form-label mb-0 me-2">PHONE:</label>
-                        <input type="text" name="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="">
-
+                        <input type="text" name="phone" id="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="">
+                        <div class="invalid-feedback">Phone is required.</div>
                         <!-- <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
                         <input type="text" name="postal_code" class="form-control custom-width-3" placeholder="Postal Code" value=""> -->
                     </div>
@@ -132,7 +168,7 @@ mysqli_close($conn);
                     </thead>
                     <tbody>
 
-                        <tr>
+                        <tr style="display: none;">
                             <th colspan="3">
                                 <div style=" gap: 50px; display: flex;">
                                     <strong>Runsheet No: <span id="runsheet_no"></span> </strong>
@@ -141,7 +177,7 @@ mysqli_close($conn);
                             </th>
                         </tr>
 
-                        <tr id="tabletr">
+                        <tr id="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
@@ -298,19 +334,26 @@ mysqli_close($conn);
 
             initializePage();
 
-            $(".add-runsheet-button").click(addRunSheetValues);
-            $(".add-button").click(() => addRows(1));
-            $(".add-bulk-button").click(() => addRows(promptForRowCount("add")));
-            $(".remove-button").click(() => removeRows(1));
-            $(".remove-bulk-button").click(() => removeRows(promptForRowCount("remove")));
+            // $(".add-runsheet-button").click(addRunSheetValues);
+            // $(".add-button").click(() => addRows(1));
+            // $(".add-bulk-button").click(() => addRows(promptForRowCount("add")));
+            // $(".remove-button").click(() => removeRows(1));
+            // $(".remove-bulk-button").click(() => removeRows(promptForRowCount("remove")));
 
+            // $("#invoiceForm").on("submit", handleFormSubmit);
+            // $("#tax_rate, #other_cost").on("input", calculateSubTotal);
+
+
+            $(".add-runsheet-button").click(showAddRunsheetModal);
+            $("#addRunsheet").click(addRunsheet);
+            $(".add-bulk-button").click(() => addRows(promptForRowCount("add")));
+            $(".remove-bulk-button").click(() => removeRows(promptForRowCount("remove")));
             $("#invoiceForm").on("submit", handleFormSubmit);
             $("#tax_rate, #other_cost").on("input", calculateSubTotal);
 
             function initializePage() {
-                $('#runsheet_no').append(<?php echo $newInvoice; ?> + '1001');
-                $('#runsheet_date').append(new Date().toLocaleDateString());
-                attachRowListeners($(".table-container tbody tr#tabletr"));
+                // Initialization logic
+                attachRowListeners($(".table-container tbody tr"));
                 calculateSubTotal();
             }
 
@@ -324,12 +367,15 @@ mysqli_close($conn);
                 return count;
             }
 
-            function addRunSheetValues() {
-                let runsheetNumber = prompt("Enter Runsheet Number:");
-                if (!runsheetNumber || runsheetNumber.trim() === "") return;
 
-                let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
-                if (!runsheetDate || runsheetDate.trim() === "") return;
+            function addRunsheet() {
+                const runsheetNumber = $("#addRunsheetNumber").val();
+                const runsheetDate = $("#addRunsheetDate").val();
+
+                if (!runsheetNumber || !runsheetDate) {
+                    alert("Please fill in both Runsheet Number and Runsheet Date.");
+                    return;
+                }
 
                 runsheetIndex++;
                 currentRunsheet = {
@@ -337,22 +383,35 @@ mysqli_close($conn);
                     date: runsheetDate
                 };
 
-                let runsheetRow = `
-            <tr>
-                <th colspan="3" id="runsheet-${runsheetIndex}">
+                const runsheetRow = `
+            <tr id="runsheet-${runsheetIndex}">
+                <th colspan="3">
                     <div style="gap: 50px; display: flex;">
                         <strong>Runsheet No: ${runsheetNumber}</strong>
                         <strong>Runsheet Date: ${runsheetDate}</strong>
                         <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                     </div>
                 </th>
-            </tr>`;
+            </tr> `;
                 $(".table-container tbody").append(runsheetRow);
+
+                attachRowListeners($(`#tabletr-${runsheetIndex}`));
+
+                $("#addRunsheetModal").modal("hide");
             }
 
+
             $(document).on("click", ".remove-runsheet", function() {
-                $("#" + $(this).attr("data-id")).remove();
+                const runsheetId = $(this).data("id");
+                $(`#${runsheetId}`).remove();
+                $(`#tabletr-${runsheetId.split('-')[1]}`).remove();
             });
+
+            function showAddRunsheetModal() {
+                $("#addRunsheetNumber").val("");
+                $("#addRunsheetDate").val("");
+                $("#addRunsheetModal").modal("show");
+            }
 
             function calculateRowAmount(row) {
                 let amount = 0;
@@ -414,12 +473,12 @@ mysqli_close($conn);
             }
 
             function addRows(count) {
-                if (count <= 0) return;
-                let currentRows = $(".table-container tbody tr#tabletr").length;
+                const rows = $(".table-container tbody tr#tabletr");
+                let currentRows = rows.length;
                 let newRows = Math.min(count, maxRows - currentRows);
 
                 if (newRows <= 0) {
-                    alert(`You cannot add more than ${maxRows} rows.`);
+                    alert("You cannot add more than " + maxRows + " rows.");
                     return;
                 }
 
@@ -434,7 +493,11 @@ mysqli_close($conn);
                         }
                     });
 
+                    newRow.removeAttr("style");
+
                     newRow.find(".form-contro").prop("disabled", false);
+
+                    newRow.find("#customer-inv-name").val("");
 
                     newRow.find(".form-check").each(function() {
                         const labelText = $(this).find("label").text().trim();
@@ -489,6 +552,54 @@ mysqli_close($conn);
 
             function handleFormSubmit(e) {
                 e.preventDefault();
+
+                e.preventDefault();
+
+                let isValid = true;
+
+                const requiredFields = [{
+                        id: "#invoice_date",
+                        message: "Invoice date is required."
+                    },
+                    {
+                        id: "#company_name",
+                        message: "Company name is required."
+                    },
+                    {
+                        id: "#company_address",
+                        message: "Address is required."
+                    },
+                    {
+                        id: "#company_abn",
+                        message: "ABN is required."
+                    },
+                    {
+                        id: "#phone",
+                        message: "Phone is required."
+                    }
+                ];
+
+                // Validate each required field
+                requiredFields.forEach(field => {
+                    const input = $(field.id);
+                    const value = input.val().trim();
+
+                    if (!value) {
+                        input.addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        input.removeClass("is-invalid");
+                    }
+                });
+
+                // Check if runsheet exists
+                if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
+                    alert("Please add at least one Runsheet before submitting.");
+                    isValid = false;
+                }
+
+                if (!isValid) return;
+
                 const formData = {
                     date: $("input[name='date']").val(),
                     invoice: $("input[name='invoice']").val(),
