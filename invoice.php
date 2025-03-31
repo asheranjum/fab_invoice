@@ -54,7 +54,7 @@ mysqli_close($conn);
                     <form id="addRunsheetForm">
                         <div class="mb-3">
                             <label for="addRunsheetNumber" class="form-label">Runsheet Number</label>
-                            <input type="text" class="form-control" id="addRunsheetNumber" name="addRunsheetNumber" required>
+                            <input type="number" class="form-control" id="addRunsheetNumber" name="addRunsheetNumber" required>
                         </div>
                         <div class="mb-3">
                             <label for="addRunsheetDate" class="form-label">Runsheet Date</label>
@@ -114,8 +114,8 @@ mysqli_close($conn);
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="address" class="form-label mb-0 me-4" id="company_address">ADDREESS:</label>
-                        <input type="text" name="address" class="form-control custom-width-2" placeholder="Enter Address Here" value="">
+                        <label for="address" class="form-label mb-0 me-4">ADDREESS:</label>
+                        <input type="text" name="address" id="company_address" class="form-control custom-width-2" placeholder="Enter Address Here" value="">
                         <div class="invalid-feedback">Address is required.</div>
 
                     </div>
@@ -180,7 +180,7 @@ mysqli_close($conn);
                         <tr id="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
-                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
+                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no numeric-only" placeholder="Enter Invoice No">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Invoice Name">
                             </td>
 
@@ -189,67 +189,67 @@ mysqli_close($conn);
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="deliv-0" name="item[0][deliv]">
                                         <label for="deliv-0" class="form-check-label">DELIV+</label>
-                                        <input type="text" name="item[0][deliv_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][deliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="disas-0" name="item[0][disas]">
                                         <label for="disas-0" class="form-check-label">DISAS+</label>
-                                        <input type="text" name="item[0][disas_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][disas_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="assem-0" name="item[0][assem]">
                                         <label for="assem-0" class="form-check-label">ASSEM+</label>
-                                        <input type="text" name="item[0][assem_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][assem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="rub-0" name="item[0][rub]">
                                         <label for="rub-0" class="form-check-label">RUB+</label>
-                                        <input type="text" name="item[0][rub_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][rub_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="upst-0" name="item[0][upst]">
                                         <label for="upst-0" class="form-check-label">UPST+</label>
-                                        <input type="text" name="item[0][upst_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][upst_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="downst-0" name="item[0][downst]">
                                         <label for="downst-0" class="form-check-label">DOWNST+</label>
-                                        <input type="text" name="item[0][downst_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][downst_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="prem-0" name="item[0][prem]">
                                         <label for="prem-0" class="form-check-label">PREM+</label>
-                                        <input type="text" name="item[0][prem_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][prem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="brtrans-0" name="item[0][brtrans]">
                                         <label for="brtrans-0" class="form-check-label">BRTRANS+</label>
-                                        <input type="text" name="item[0][brtrans_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][brtrans_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="ins-0" name="item[0][ins]">
                                         <label for="ins-0" class="form-check-label">INST+</label>
-                                        <input type="text" name="item[0][ins_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][ins_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="h_dliv-0" name="item[0][h_dliv]">
                                         <label for="h_dliv-0" class="form-check-label">H/DLIV+</label>
-                                        <input type="text" name="item[0][h_dliv_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][h_dliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="vol-0" name="item[0][vol]">
                                         <label for="vol-0" class="form-check-label">VOL+</label>
-                                        <input type="text" name="item[0][vol_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][vol_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="water_con-0" name="item[0][water_con]">
                                         <label for="water_con-0" class="form-check-label">WATERCON+</label>
-                                        <input type="text" name="item[0][water_con_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][water_con_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_remove]">
                                         <label for="door_remove-0" class="form-check-label">DOOR/R+</label>
-                                        <input type="text" name="item[0][door_remove_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][door_remove_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <select id="pup-0" name="item[0][pup]" class="form-contro">
@@ -346,7 +346,16 @@ mysqli_close($conn);
 
             $(".add-runsheet-button").click(showAddRunsheetModal);
             $("#addRunsheet").click(addRunsheet);
-            $(".add-bulk-button").click(() => addRows(promptForRowCount("add")));
+            $(".add-bulk-button").click(() => {
+
+                // Check if at least one runsheet row exists
+                if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
+                    alert("Please add at least one Runsheet before adding rows.");
+                    return;
+                }
+
+                addRows(promptForRowCount("add"))
+            });
             $(".remove-bulk-button").click(() => removeRows(promptForRowCount("remove")));
             $("#invoiceForm").on("submit", handleFormSubmit);
             $("#tax_rate, #other_cost").on("input", calculateSubTotal);
@@ -369,6 +378,12 @@ mysqli_close($conn);
 
 
             function addRunsheet() {
+
+                // Check for duplicate runsheet number
+                let duplicateRunsheet = false;
+
+               
+
                 const runsheetNumber = $("#addRunsheetNumber").val();
                 const runsheetDate = $("#addRunsheetDate").val();
 
@@ -393,6 +408,19 @@ mysqli_close($conn);
                     </div>
                 </th>
             </tr> `;
+
+            $(".table-container tbody tr[id^='runsheet-']").each(function() {
+                    const text = $(this).text();
+                    if (text.includes(runsheetNumber)) {
+                        duplicateRunsheet = true;
+                        return false; // break
+                    }
+                });
+
+                if (duplicateRunsheet) {
+                    alert("This Runsheet Number already exists. Please enter a unique Runsheet Number.");
+                    return;
+                }
                 $(".table-container tbody").append(runsheetRow);
 
                 attachRowListeners($(`#tabletr-${runsheetIndex}`));
@@ -456,17 +484,33 @@ mysqli_close($conn);
                     calculateRowAmount(row);
                 });
 
-                $(row).find("input[type='text']").keypress(function(e) {
-                    if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
+                // ✅ Numeric-only fields
+                $(row).find(".numeric-only").on("keypress", function(e) {
+                    const key = e.key;
+                    const allowedPattern = /^[0-9.]$/;
+                    if (!allowedPattern.test(key)) {
                         e.preventDefault();
                     }
                 });
 
-                $(row).find("#customer-inv-name").keypress(function(e) {
-                    if (!/^[\w\s.,;!?()\-"'&@#$%^*+=<>_/|\\`~]+$/.test(e.key) && e.key !== "Backspace") {
+                $(row).find(".numeric-only").on("paste", function(e) {
+                    const pasted = (e.originalEvent || e).clipboardData.getData('text');
+                    if (!/^[0-9.]+$/.test(pasted)) {
                         e.preventDefault();
                     }
                 });
+
+
+
+                $(row).find(".customer-inv-name").on("keypress", function(e) {
+                    const key = e.key;
+                    const allowedPattern = /^[a-zA-Z0-9\s.,()\-'"&]$/;
+                    if (!allowedPattern.test(key)) {
+                        e.preventDefault();
+                    }
+                });
+
+
 
                 $(row).find(".form-check input[type='text']").prop("disabled", true);
                 $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true);
@@ -553,7 +597,6 @@ mysqli_close($conn);
             function handleFormSubmit(e) {
                 e.preventDefault();
 
-                e.preventDefault();
 
                 let isValid = true;
 
@@ -595,6 +638,66 @@ mysqli_close($conn);
                 // Check if runsheet exists
                 if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
                     alert("Please add at least one Runsheet before submitting.");
+                    isValid = false;
+                }
+
+
+                // Check if at least one valid item row is added
+                let hasValidItem = false;
+
+                $(".table-container tbody tr#tabletr").each(function() {
+                    const row = $(this);
+                    const invNo = row.find(".customer-inv-no").val().trim();
+                    const invName = row.find(".customer-inv-name").val().trim();
+                    let itemIsValid = false;
+
+                    // Check if at least one checkbox is checked AND has a value > 0
+                    row.find(".form-check").each(function() {
+                        const checkbox = $(this).find("input[type='checkbox']");
+                        const valueInput = $(this).find("input[type='text']");
+                        const value = parseFloat(valueInput.val()) || 0;
+
+                        if (checkbox.prop("checked") && value > 0) {
+                            itemIsValid = true;
+                        }
+                    });
+
+                    // Also check P/UP (select + value)
+                    const pupSelect = row.find(".form-contro");
+                    const pupValue = parseFloat(pupSelect.siblings("input[type='text']").val()) || 0;
+                    if (pupSelect.val() && pupValue > 0) {
+                        itemIsValid = true;
+                    }
+
+                    if (invNo !== "" && invName !== "" && itemIsValid) {
+                        hasValidItem = true;
+                        return false; // break .each()
+                    }
+                });
+
+                if (!hasValidItem) {
+                    alert("Please add at least one valid item row with Invoice No, Name, and at least one selected item with value.");
+                    isValid = false;
+                }
+
+                // Check for duplicate customer invoice numbers
+                let invoiceNumbers = new Set();
+                let duplicateInvoiceNoFound = false;
+
+                $(".table-container tbody tr#tabletr").each(function() {
+                    const invNo = $(this).find(".customer-inv-no").val().trim();
+
+                    if (invNo !== "") {
+                        if (invoiceNumbers.has(invNo)) {
+                            duplicateInvoiceNoFound = true;
+                            return false; // break loop
+                        }
+                        invoiceNumbers.add(invNo);
+                    }
+                });
+
+                if (duplicateInvoiceNoFound) {
+                    alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
                     isValid = false;
                 }
 

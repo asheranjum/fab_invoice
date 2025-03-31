@@ -186,10 +186,7 @@ mysqli_close($conn);
                         <input type="text" name="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="<?php echo $invoiceData['phone'] ?? ''; ?>">
                     </div>
 
-                    <div class="mb-0 d-flex align-items-center">
-                        <label for="runsheet" class="form-label mb-0 me-2">RUNSHEET NO:</label>
-                        <input type="text" name="runsheet" class="form-control custom-width-1" placeholder="Enter RunSheet Number" value="<?php echo $invoiceData['runsheet'] ?? ''; ?>">
-                    </div>
+
                 </form>
             </div>
 
@@ -336,14 +333,21 @@ mysqli_close($conn);
                         <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
 
                             <tr>
-                                <th colspan="3">
+                                <th colspan="3" id='runsheet-data'>
                                     <div style="gap: 50px; display: flex;">
-                                        <strong>Runsheet No: <?= htmlspecialchars($runsheetNumber) ?></strong>
-                                        <strong>Runsheet Date: <?= htmlspecialchars($runsheetData['runsheet_date']) ?></strong>
+
+                                        <strong>Runsheet No: <span id="runsheet_no"><?= htmlspecialchars($runsheetNumber) ?></span> </strong>
+                                        <strong>Runsheet Date: <span id="runsheet_date"><?= htmlspecialchars($runsheetData['runsheet_date']) ?></span> </strong>
+
                                         <button type="button" class="btn btn-warning btn-sm edit-runsheet-button"
                                             data-run-number="<?= htmlspecialchars($runsheetNumber) ?>"
                                             data-run-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                             Edit
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm delete-runsheet-items"
+                                            data-run-number="<?= htmlspecialchars($runsheetNumber) ?>"
+                                            data-run-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                            Delete
                                         </button>
                                     </div>
                                 </th>
@@ -438,8 +442,8 @@ mysqli_close($conn);
                                                             <div class="form-check">
                                                                 <input type="hidden" name="item_id" value="<?= isset($data['items'][$key]['item_id']) ? $data['items'][$key]['item_id'] : '' ?>">
                                                                 <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
-                                                                <input id="<?= $label . '-' . $itemId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemId ?>][<?= strtolower($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
-                                                                <label for="<?= $label . '-' . $itemId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
+                                                                <input id="<?= $label . '-' . $itemRowId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemId ?>][<?= strtolower($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
+                                                                <label for="<?= $label . '-' . $itemRowId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
                                                                 <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
                                                             </div>
 
@@ -585,14 +589,19 @@ mysqli_close($conn);
                     return;
                 }
 
+                currentRunsheet = {
+                    number: runsheetNumber,
+                    date: runsheetDate
+                };
+
                 // Create new runsheet row
                 const runsheetIndex = new Date().getTime(); // Unique index based on timestamp
                 const runsheetRow = `
             <tr>
                 <th colspan="3" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
-                        <strong>Runsheet No: ${runsheetNumber}</strong>
-                        <strong>Runsheet Date: ${runsheetDate}</strong>
+                         <strong>Runsheet No: <span id="runsheet_no">${runsheetNumber}</span> </strong>
+                        <strong>Runsheet Date: <span id="runsheet_date">${runsheetDate}</span> </strong>
                         <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                     </div>
                 </th>
@@ -703,15 +712,22 @@ mysqli_close($conn);
 
                 for (let i = 0; i < newRows; i++) {
                     const lastRow = $(".table-container #tbody tr#tabletr").last();
-
+                    console.log('lastRow', lastRow);
                     if (lastRow.length === 0) {
                         alert("No existing rows found to clone.");
                         return;
                     }
 
-                    // ✅ Get Runsheet Data from Last Row
-                    const lastRunsheetNumber = lastRow.attr("data-runsheet-number") || "";
-                    const lastRunsheetDate = lastRow.attr("data-runsheet-date") || "";
+                    var lastRunsheetNumber = lastRow.attr("data-runsheet-number") || "";
+                    var lastRunsheetDate = lastRow.attr("data-runsheet-date") || "";
+
+                    if (lastRunsheetNumber == '' && lastRunsheetDate == '') {
+                        const table_exitisng = $(".table-container #tbody tr#table_exitisng").last();
+
+                        lastRunsheetNumber = table_exitisng.attr("data-runsheet-number") || "";
+                        lastRunsheetDate = table_exitisng.attr("data-runsheet-date") || "";
+                    }
+
 
                     const newRow = lastRow.clone();
                     newRow.removeAttr("style");
@@ -838,7 +854,6 @@ mysqli_close($conn);
                 address: $("input[name='address']").val().trim(),
                 phone: $("input[name='phone']").val().trim(),
                 abn: $("input[name='abn']").val().trim(),
-                runsheet: $("input[name='runsheet']").val().trim(),
                 sub_total: $("#sub_total").val().trim(),
                 tax_rate: $("#tax_rate").val().trim(),
                 total_cost: $("#total_cost").val().trim(),
@@ -849,13 +864,16 @@ mysqli_close($conn);
 
             let currentRunsheetNumber = $("#runsheet_no").text().trim();
             let currentRunsheetDate = $("#runsheet_date").text().trim();
-
+            let maxItemRowId = 0;
             /** --------------------
              * ✅ Collect Existing Items
              * -------------------- **/
             $(".table-container #tbody tr#table_exitisng").each(function() {
                 const row = $(this);
                 const itemRowId = row.attr("data-item-row-id");
+                if (itemRowId > maxItemRowId) {
+                    maxItemRowId = itemRowId;
+                }
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
                 const customerInvoiceName = row.find(".customer-inv-name").val().trim() || "";
 
@@ -951,10 +969,10 @@ mysqli_close($conn);
                     }
                 });
 
-
+                maxItemRowId++;
                 if (hasCheckedItem && newItem.length > 0) {
                     formData.new_items.push({
-                        item_row_id: `${index + 1}`,
+                        item_row_id: `${maxItemRowId}`,
                         customer_inv_no: customerInvoiceNo,
                         customer_inv_name: customerInvoiceName,
                         items: newItem,
@@ -1028,6 +1046,42 @@ mysqli_close($conn);
                 $("#runsheetDate").val(currentRunsheetDate);
 
                 $("#runsheetModal").modal("show");
+            });
+            // Show Modal with existing runsheet data
+
+
+
+            $(document).on("click", ".delete-runsheet-items", function() {
+                const button = $(this);
+                const runsheetNumber = button.data("run-number");
+                const runsheetDate = button.data("run-date");
+
+                if (confirm('Are you sure you want to delete this runsheet and all linked items?')) {
+                    $.ajax({
+                        url: "delete_runsheet.php",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            runsheet_number: runsheetNumber,
+                            runsheet_date: runsheetDate
+                        }),
+                        success: function(response) {
+                            if (response.success) {
+                                alert("Runsheet and linked items deleted successfully!");
+
+                                // Remove the runsheet and linked items from the DOM
+                                $(`tr[data-runsheet-number='${runsheetNumber}'][data-runsheet-date='${runsheetDate}']`).remove();
+                                $(`#runsheet-data`).remove();
+                            } else {
+                                alert("Error: " + response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error:", error);
+                            alert("An error occurred while deleting the runsheet. Please try again.");
+                        }
+                    });
+                }
             });
 
             // Save Runsheet Changes
