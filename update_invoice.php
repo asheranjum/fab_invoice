@@ -159,7 +159,8 @@ mysqli_close($conn);
                     <div class="mb-2 d-flex align-items-center">
                         <input type="hidden" name="invoice_id" value="<?php echo $invoiceId ?? ''; ?>">
                         <label for="date" class="form-label mb-0 me-2">DATE:</label>
-                        <input type="date" name="date" class="form-control form-control-sm custom-width me-3" style="font-size: 18px;" value="<?php echo $invoiceData['date'] ?? ''; ?>">
+                        <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3" style="font-size: 18px;" value="<?php echo $invoiceData['date'] ?? ''; ?>">
+                        <div class="invalid-feedback">Invoice date is required.</div>
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
                         <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" readonly>
                     </div>
@@ -168,22 +169,27 @@ mysqli_close($conn);
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>
-                        <input type="text" name="company" class="form-control w-50" placeholder="Type Company Name" value="<?php echo $invoiceData['company_name'] ?? ''; ?>">
+                        <input type="text" name="company" id="company_name" class="form-control w-50" placeholder="Type Company Name" value="<?php echo $invoiceData['company_name'] ?? ''; ?>">
+                        <div class="invalid-feedback">Company name is required.</div>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="address" class="form-label mb-0 me-4">ADDRESS:</label>
-                        <input type="text" name="address" class="form-control custom-width-2" placeholder="Enter Address Here" value="<?php echo $invoiceData['address'] ?? ''; ?>">
+                        <input type="text" name="address" id="company_address" class="form-control custom-width-2" placeholder="Enter Address Here" value="<?php echo $invoiceData['address'] ?? ''; ?>">
+                        <div class="invalid-feedback">Address is required.</div>
+
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="abn" class="form-label mb-0 me-5">ABN:</label>
-                        <input type="text" name="abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="<?php echo $invoiceData['abn'] ?? ''; ?>">
+                        <input type="text" name="abn" id="company_abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="<?php echo $invoiceData['abn'] ?? ''; ?>">
+                        <div class="invalid-feedback">ABN is required.</div>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="phone" class="form-label mb-0 me-2">PHONE NO:</label>
-                        <input type="text" name="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="<?php echo $invoiceData['phone'] ?? ''; ?>">
+                        <input type="text" name="phone" id="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="<?php echo $invoiceData['phone'] ?? ''; ?>">
+                        <div class="invalid-feedback">Phone is required.</div>
                     </div>
 
 
@@ -597,7 +603,7 @@ mysqli_close($conn);
                 // Create new runsheet row
                 const runsheetIndex = new Date().getTime(); // Unique index based on timestamp
                 const runsheetRow = `
-            <tr>
+            <tr id="runsheet-${runsheetIndex}">
                 <th colspan="3" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
                          <strong>Runsheet No: <span id="runsheet_no">${runsheetNumber}</span> </strong>
@@ -811,6 +817,13 @@ mysqli_close($conn);
             });
 
             $(".add-bulk-button").click(function() {
+
+                // Check if at least one runsheet row exists
+                if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
+                    alert("Please add at least one Runsheet before adding rows.");
+                    return;
+                }
+
                 let count = prompt("How many rows do you want to add? (1-25)", "1");
                 count = parseInt(count, 10);
                 if (!isNaN(count) && count > 0 && count <= 25) {
@@ -845,6 +858,110 @@ mysqli_close($conn);
 
         $("#invoiceForm").on("submit", function(e) {
             e.preventDefault();
+            let isValid = true;
+
+            const requiredFields = [{
+                    id: "#invoice_date",
+                    message: "Invoice date is required."
+                },
+                {
+                    id: "#company_name",
+                    message: "Company name is required."
+                },
+                {
+                    id: "#company_address",
+                    message: "Address is required."
+                },
+                {
+                    id: "#company_abn",
+                    message: "ABN is required."
+                },
+                {
+                    id: "#phone",
+                    message: "Phone is required."
+                }
+            ];
+
+            // Validate each required field
+            requiredFields.forEach(field => {
+                const input = $(field.id);
+                const value = input.val().trim();
+
+                if (!value) {
+                    input.addClass("is-invalid");
+                    isValid = false;
+                } else {
+                    input.removeClass("is-invalid");
+                }
+            });
+
+            // Check if runsheet exists
+            if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
+                alert("Please add at least one Runsheet before submitting.");
+                isValid = false;
+            }
+
+
+            // Check if at least one valid item row is added
+            let hasValidItem = false;
+
+            $(".table-container tbody tr#tabletr").each(function() {
+                const row = $(this);
+                const invNo = row.find(".customer-inv-no").val().trim();
+                const invName = row.find(".customer-inv-name").val().trim();
+                let itemIsValid = false;
+
+                // Check if at least one checkbox is checked AND has a value > 0
+                row.find(".form-check").each(function() {
+                    const checkbox = $(this).find("input[type='checkbox']");
+                    const valueInput = $(this).find("input[type='text']");
+                    const value = parseFloat(valueInput.val()) || 0;
+
+                    if (checkbox.prop("checked") && value > 0) {
+                        itemIsValid = true;
+                    }
+                });
+
+                // Also check P/UP (select + value)
+                const pupSelect = row.find(".form-contro");
+                const pupValue = parseFloat(pupSelect.siblings("input[type='text']").val()) || 0;
+                if (pupSelect.val() && pupValue > 0) {
+                    itemIsValid = true;
+                }
+
+                if (invNo !== "" && invName !== "" && itemIsValid) {
+                    hasValidItem = true;
+                    return false; // break .each()
+                }
+            });
+
+            if (!hasValidItem) {
+                alert("Please add at least one valid item row with Invoice No, Name, and at least one selected item with value.");
+                isValid = false;
+            }
+
+            // Check for duplicate customer invoice numbers
+            let invoiceNumbers = new Set();
+            let duplicateInvoiceNoFound = false;
+
+            $(".table-container tbody tr#tabletr").each(function() {
+                const invNo = $(this).find(".customer-inv-no").val().trim();
+
+                if (invNo !== "") {
+                    if (invoiceNumbers.has(invNo)) {
+                        duplicateInvoiceNoFound = true;
+                        return false; // break loop
+                    }
+                    invoiceNumbers.add(invNo);
+                }
+            });
+
+            if (duplicateInvoiceNoFound) {
+                alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
+                isValid = false;
+            }
+
+            if (!isValid) return;
 
             const formData = {
                 invoice_id: <?php echo $invoiceId ?? ''; ?>,
