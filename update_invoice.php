@@ -338,7 +338,7 @@ mysqli_close($conn);
 
                         <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
 
-                            <tr>
+                            <tr id="runsheet-">
                                 <th colspan="3" id='runsheet-data'>
                                     <div style="gap: 50px; display: flex;">
 
@@ -905,7 +905,7 @@ mysqli_close($conn);
             // Check if at least one valid item row is added
             let hasValidItem = false;
 
-            $(".table-container tbody tr#tabletr").each(function() {
+            $(".table-container tbody tr#tabletr, .table-container tbody tr#table_exitisng").each(function() {
                 const row = $(this);
                 const invNo = row.find(".customer-inv-no").val().trim();
                 const invName = row.find(".customer-inv-name").val().trim();
@@ -944,7 +944,7 @@ mysqli_close($conn);
             let invoiceNumbers = new Set();
             let duplicateInvoiceNoFound = false;
 
-            $(".table-container tbody tr#tabletr").each(function() {
+            $(".table-container tbody tr#tabletr, .table-container tbody tr#table_exitisng").each(function() {
                 const invNo = $(this).find(".customer-inv-no").val().trim();
 
                 if (invNo !== "") {
