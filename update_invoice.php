@@ -117,11 +117,10 @@ mysqli_close($conn);
 
                 <form id="invoiceForm" class="form-group p-1">
                     <div class="topbtngrp">
-                        <button type="submit" class="btn btn-success export-button">Update Invoice</button>
-                        <button type="button" class="btn btn-secondary  add-bulk-button">Add Bulk Rows</button>
-                        <button type="button" class="btn btn-warning remove-bulk-button">Remove Bulk Rows</button>
-                        <button type="button" class="btn btn-info add-runsheet-button">Add Runsheet</button>
-
+                        <button type="button" class="btn btn-dark  add-bulk-button">Add Rows</button>
+                        <button type="button" class="btn btn-dark remove-bulk-button">Remove Rows</button>
+                        <button type="button" class="btn btn-dark add-runsheet-button">Add Runsheet</button>
+                        <button type="submit" class="btn btn-dark export-button">Save and Update Invoice</button>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
