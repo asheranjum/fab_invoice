@@ -4,7 +4,7 @@ require 'session.php';
 require 'config/database.php';
 
 // Fetch the last invoice number
-$sql = "SELECT MAX(CAST(invoice AS UNSIGNED)) AS last_invoice FROM invoice";
+$sql = "SELECT MAX(CAST(invoice_number AS UNSIGNED)) AS last_invoice FROM invoices";
 $result = mysqli_query($conn, $sql);
 
 $lastInvoice = 0;
@@ -12,12 +12,15 @@ if ($result && $row = mysqli_fetch_assoc($result)) {
     $lastInvoice = (int)$row['last_invoice']; // Get the last invoice number
 }
 
+
 // Set starting invoice number if no records exist
 $startingInvoice = 10001;
 $newInvoice = ($lastInvoice > 0) ? $lastInvoice + 1 : $startingInvoice;
 
 // Close the connection
 mysqli_close($conn);
+
+
 
 
 ?>
@@ -33,10 +36,40 @@ mysqli_close($conn);
     <link rel="stylesheet" href="assets/css/style-2.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
 </head>
 
 <body>
+
+
+    <!-- Add Runsheet Modal -->
+    <div class="modal fade" id="addRunsheetModal" tabindex="-1" aria-labelledby="addRunsheetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRunsheetModalLabel">Add Runsheet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addRunsheetForm">
+                        <div class="mb-3">
+                            <label for="addRunsheetNumber" class="form-label">Runsheet Number</label>
+                            <input type="number" class="form-control" id="addRunsheetNumber" name="addRunsheetNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addRunsheetDate" class="form-label">Runsheet Date</label>
+                            <input type="date" class="form-control" id="addRunsheetDate" name="addRunsheetDate" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="addRunsheet">Add Runsheet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container invoice-container mb-5">
 
         <div class="row">
@@ -62,7 +95,8 @@ mysqli_close($conn);
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="date" class="form-label mb-0 me-2">DATE:</label>
-                        <input type="date" name="date" class="form-control form-control-sm custom-width me-3" style=" font-size: 18px;" value="">
+                        <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3">
+                        <div class="invalid-feedback">Invoice date is required.</div>
 
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
 
@@ -74,23 +108,28 @@ mysqli_close($conn);
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>
-                        <input type="text" name="company" class="form-control w-50" placeholder="Type Company Name" value="">
+                        <input type="text" name="company" id="company_name" class="form-control w-50" placeholder="Type Company Name" value="">
+                        <div class="invalid-feedback">Company name is required.</div>
+
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="address" class="form-label mb-0 me-4">ADDREESS:</label>
-                        <input type="text" name="address" class="form-control custom-width-2" placeholder="Enter Address Here" value="">
+                        <input type="text" name="address" id="company_address" class="form-control custom-width-2" placeholder="Enter Address Here" value="">
+                        <div class="invalid-feedback">Address is required.</div>
+
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="abn" class="form-label mb-0 me-5">ABN:</label>
-                        <input type="text" name="abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="">
+                        <input type="text" name="abn" id="company_abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="">
+                        <div class="invalid-feedback">ABN is required.</div>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="phone" class="form-label mb-0 me-2">PHONE:</label>
-                        <input type="text" name="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="">
-
+                        <input type="text" name="phone" id="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="">
+                        <div class="invalid-feedback">Phone is required.</div>
                         <!-- <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
                         <input type="text" name="postal_code" class="form-control custom-width-3" placeholder="Postal Code" value=""> -->
                     </div>
@@ -129,88 +168,88 @@ mysqli_close($conn);
                     </thead>
                     <tbody>
 
-                        <!-- <tr>
+                        <tr style="display: none;">
                             <th colspan="3">
                                 <div style=" gap: 50px; display: flex;">
-                                    <strong>Runsheet No:    <span id="runsheet_no"></span> </strong>
-                                    <strong>Runsheet Date:  <span id="runsheet_date"></span> </strong>
+                                    <strong>Runsheet No: <span id="runsheet_no"></span> </strong>
+                                    <strong>Runsheet Date: <span id="runsheet_date"></span> </strong>
                                 </div>
                             </th>
-                        </tr> -->
+                        </tr>
 
-                        <tr id="tabletr">
-                          
+                        <tr id="tabletr" style="display: none;">
+
                             <td style="width: 180px;">
-                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
+                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no numeric-only" placeholder="Enter Invoice No">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Invoice Name">
                             </td>
-                            
+
                             <td>
                                 <div class="d-flex">
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="deliv-0" name="item[0][deliv]">
                                         <label for="deliv-0" class="form-check-label">DELIV+</label>
-                                        <input type="text" name="item[0][deliv_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][deliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="disas-0" name="item[0][disas]">
                                         <label for="disas-0" class="form-check-label">DISAS+</label>
-                                        <input type="text" name="item[0][disas_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][disas_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="assem-0" name="item[0][assem]">
                                         <label for="assem-0" class="form-check-label">ASSEM+</label>
-                                        <input type="text" name="item[0][assem_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][assem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="rub-0" name="item[0][rub]">
                                         <label for="rub-0" class="form-check-label">RUB+</label>
-                                        <input type="text" name="item[0][rub_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][rub_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="upst-0" name="item[0][upst]">
                                         <label for="upst-0" class="form-check-label">UPST+</label>
-                                        <input type="text" name="item[0][upst_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][upst_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="downst-0" name="item[0][downst]">
                                         <label for="downst-0" class="form-check-label">DOWNST+</label>
-                                        <input type="text" name="item[0][downst_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][downst_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="prem-0" name="item[0][prem]">
                                         <label for="prem-0" class="form-check-label">PREM+</label>
-                                        <input type="text" name="item[0][prem_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][prem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="brtrans-0" name="item[0][brtrans]">
                                         <label for="brtrans-0" class="form-check-label">BRTRANS+</label>
-                                        <input type="text" name="item[0][brtrans_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][brtrans_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="ins-0" name="item[0][ins]">
                                         <label for="ins-0" class="form-check-label">INST+</label>
-                                        <input type="text" name="item[0][ins_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][ins_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="h_dliv-0" name="item[0][h_dliv]">
                                         <label for="h_dliv-0" class="form-check-label">H/DLIV+</label>
-                                        <input type="text" name="item[0][h_dliv_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][h_dliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="vol-0" name="item[0][vol]">
                                         <label for="vol-0" class="form-check-label">VOL+</label>
-                                        <input type="text" name="item[0][vol_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][vol_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="water_con-0" name="item[0][water_con]">
                                         <label for="water_con-0" class="form-check-label">WATERCON+</label>
-                                        <input type="text" name="item[0][water_con_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][water_con_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_remove]">
                                         <label for="door_remove-0" class="form-check-label">DOOR/R+</label>
-                                        <input type="text" name="item[0][door_remove_value]" class="form-control mt-1" disabled placeholder="">
+                                        <input type="text" name="item[0][door_remove_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <select id="pup-0" name="item[0][pup]" class="form-contro">
@@ -289,84 +328,127 @@ mysqli_close($conn);
 
     <script>
         $(document).ready(function() {
-
-          
-
-            $('#runsheet_no').append(<?php echo $newInvoice;?>+'1001')
-
-            var today = new Date();
-            var formattedDate = today.toLocaleDateString(); // Format the date (e.g., "3/7/2025" in US format)
-
-            // Append the date to the element
-            $('#runsheet_date').append(formattedDate);
             const maxRows = 25;
-            let currentRunsheet = null; // Store current runsheet data
-            let runsheetIndex = 0; // Unique identifier for runsheets
-            $(".add-runsheet-button").click(function() {
+            let currentRunsheet = null;
+            let runsheetIndex = 0;
 
-                addRunSheetValues()
+            initializePage();
+
+            // $(".add-runsheet-button").click(addRunSheetValues);
+            // $(".add-button").click(() => addRows(1));
+            // $(".add-bulk-button").click(() => addRows(promptForRowCount("add")));
+            // $(".remove-button").click(() => removeRows(1));
+            // $(".remove-bulk-button").click(() => removeRows(promptForRowCount("remove")));
+
+            // $("#invoiceForm").on("submit", handleFormSubmit);
+            // $("#tax_rate, #other_cost").on("input", calculateSubTotal);
+
+
+            $(".add-runsheet-button").click(showAddRunsheetModal);
+            $("#addRunsheet").click(addRunsheet);
+            $(".add-bulk-button").click(() => {
+
+                // Check if at least one runsheet row exists
+                if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
+                    alert("Please add at least one Runsheet before adding rows.");
+                    return;
+                }
+
+                addRows(promptForRowCount("add"))
             });
+            $(".remove-bulk-button").click(() => removeRows(promptForRowCount("remove")));
+            $("#invoiceForm").on("submit", handleFormSubmit);
+            $("#tax_rate, #other_cost").on("input", calculateSubTotal);
 
-            // addRunSheetValues()
-            
-            function addRunSheetValues() {
+            function initializePage() {
+                // Initialization logic
+                attachRowListeners($(".table-container tbody tr"));
+                calculateSubTotal();
+            }
+
+            function promptForRowCount(action) {
+                let count = prompt(`How many rows do you want to ${action}? (1-25)`, "1");
+                count = parseInt(count, 10);
+                if (isNaN(count) || count <= 0 || count > 25) {
+                    alert("Please enter a valid number between 1 and 25.");
+                    return 0;
+                }
+                return count;
+            }
+
+
+            function addRunsheet() {
+
+                // Check for duplicate runsheet number
+                let duplicateRunsheet = false;
+
                
-               // Get Runsheet details using prompt()
-               let runsheetNumber = prompt("Enter Runsheet Number:");
-               if (runsheetNumber === null || runsheetNumber.trim() === "") return; // Exit if empty or canceled
 
-               let runsheetDate = prompt("Enter Runsheet Date (YYYY-MM-DD):");
-               if (runsheetDate === null || runsheetDate.trim() === "") return; // Exit if empty or canceled
-               runsheetIndex++; // Increment unique runsheet index
-               // Validate date format (basic check)
-               // if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
-               //     alert("Invalid date format. Please use YYYY-MM-DD.");
-               //     return;
-               // }
+                const runsheetNumber = $("#addRunsheetNumber").val();
+                const runsheetDate = $("#addRunsheetDate").val();
 
-               // Store current runsheet details for new rows
-               currentRunsheet = {
-                   number: runsheetNumber,
-                   date: runsheetDate
-               };
+                if (!runsheetNumber || !runsheetDate) {
+                    alert("Please fill in both Runsheet Number and Runsheet Date.");
+                    return;
+                }
 
-               // Runsheet HTML template
-               let runsheetRow = `
-           
-               <tr>
-                   <th colspan="3"  id="runsheet-${runsheetIndex}">
-                       <div style=" gap: 50px; display: flex;">
-                           <strong>Runsheet No: ${runsheetNumber}</strong>
-                           <strong>Runsheet Date: ${runsheetDate}</strong>
-                           <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
-                       </div>
-                   </th>
-               </tr>
-               `;
+                runsheetIndex++;
+                currentRunsheet = {
+                    number: runsheetNumber,
+                    date: runsheetDate
+                };
 
-               // Append runsheet below the last item row
-               $(".table-container tbody").append(runsheetRow);
-           }
+                const runsheetRow = `
+            <tr id="runsheet-${runsheetIndex}">
+                <th colspan="3">
+                    <div style="gap: 50px; display: flex;">
+                        <strong>Runsheet No: ${runsheetNumber}</strong>
+                        <strong>Runsheet Date: ${runsheetDate}</strong>
+                        <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
+                    </div>
+                </th>
+            </tr> `;
 
-            // Event delegation for dynamically added "Remove" buttons
-            $(document).on("click", ".remove-runsheet", function() {
-                let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
-            
-                $("#" + runsheetId).remove(); // Remove the respective runsheet row
-            });
-            
-            function calculateRowAmount(row) {
-                let amount = 0;
-
-                $(row).find(".form-checkboxes").each(function() {
-                    const inputField = $(this).closest(".form-check").find("input[type='text']");
-                    const value = parseFloat(inputField.val()) || 0;
-
-                    if (this.checked) amount += value;
+            $(".table-container tbody tr[id^='runsheet-']").each(function() {
+                    const text = $(this).text();
+                    if (text.includes(runsheetNumber)) {
+                        duplicateRunsheet = true;
+                        return false; // break
+                    }
                 });
 
-                const selectField = $(row).find(".form-contro");
-                const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
+                if (duplicateRunsheet) {
+                    alert("This Runsheet Number already exists. Please enter a unique Runsheet Number.");
+                    return;
+                }
+                $(".table-container tbody").append(runsheetRow);
+
+                attachRowListeners($(`#tabletr-${runsheetIndex}`));
+
+                $("#addRunsheetModal").modal("hide");
+            }
+
+
+            $(document).on("click", ".remove-runsheet", function() {
+                const runsheetId = $(this).data("id");
+                $(`#${runsheetId}`).remove();
+                $(`#tabletr-${runsheetId.split('-')[1]}`).remove();
+            });
+
+            function showAddRunsheetModal() {
+                $("#addRunsheetNumber").val("");
+                $("#addRunsheetDate").val("");
+                $("#addRunsheetModal").modal("show");
+            }
+
+            function calculateRowAmount(row) {
+                let amount = 0;
+                $(row).find(".form-checkboxes:checked").each(function() {
+                    const value = parseFloat($(this).closest(".form-check").find("input[type='text']").val()) || 0;
+                    amount += value;
+                });
+
+                const selectValue = parseFloat($(row).find(".form-contro").siblings("input[type='text']").val()) || 0;
                 amount += selectValue;
 
                 $(row).find(".amount-field").val(amount.toFixed(2));
@@ -375,52 +457,60 @@ mysqli_close($conn);
 
             function calculateSubTotal() {
                 let subTotal = 0;
-
                 $(".amount-field").each(function() {
                     subTotal += parseFloat($(this).val()) || 0;
                 });
 
                 const taxRate = parseFloat($("#tax_rate").val()) || 0;
                 const otherCost = parseFloat($("#other_cost").val()) || 0;
-                const total = subTotal + taxRate + otherCost;
-
                 $("#sub_total").val(subTotal.toFixed(2));
-                $("#total_cost").val(total.toFixed(2));
+                $("#total_cost").val((subTotal + taxRate + otherCost).toFixed(2));
             }
 
             function attachRowListeners(row) {
-                $(row).find(".form-checkboxes").off("change").on("change", function() {
+                $(row).find(".form-checkboxes").change(function() {
                     const inputField = $(this).closest(".form-check").find("input[type='text']");
                     inputField.prop("disabled", !this.checked).val("");
                     calculateRowAmount(row);
                 });
 
-                $(row).find(".form-contro").off("change").on("change", function() {
+                $(row).find(".form-contro").change(function() {
                     const inputField = $(this).siblings("input[type='text']");
-                    if ($(this).val() !== "") {
-                        inputField.prop("disabled", false);
-                    } else {
-                        inputField.prop("disabled", true).val("");
-                    }
+                    inputField.prop("disabled", !$(this).val()).val("");
                     calculateRowAmount($(this).closest("tr"));
                 });
 
-                $(row).find(".form-check input[type='text']").off("input").on("input", function() {
+                $(row).find(".form-check input[type='text']").on("input", function() {
                     calculateRowAmount(row);
                 });
 
-                $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
-                    if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
+                // ✅ Numeric-only fields
+                $(row).find(".numeric-only").on("keypress", function(e) {
+                    const key = e.key;
+                    const allowedPattern = /^[0-9.]$/;
+                    if (!allowedPattern.test(key)) {
                         e.preventDefault();
                     }
                 });
 
-                $(row).find("#customer-inv-name").off("keypress").on("keypress", function(e) {
-                    // Allow all alphanumeric characters and special characters (including space)
-                    if (!/^[\w\s.,;!?()\-"'&@#$%^*+=<>_/|\\`~]+$/.test(e.key) && e.key !== "Backspace") {
+                $(row).find(".numeric-only").on("paste", function(e) {
+                    const pasted = (e.originalEvent || e).clipboardData.getData('text');
+                    if (!/^[0-9.]+$/.test(pasted)) {
                         e.preventDefault();
                     }
                 });
+
+
+
+                $(row).find(".customer-inv-name").on("keypress", function(e) {
+                    const key = e.key;
+                    const allowedPattern = /^[a-zA-Z0-9\s.,()\-'"&]$/;
+                    if (!allowedPattern.test(key)) {
+                        e.preventDefault();
+                    }
+                });
+
+
 
                 $(row).find(".form-check input[type='text']").prop("disabled", true);
                 $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true);
@@ -437,23 +527,21 @@ mysqli_close($conn);
                 }
 
                 for (let i = 0; i < newRows; i++) {
-                   
-                    const lastRow = $(".table-container tbody tr#tabletr").last();
-                    const newRow = lastRow.clone();
+                    const newRow = $(".table-container tbody tr#tabletr").last().clone();
                     const rowIndex = $(".table-container tbody tr#tabletr").length;
-                    
+
                     newRow.find("input, select").each(function() {
-                        if (this.type === "checkbox") {
-                            this.checked = false;
-                        } else {
-                            // $(this).val("").prop("disabled", true);
-                        }
+                        if (this.type === "checkbox") this.checked = false;
                         if ($(this).hasClass("customer-inv-no")) {
                             $(this).prop("disabled", false).val("");
                         }
                     });
 
+                    newRow.removeAttr("style");
+
                     newRow.find(".form-contro").prop("disabled", false);
+
+                    newRow.find("#customer-inv-name").val("");
 
                     newRow.find(".form-check").each(function() {
                         const labelText = $(this).find("label").text().trim();
@@ -476,7 +564,6 @@ mysqli_close($conn);
                     newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
                     newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
 
-                   
                     if (currentRunsheet) {
                         newRow.attr("data-runsheet-number", currentRunsheet.number);
                         newRow.attr("data-runsheet-date", currentRunsheet.date);
@@ -488,8 +575,8 @@ mysqli_close($conn);
             }
 
             function removeRows(count) {
-                const rows = $(".table-container tbody tr#tabletr");
-                let currentRows = rows.length;
+                if (count <= 0) return;
+                let currentRows = $(".table-container tbody tr#tabletr").length;
 
                 if (currentRows <= 1) {
                     alert("You cannot remove the last row.");
@@ -507,78 +594,162 @@ mysqli_close($conn);
                 }
             }
 
-            $(".add-button").click(function() {
-                addRows(1);
-            });
+            function handleFormSubmit(e) {
+                e.preventDefault();
 
-            $(".add-bulk-button").click(function() {
-                let count = prompt("How many rows do you want to add? (1-25)", "1");
-                count = parseInt(count, 10);
-                if (!isNaN(count) && count > 0 && count <= 25) {
-                    addRows(count);
-                } else {
-                    alert("Please enter a valid number between 1 and 25.");
+
+                let isValid = true;
+
+                const requiredFields = [{
+                        id: "#invoice_date",
+                        message: "Invoice date is required."
+                    },
+                    {
+                        id: "#company_name",
+                        message: "Company name is required."
+                    },
+                    {
+                        id: "#company_address",
+                        message: "Address is required."
+                    },
+                    {
+                        id: "#company_abn",
+                        message: "ABN is required."
+                    },
+                    {
+                        id: "#phone",
+                        message: "Phone is required."
+                    }
+                ];
+
+                // Validate each required field
+                requiredFields.forEach(field => {
+                    const input = $(field.id);
+                    const value = input.val().trim();
+
+                    if (!value) {
+                        input.addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        input.removeClass("is-invalid");
+                    }
+                });
+
+                // Check if runsheet exists
+                if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
+                    alert("Please add at least one Runsheet before submitting.");
+                    isValid = false;
                 }
-            });
 
-            $(".remove-button").click(function() {
-                removeRows(1);
-            });
 
-            $(".remove-bulk-button").click(function() {
-                let count = prompt("How many rows do you want to remove?", "1");
-                count = parseInt(count, 10);
-                if (!isNaN(count) && count > 0) {
-                    removeRows(count);
-                } else {
-                    alert("Please enter a valid number.");
+                // Check if at least one valid item row is added
+                let hasValidItem = false;
+
+                $(".table-container tbody tr#tabletr").each(function() {
+                    const row = $(this);
+                    const invNo = row.find(".customer-inv-no").val().trim();
+                    const invName = row.find(".customer-inv-name").val().trim();
+                    let itemIsValid = false;
+
+                    // Check if at least one checkbox is checked AND has a value > 0
+                    row.find(".form-check").each(function() {
+                        const checkbox = $(this).find("input[type='checkbox']");
+                        const valueInput = $(this).find("input[type='text']");
+                        const value = parseFloat(valueInput.val()) || 0;
+
+                        if (checkbox.prop("checked") && value > 0) {
+                            itemIsValid = true;
+                        }
+                    });
+
+                    // Also check P/UP (select + value)
+                    const pupSelect = row.find(".form-contro");
+                    const pupValue = parseFloat(pupSelect.siblings("input[type='text']").val()) || 0;
+                    if (pupSelect.val() && pupValue > 0) {
+                        itemIsValid = true;
+                    }
+
+                    if (invNo !== "" && invName !== "" && itemIsValid) {
+                        hasValidItem = true;
+                        return false; // break .each()
+                    }
+                });
+
+                if (!hasValidItem) {
+                    alert("Please add at least one valid item row with Invoice No, Name, and at least one selected item with value.");
+                    isValid = false;
                 }
-            });
 
-            attachRowListeners($(".table-container tbody tr#tabletr"));
-            $("#tax_rate, #other_cost").on("input", calculateSubTotal);
-            calculateSubTotal();
-        });
+                // Check for duplicate customer invoice numbers
+                let invoiceNumbers = new Set();
+                let duplicateInvoiceNoFound = false;
 
+                $(".table-container tbody tr#tabletr").each(function() {
+                    const invNo = $(this).find(".customer-inv-no").val().trim();
 
+                    if (invNo !== "") {
+                        if (invoiceNumbers.has(invNo)) {
+                            duplicateInvoiceNoFound = true;
+                            return false; // break loop
+                        }
+                        invoiceNumbers.add(invNo);
+                    }
+                });
 
+                if (duplicateInvoiceNoFound) {
+                    alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
+                    isValid = false;
+                }
 
+                if (!isValid) return;
 
+                const formData = {
+                    date: $("input[name='date']").val(),
+                    invoice: $("input[name='invoice']").val(),
+                    company: $("input[name='company']").val(),
+                    address: $("input[name='address']").val(),
+                    phone: $("input[name='phone']").val(),
+                    postal_code: $("input[name='postal_code']").val(),
+                    abn: $("input[name='abn']").val(),
+                    runsheet: $("input[name='runsheet']").val(),
+                    sub_total: $("#sub_total").val(),
+                    tax_rate: $("#tax_rate").val(),
+                    other_cost: $("#other_cost").val(),
+                    total_cost: $("#total_cost").val(),
+                    items: []
+                };
 
-        $("#invoiceForm").on("submit", function(e) {
-            e.preventDefault();
-            const formData = {
-                date: $("input[name='date']").val(),
-                invoice: $("input[name='invoice']").val(),
-                company: $("input[name='company']").val(),
-                address: $("input[name='address']").val(),
-                phone: $("input[name='phone']").val(),
-                postal_code: $("input[name='postal_code']").val(),
-                abn: $("input[name='abn']").val(),
-                runsheet: $("input[name='runsheet']").val(),
-                sub_total: $("#sub_total").val(),
-                tax_rate: $("#tax_rate").val(),
-                other_cost: $("#other_cost").val(),
-                total_cost: $("#total_cost").val(),
-                items: []
-            };
+                $(".table-container tbody tr#tabletr").each(function(index) {
+                    const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
+                    const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
+                    const amount = $(this).find(".amount-field").val() || 0;
+                    let row = $(this);
+                    $(this).find(".form-check").each(function() {
+                        const checkbox = $(this).find("input[type='checkbox']");
+                        const inputField = $(this).find("input[type='text']");
 
-            $(".table-container tbody tr#tabletr").each(function(index) {
-                const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
-                const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
-                const amount = $(this).find(".amount-field").val() || 0;
-                let row = $(this);
-                $(this).find(".form-check").each(function() {
-                    const checkbox = $(this).find("input[type='checkbox']");
-                    const inputField = $(this).find("input[type='text']");
-                 
-                    if (checkbox.prop("checked")) {
+                        if (checkbox.prop("checked")) {
+                            formData.items.push({
+                                item_row_id: `${index + 1}`,
+                                customer_inv_no: customerInvoiceNo,
+                                customer_inv_name: customer_inv_name,
+                                item_name: $(this).find("label").text().trim(),
+                                item_value: inputField.val() || 0,
+                                amount: amount,
+                                runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
+                                runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+                            });
+                        }
+                    });
+
+                    const selectField = $(this).find(".form-contro");
+                    if (selectField.val() !== "") {
                         formData.items.push({
                             item_row_id: `${index + 1}`,
                             customer_inv_no: customerInvoiceNo,
                             customer_inv_name: customer_inv_name,
-                            item_name: $(this).find("label").text().trim(),
-                            item_value: inputField.val() || 0,
+                            item_name: selectField.find("option:selected").text().trim(),
+                            item_value: selectField.siblings("input[type='text']").val() || 0,
                             amount: amount,
                             runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
                             runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
@@ -586,43 +757,27 @@ mysqli_close($conn);
                     }
                 });
 
-                const selectField = $(this).find(".form-contro");
-                if (selectField.val() !== "") {
-                    formData.items.push({
-                        item_row_id: `${index + 1}`,
-                        customer_inv_no: customerInvoiceNo,
-                        customer_inv_name: customer_inv_name,
-                        item_name: selectField.find("option:selected").text().trim(),
-                        item_value: selectField.siblings("input[type='text']").val() || 0,
-                        amount: amount,
-                        runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
-                        runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+                console.log(formData);
+                fetch("save_invoice.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(formData),
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            alert(data.message);
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred. Please try again.");
                     });
-                }
-            });
-
-            console.log(formData)
-            fetch("save_invoice.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData),
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        alert(data.message);
-                        isFormDirty = false; // Reset dirty flag on successful submission
-                        // window.location.href = "index.php";
-                    } else {
-                        alert("Error: " + data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                    alert("An error occurred. Please try again.");
-                });
+            }
         });
     </script>
 

@@ -558,7 +558,13 @@ label {
     text-align: center;
 }
 
-
+.edit-runsheet-button
+{
+    background-color: #011F7F !important;
+    border-color: #011F7F !important;
+    
+    color: white !important;
+}
 
 .topbtngrp
 {
