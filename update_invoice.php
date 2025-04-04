@@ -150,17 +150,10 @@ mysqli_close($conn);
 
                 <form id="invoiceForm" class="form-group p-1">
                     <div class="topbtngrp">
-<<<<<<< HEAD
-                        <button type="button" class="btn btn-dark  add-bulk-button">Add Rows</button>
-                        <button type="button" class="btn btn-dark remove-bulk-button">Remove Rows</button>
-                        <button type="button" class="btn btn-dark add-runsheet-button">Add Runsheet</button>
-                        <button type="submit" class="btn btn-dark export-button">Save and Update Invoice</button>
-=======
                         <button type="submit" class="btn btn-success export-button">Update Invoice</button>
                         <button type="button" class="btn btn-secondary add-bulk-button">Add Bulk Rows</button>
                         <button type="button" class="btn btn-warning remove-bulk-button">Remove Bulk Rows</button>
                         <button type="button" class="btn btn-info add-runsheet-button">Add Runsheet</button>
->>>>>>> c5a0e9f76cea3ee8333d78074b16995a710ff7be
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -1142,7 +1135,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        // location.reload(); // Refresh page after successful submission
+                        location.reload(); // Refresh page after successful submission
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }

@@ -20,9 +20,6 @@ $newInvoice = ($lastInvoice > 0) ? $lastInvoice + 1 : $startingInvoice;
 // Close the connection
 mysqli_close($conn);
 
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -769,6 +766,7 @@ mysqli_close($conn);
                     .then((data) => {
                         if (data.success) {
                             alert(data.message);
+                            location.reload();
                         } else {
                             alert("Error: " + data.message);
                         }
