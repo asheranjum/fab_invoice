@@ -224,11 +224,6 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][brtrans_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="ins-0" name="item[0][ins]">
-                                        <label for="ins-0" class="form-check-label">INST+</label>
-                                        <input type="text" name="item[0][ins_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
-                                    </div>
-                                    <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="h_dliv-0" name="item[0][h_dliv]">
                                         <label for="h_dliv-0" class="form-check-label">H/DLIV+</label>
                                         <input type="text" name="item[0][h_dliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
@@ -238,16 +233,7 @@ mysqli_close($conn);
                                         <label for="vol-0" class="form-check-label">VOL+</label>
                                         <input type="text" name="item[0][vol_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
-                                    <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="water_con-0" name="item[0][water_con]">
-                                        <label for="water_con-0" class="form-check-label">WATERCON+</label>
-                                        <input type="text" name="item[0][water_con_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
-                                    </div>
-                                    <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_remove]">
-                                        <label for="door_remove-0" class="form-check-label">DOOR/R+</label>
-                                        <input type="text" name="item[0][door_remove_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
-                                    </div>
+                                  
                                     <div class="form-check ">
                                         <select id="pup-0" name="item[0][pup]" class="form-contro">
                                             <option value="">P/UP</option>
@@ -779,8 +765,8 @@ mysqli_close($conn);
         });
     </script>
 
-
     <script src="assets/js/bootstrap.bundle.min.js"></script>
+    
 </body>
 
 </html>

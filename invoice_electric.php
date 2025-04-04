@@ -189,14 +189,9 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][deliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="disas-0" name="item[0][disas]">
-                                        <label for="disas-0" class="form-check-label">DISAS+</label>
-                                        <input type="text" name="item[0][disas_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
-                                    </div>
-                                    <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="assem-0" name="item[0][assem]">
-                                        <label for="assem-0" class="form-check-label">ASSEM+</label>
-                                        <input type="text" name="item[0][assem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="ins-0" name="item[0][ins]">
+                                        <label for="ins-0" class="form-check-label">INST+</label>
+                                        <input type="text" name="item[0][ins_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="rub-0" name="item[0][rub]">
@@ -214,40 +209,26 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][downst_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="prem-0" name="item[0][prem]">
-                                        <label for="prem-0" class="form-check-label">PREM+</label>
-                                        <input type="text" name="item[0][prem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_chnage]">
+                                        <label for="door_chnage-0" class="form-check-label">DOOR/CH+</label>
+                                        <input type="text" name="item[0][door_chnage_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="brtrans-0" name="item[0][brtrans]">
-                                        <label for="brtrans-0" class="form-check-label">BRTRANS+</label>
-                                        <input type="text" name="item[0][brtrans_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_remove]">
+                                        <label for="door_remove-0" class="form-check-label">DOOR/RE+</label>
+                                        <input type="text" name="item[0][door_remove_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="ins-0" name="item[0][ins]">
-                                        <label for="ins-0" class="form-check-label">INST+</label>
-                                        <input type="text" name="item[0][ins_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
-                                    </div>
-                                    <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="h_dliv-0" name="item[0][h_dliv]">
-                                        <label for="h_dliv-0" class="form-check-label">H/DLIV+</label>
-                                        <input type="text" name="item[0][h_dliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
-                                    </div>
-                                    <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="vol-0" name="item[0][vol]">
-                                        <label for="vol-0" class="form-check-label">VOL+</label>
-                                        <input type="text" name="item[0][vol_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="h_dliv-0" name="item[0][relo]">
+                                        <label for="relo-0" class="form-check-label">RELO+</label>
+                                        <input type="text" name="item[0][relo_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="water_con-0" name="item[0][water_con]">
                                         <label for="water_con-0" class="form-check-label">WATERCON+</label>
                                         <input type="text" name="item[0][water_con_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
-                                    <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_remove]">
-                                        <label for="door_remove-0" class="form-check-label">DOOR/R+</label>
-                                        <input type="text" name="item[0][door_remove_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
-                                    </div>
+                                   
                                     <div class="form-check ">
                                         <select id="pup-0" name="item[0][pup]" class="form-contro">
                                             <option value="">P/UP</option>

@@ -19,7 +19,7 @@ $stmt->bind_param("i", $invoiceId);
 $stmt->execute();
 $resultInvoice = $stmt->get_result();
 
-$invoice = $resultInvoice->fetch_assoc();
+$invoice = $resultInvoice->fetch_assoc();   
 
 if (!$invoice) {
     die('Invoice not found');
@@ -290,19 +290,14 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         $allOptions = [
             'DELIV+' => 'DELIV+',
-            'DISAS+' => 'DISAS+',
-            'ASSEM+' => 'ASSEM+',
+            'INST+' => 'INST+',
             'RUB+' => 'RUB+',
             'UPST+' => 'UPST+',
             'DOWNST+' => 'DOWNST+',
-            'PREM+' => 'PREM+',
-            'BRTRANS+' => 'BRTRANS+',
-            'INST+' => 'INST+',
-            'H/DLIV+' => 'H/DLIV+',
-            'VOL+' => 'VOL+',
+            'DOOR/CH+' => 'DOOR/CH+',
+            'DOOR/RE+' => 'DOOR/RE+',
+            'RELO+' => 'RELO+',
             'WATERCON+' => 'WATERCON+',
-            'DOOR/R+' => 'DOOR/R+',
-
         ];
 
         // Check for any key matching P/UP(x)

@@ -297,12 +297,8 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
             'DOWNST+' => 'DOWNST+',
             'PREM+' => 'PREM+',
             'BRTRANS+' => 'BRTRANS+',
-            'INST+' => 'INST+',
             'H/DLIV+' => 'H/DLIV+',
             'VOL+' => 'VOL+',
-            'WATERCON+' => 'WATERCON+',
-            'DOOR/R+' => 'DOOR/R+',
-
         ];
 
         // Check for any key matching P/UP(x)
