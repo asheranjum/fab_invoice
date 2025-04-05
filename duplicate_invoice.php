@@ -8,7 +8,7 @@ if (isset($_GET['invoice_id']) && is_numeric($_GET['invoice_id'])) {
     $invoice_id = $_GET['invoice_id']; // Get the invoice ID from the URL
 
     // Fetch the invoice details (excluding invoice_id)
-    $sqlFetch = "SELECT date, company_name, address, phone, abn 
+    $sqlFetch = "SELECT invoice_type, date, company_name, address, phone, abn 
                  FROM invoices WHERE id = ?";
 
     $stmt = $conn->prepare($sqlFetch);
@@ -26,6 +26,7 @@ if (isset($_GET['invoice_id']) && is_numeric($_GET['invoice_id'])) {
         die("Invoice not found.");
     }
 
+    $invoiceCompanyName = 'Copy of '.$invoiceData['company_name'];
     // Generate a new unique invoice number
     $sqlLastInvoice = "SELECT MAX(CAST(invoice_number AS UNSIGNED)) AS last_invoice FROM invoices";
     $resultLastInvoice = mysqli_query($conn, $sqlLastInvoice);
@@ -40,8 +41,8 @@ if (isset($_GET['invoice_id']) && is_numeric($_GET['invoice_id'])) {
     $newInvoiceNumber = $lastInvoiceNumber + 1; // Generate next invoice number
 
     // Insert duplicate invoice with a new unique invoice number
-    $sqlInsert = "INSERT INTO invoices (date, invoice_number, company_name, address, phone, abn) 
-                  VALUES (?, ?, ?, ?, ?, ?)";
+    $sqlInsert = "INSERT INTO invoices (invoice_type,date, invoice_number, company_name, address, phone, abn) 
+                  VALUES (?,?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sqlInsert);
 
@@ -51,10 +52,11 @@ if (isset($_GET['invoice_id']) && is_numeric($_GET['invoice_id'])) {
 
     // Corrected bind_param() with 6 parameters (not 7)
     $stmt->bind_param(
-        "sissss",  // "s" for string, "i" for integer
+        "ssissss",  // "s" for string, "i" for integer
+        $invoiceData['invoice_type'],
         $invoiceData['date'],
         $newInvoiceNumber,
-        $invoiceData['company_name'],
+        $invoiceCompanyName,
         $invoiceData['address'],
         $invoiceData['phone'],
         $invoiceData['abn']

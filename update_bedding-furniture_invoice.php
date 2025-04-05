@@ -80,6 +80,33 @@ mysqli_close($conn);
 <body>
 
     <!-- Edit Runsheet Modal -->
+    <div class="modal fade" id="updateOnpageRunsheet" tabindex="-1" aria-labelledby="updateOnpageRunsheetLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateOnpageRunsheetLabel">Edit Runsheet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateRunsheetForm">
+                        <div class="mb-3">
+                            <label for="runsheetNumber" class="form-label">Runsheet Number</label>
+                            <input type="number" class="form-control" id="runsheetNumber" name="runsheetNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="runsheetDate" class="form-label">Runsheet Date</label>
+                            <input type="date" class="form-control" id="runsheetDate" name="runsheetDate" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveRunsheet">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Runsheet Modal -->
     <div class="modal fade" id="runsheetModal" tabindex="-1" aria-labelledby="runsheetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -149,12 +176,19 @@ mysqli_close($conn);
             <div class="col-md-8">
 
                 <form id="invoiceForm" class="form-group p-1">
-                    <div class="topbtngrp">
-                        <button type="button" class="btn btn-info add-runsheet-button">Add Runsheet</button>
-                        <button type="button" class="btn btn-secondary add-bulk-button">Add Row</button>
-                        <button type="button" class="btn btn-warning remove-bulk-button">Remove Row</button>
-                        <button type="submit" class="btn btn-success export-button">Update Invoice</button>
+
+                    <div class="top-nav">
+                        <div class="topbtngr btn-group" role="group">
+                            <button type="button" class="btn btn-dark add-runsheet-button">Add Runsheet</button>
+                            <button type="button" class="btn btn-dark  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn btn-dark remove-bulk-button">Remove Row</button>
+                        </div>
+                        <div class=" btn-group">
+                            <button type="submit" class="btn btn-success export-button">Save Invoice</button>
+                            <button type="submit" class="btn btn-success export-button">Export Invoice</button>
+                        </div>
                     </div>
+
 
                     <div class="mb-2 d-flex align-items-center">
                         <input type="hidden" name="invoice_id" value="<?php echo $invoiceId ?? ''; ?>">
@@ -295,7 +329,7 @@ mysqli_close($conn);
                                         <label for="vol-0" class="form-check-label">VOL+</label>
                                         <input type="text" name="item[0][vol_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
-                                  
+
                                     <div class="form-check ">
                                         <select id="pup-0" name="item[0][pup]" class="form-contro">
                                             <option value="">P/UP</option>
@@ -587,6 +621,8 @@ mysqli_close($conn);
                     <div style="gap: 50px; display: flex;">
                          <strong>Runsheet No: <span id="runsheet_no">${runsheetNumber}</span> </strong>
                         <strong>Runsheet Date: <span id="runsheet_date">${runsheetDate}</span> </strong>
+                        <strong><button class="btn btn-danger btn-sm edit-onpage-runsheet-button" data-id="runsheet-${runsheetIndex}" data-run-number="${runsheetNumber}>"
+                                            data-run-date="${runsheetDate}">Edit</button></strong>
                         <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                     </div>
                 </th>
@@ -1142,6 +1178,20 @@ mysqli_close($conn);
                 $("#runsheetDate").val(currentRunsheetDate);
 
                 $("#runsheetModal").modal("show");
+            });
+
+
+            $(document).on("click", ".edit-onpage-runsheet-button", function() {
+
+                let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
+                currentRunsheetNumber = $(this).data("run-number");
+                currentRunsheetDate = $(this).data("run-date");
+
+                $("#runsheetNumber").val(currentRunsheetNumber);
+                $("#runsheetDate").val(currentRunsheetDate);
+
+                $("#updateOnpageRunsheet").modal("show");
+                // updateRunsheetForm
             });
             // Show Modal with existing runsheet data
 

@@ -1,13 +1,17 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    font-family: 'Roboto', sans-serif; /* Clean and professional font */
-    font-size: 14px; /* Default font size */
-    color: #011F7F; ; /* Dark gray for professional look */
+    font-family: 'Roboto', sans-serif;
+    /* Clean and professional font */
+    font-size: 14px;
+    /* Default font size */
+    color: #011F7F;
+    ;
+    /* Dark gray for professional look */
 
 }
 
@@ -29,8 +33,7 @@ body {
 
 .export-button {
     /* position: absolute; */
-    top: 30px;
-    right: 10px;
+   
     background-color: rgb(5, 1, 1);
     color: white;
     border: none;
@@ -45,7 +48,8 @@ body {
 .add-button {
     /* position: absolute; */
     top: 750px;
-    right:20px; /* Position the "Add Row" button to the left */
+    right: 20px;
+    /* Position the "Add Row" button to the left */
     background-color: rgb(2, 2, 2);
     color: white;
     border: none;
@@ -60,7 +64,8 @@ body {
 .remove-button {
     /* position: absolute; */
     top: 800px;
-    right: 6px; /* Position the "Remove Row" button next to "Add Row" */
+    right: 6px;
+    /* Position the "Remove Row" button next to "Add Row" */
     background-color: rgb(2, 2, 2);
     color: white;
     border: none;
@@ -73,24 +78,25 @@ body {
 }
 
 .invoice-container {
-    margin-top: 50px;
+    margin-top: 100px;
     border: 1px solid #e0dbdb;
     padding: 10px;
-    color: #011F7F; 
+    color: #011F7F;
     position: relative;
 }
 
 .header-img {
-    width: 100%;          
-    height: auto;        
-    object-fit: cover;  
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
 
 .service-items {
     position: absolute;
     top: 36%;
     right: 0%;
-    z-index: 111;}
+    z-index: 111;
+}
 
 .info {
     position: absolute;
@@ -111,8 +117,7 @@ body {
     gap: 0px 15px;
 } */
 
-.form-check
-{
+.form-check {
     /* width: 65px; */
     /* background-color: red; */
     display: flex;
@@ -123,8 +128,7 @@ body {
 }
 
 
-.form-check  .form-control
-{
+.form-check .form-control {
     padding: 10px 6px;
     height: 30px;
     border-radius: 0px;
@@ -132,15 +136,13 @@ body {
 }
 
 
-.form-check .form-check-input
-{
+.form-check .form-check-input {
     float: none;
     margin-right: 0px;
     margin-left: 0px;
 }
 
-.form-check .form-control:disabled
-{
+.form-check .form-control:disabled {
     opacity: 0;
 }
 
@@ -155,7 +157,7 @@ body {
 .table-container {
     width: 100%;
     border-collapse: collapse;
-    color: #011F7F; 
+    color: #011F7F;
 }
 
 .table-container th,
@@ -170,25 +172,27 @@ body {
     font-size: 18px;
 }
 
-.footer-bg{
+.footer-bg {
     background-color: #011F7F;
 }
 
 
 .footer {
-    text-align: center; 
+    text-align: center;
     font-size: 18px;
     font-weight: bold;
     color: #ed9a1e;
 
 }
 
-.footer>p,ul,li{
+.footer>p,
+ul,
+li {
     color: #ed9a1e;
 }
 
 .footer ul {
-    list-style-type: none; 
+    list-style-type: none;
     text-align: center;
 }
 
@@ -203,7 +207,7 @@ body {
     width: 200px;
 }
 
-.custom-width-2{
+.custom-width-2 {
     width: 438px;
 
 }
@@ -212,22 +216,22 @@ body {
     width: 130px;
 }
 
-.form-control{
+.form-control {
     border-radius: 0px;
     color: #031d91;
 }
 
-.form-contro
-{
+.form-contro {
     padding: 7px 5px;
     margin-bottom: 7px;
 }
+
 .heading {
-    font-family: 'Playfair Display', serif; 
-    font-weight: 600; 
-    font-size: 1.8rem; 
-    color:  #031d91; 
-    line-height: 1.5; 
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: #031d91;
+    line-height: 1.5;
 }
 
 /* For labels */
@@ -239,43 +243,44 @@ label {
 
 /* invoice table cutomer and amount */
 
-.custom-width-4{
+.custom-width-4 {
     width: 100px;
     background: transparent;
     border: 1px solid transparent;
 }
 
-.custom-width-5{
+.custom-width-5 {
     width: 65px;
     background: transparent;
     border: 1px solid transparent;
 }
 
 
- /* For checkboxes and labels of the invoice */
+/* For checkboxes and labels of the invoice */
 
- .check {
+.check {
     display: inline-block;
-    position: relative; 
+    position: relative;
 }
 
 .form-checkboxes {
-    appearance: none; 
+    appearance: none;
     width: 14px;
     height: 14px;
-    border: 1px solid #000; 
-    background-color: #fff; 
+    border: 1px solid #000;
+    background-color: #fff;
     position: relative;
     cursor: pointer;
 }
 
 .form-checkboxes:checked {
-    background-color: #011F7F;; 
-    border-color: #011F7F; 
+    background-color: #011F7F;
+    ;
+    border-color: #011F7F;
 }
 
 .form-checkboxes:checked::after {
-    content: ''; 
+    content: '';
     position: absolute;
     bottom: 2px;
     left: 4px;
@@ -283,70 +288,77 @@ label {
     height: 12px;
     border: solid #fff;
     border-width: 0 2px 2px 0;
-    transform: rotate(45deg); 
+    transform: rotate(45deg);
 }
 
 .d-flex {
-    gap: 0px; 
-    flex-wrap: nowrap; 
-    align-items: center; 
+    gap: 0px;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 
-.custom-postion{
-   top: 0px;
-   right: 10px;
+.custom-postion {
+    top: 0px;
+    right: 10px;
 }
-  
-.form-check-label{
-      font-size: 13px!important;
-      font-weight: 500;
+
+.form-check-label {
+    font-size: 13px !important;
+    font-weight: 500;
 }
-  
-.form-check-2{
-      position: relative;
-      bottom: 5px;
-      left: 0px;
+
+.form-check-2 {
+    position: relative;
+    bottom: 5px;
+    left: 0px;
 }
 
 .label-custom-width {
-    width: 55px !important; 
-  }
+    width: 55px !important;
+}
 
-  .custom-select {
-    appearance: none; 
-    -webkit-appearance: none; 
-    -moz-appearance: none; 
+.custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     background-color: transparent;
-    border: 1px solid transparent; /* Border style */
-    padding: 0px 0px; /* Padding */
-    font-size: 13px; /* Font size */
-    color: #011F7F; /* Text color */
+    border: 1px solid transparent;
+    /* Border style */
+    padding: 0px 0px;
+    /* Padding */
+    font-size: 13px;
+    /* Font size */
+    color: #011F7F;
+    /* Text color */
     font-weight: 500;
     margin-top: 1px;
-    cursor: pointer; /* Pointer cursor */
-  }
+    cursor: pointer;
+    /* Pointer cursor */
+}
 
-  .custom-select:focus {
-    border-color: #031d91; /* Highlight border on focus */
-    outline: none; /* Removes outline */
-  }
+.custom-select:focus {
+    border-color: #031d91;
+    /* Highlight border on focus */
+    outline: none;
+    /* Removes outline */
+}
 
-  /* Invoice Items Input Fields */
+/* Invoice Items Input Fields */
 
-  .inv-items{
-     position: relative;
-     top: 20px;
-     left: 205px;
-  }
+.inv-items {
+    position: relative;
+    top: 20px;
+    left: 205px;
+}
 
-  .item-value-1 {
+.item-value-1 {
     position: absolute;
     bottom: 15.5px;
     right: 155px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -355,10 +367,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     right: 110px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -367,10 +379,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     right: 60px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -379,10 +391,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     right: 10px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -391,22 +403,22 @@ label {
     position: absolute;
     bottom: 15.5px;
     right: -30px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
-    
+
 .item-value-6 {
     position: absolute;
     bottom: 15.5px;
     left: 18px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -415,10 +427,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     left: 80px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -427,10 +439,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     left: 130px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -439,10 +451,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     left: 176px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -451,10 +463,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     left: 215px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -463,10 +475,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     left: 250px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -475,10 +487,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     left: 298px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -487,10 +499,10 @@ label {
     position: absolute;
     bottom: 15.5px;
     left: 358px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
@@ -499,41 +511,40 @@ label {
     position: absolute;
     bottom: 15.5px;
     left: 405px;
-    color:#011F7F;
+    color: #011F7F;
     font-size: 14px;
     font-weight: 500;
-    width: 60px!important; 
+    width: 60px !important;
     background: transparent;
     border: 1px solid red;
 }
 
 .table-container-2 td {
-    width: 50%; 
-    text-align: left; 
-    vertical-align: middle; 
+    width: 50%;
+    text-align: left;
+    vertical-align: middle;
 }
 
-.table-container-2 .form-control
-{
+.table-container-2 .form-control {
     border-radius: 0px !important;
     border: 0px !important;
     background: transparent;
 }
 
 .table-2-width {
-    width: 100%; 
+    width: 100%;
 }
 
 
 .bold-label {
-    font-weight: bold; 
+    font-weight: bold;
 }
 
-.table-container-2 tr{
+.table-container-2 tr {
     font-size: 17px;
 }
 
-.table-container-2 td{
+.table-container-2 td {
     border: 1px solid #011F7F;
     padding: 3px;
     text-align: center;
@@ -541,8 +552,8 @@ label {
 
 .table-container-2 tr:nth-child(1),
 .table-container-2 tr:nth-child(4) {
-    background-color: #ed9a1e!important;
-    color: #011F7F!important;
+    background-color: #ed9a1e !important;
+    color: #011F7F !important;
 }
 
 .table-container-2 tr:nth-child(2),
@@ -550,7 +561,7 @@ label {
     background-color: #ffffff !important;
 }
 
-.bg-transparent{
+.bg-transparent {
     background-color: transparent;
     border: 1px solid transparent;
     color: #011F7F;
@@ -558,22 +569,29 @@ label {
     text-align: center;
 }
 
-.edit-runsheet-button
-{
+.edit-runsheet-button {
     background-color: #011F7F !important;
     border-color: #011F7F !important;
-    
+
     color: white !important;
 }
 
-.topbtngrp
-{
+.topbtngrp {
 
     margin-bottom: 30px;
 }
 
- .remove-runsheet
-{
-	background-color:#011F7F !important;
+.remove-runsheet {
+    background-color: #011F7F !important;
     border-color: #011F7F !important;
+}
+
+.top-nav {
+    display: flex;
+    position: absolute;
+    padding: 10px;
+    width: 100%;
+    justify-content: space-between;
+    top: -80px;
+    left: 0px;
 }

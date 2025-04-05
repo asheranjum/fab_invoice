@@ -149,11 +149,16 @@ mysqli_close($conn);
             <div class="col-md-8">
 
                 <form id="invoiceForm" class="form-group p-1">
-                    <div class="topbtngrp">
-                        <button type="button" class="btn btn-info add-runsheet-button">Add Runsheet</button>
-                        <button type="button" class="btn btn-secondary add-bulk-button">Add Row</button>
-                        <button type="button" class="btn btn-warning remove-bulk-button">Remove Row</button>
-                        <button type="submit" class="btn btn-success export-button">Update Invoice</button>
+                    <div class="top-nav">
+                        <div class="topbtngr btn-group" role="group">
+                            <button type="button" class="btn btn-dark add-runsheet-button">Add Runsheet</button>
+                            <button type="button" class="btn btn-dark  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn btn-dark remove-bulk-button">Remove Row</button>
+                        </div>
+                        <div class=" btn-group">
+                            <button type="submit" class="btn btn-success export-button">Save Invoice</button>
+                            <button type="submit" class="btn btn-success export-button">Export Invoice</button>
+                        </div>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -290,7 +295,7 @@ mysqli_close($conn);
                                         <label for="water_con-0" class="form-check-label">WATERCON+</label>
                                         <input type="text" name="item[0][water_con_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
-                                   
+
                                     <div class="form-check ">
                                         <select id="pup-0" name="item[0][pup]" class="form-contro">
                                             <option value="">P/UP</option>
