@@ -682,6 +682,7 @@ mysqli_close($conn);
                 if (!isValid) return;
 
                 const formData = {
+                    invoice_type: 'Electric',
                     date: $("input[name='date']").val(),
                     invoice: $("input[name='invoice']").val(),
                     company: $("input[name='company']").val(),
@@ -747,7 +748,7 @@ mysqli_close($conn);
                     .then((data) => {
                         if (data.success) {
                             alert(data.message);
-                            location.reload();
+                            window.location.href = "index.php"; // Redirect after success
                         } else {
                             alert("Error: " + data.message);
                         }

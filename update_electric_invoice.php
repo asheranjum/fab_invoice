@@ -1108,7 +1108,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        location.reload(); // Refresh page after successful submission
+                        window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }

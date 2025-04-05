@@ -36,8 +36,8 @@ require 'session.php';
         <div class="dropdown">
           <button class="btn btn-lg create-btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"> Create Invoice </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a class="dropdown-item" href="invoice.php" target="_blank">Bedding/Furniture</a></li>
-            <li><a class="dropdown-item" href="invoice.php" target="_blank">Electric</a></li>
+            <li><a class="dropdown-item" href="invoice_bedding-furniture.php" target="_blank">Bedding/Furniture</a></li>
+            <li><a class="dropdown-item" href="invoice_electric.php" target="_blank">Electric</a></li>
           </ul>
         </div>
       </div>
@@ -91,6 +91,7 @@ require 'session.php';
               <tr>
                 <th>Date</th>
                 <th>Franchise Name</th>
+                <th>Type</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -99,9 +100,15 @@ require 'session.php';
                 <tr>
                   <td style="color:#011f7f;"><?php echo htmlspecialchars($row['date']); ?></td>
                   <td style="color:#011f7f;"><?php echo htmlspecialchars($row['company_name']); ?></td>
+                  <td style="color:#011f7f;"><?php echo htmlspecialchars($row['invoice_type']); ?></td>
                   <td>
-                    <button type="button" class="btn action-btn" onclick="window.open('pdf.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
-                    <button type="button" class="btn action-btn" onclick="window.open('update_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
+                    <?php if($row['invoice_type'] == 'Bedding'){ ?>
+                      <button type="button" class="btn action-btn" onclick="window.open('pdf_electric.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
+                      <button type="button" class="btn action-btn" onclick="window.open('update_bedding-furniture_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
+                      <?php } else{ ?>
+                        <button type="button" class="btn action-btn" onclick="window.open('pdf_bedding-furniture.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
+                    <button type="button" class="btn action-btn" onclick="window.open('update_electric_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
+                    <?php } ?>
                     <button type="button" class="btn action-btn" onclick="location.href='duplicate_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>'">Duplicate</button>
                     <button type="button" class="btn action-btn" onclick="if(confirm('Are you sure you want to delete this invoice?')) location.href='delete_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>'">Delete</button>
                   </td>
