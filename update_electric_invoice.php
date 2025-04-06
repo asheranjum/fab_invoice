@@ -107,6 +107,35 @@ mysqli_close($conn);
         </div>
     </div>
 
+    <!-- Edit Runsheet Modal -->
+    <div class="modal fade" id="editRunsheetModal" tabindex="-1" aria-labelledby="editRunsheetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRunsheetModalLabel">Edit Runsheet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editRunsheetForm">
+                        <div class="mb-3">
+                            <label for="editRunsheetNumber" class="form-label">Runsheet Number</label>
+                            <input type="text" class="form-control" id="editRunsheetNumber" name="editRunsheetNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editRunsheetDate" class="form-label">Runsheet Date</label>
+                            <input type="date" class="form-control" id="editRunsheetDate" name="editRunsheetDate" required>
+                        </div>
+                        <input type="hidden" id="editRunsheetId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveEditRunsheet">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Runsheet Modal -->
     <div class="modal fade" id="addRunsheetModal" tabindex="-1" aria-labelledby="addRunsheetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -584,13 +613,13 @@ mysqli_close($conn);
             <tr id="runsheet-${runsheetIndex}">
                 <th colspan="3" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
-                         <strong>Runsheet No: <span id="runsheet_no">${runsheetNumber}</span> </strong>
-                        <strong>Runsheet Date: <span id="runsheet_date">${runsheetDate}</span> </strong>
+                        <strong>Runsheet No: <span class="runsheet-no">${runsheetNumber}</span> </strong>
+                        <strong>Runsheet Date: <span class="runsheet-date">${runsheetDate}</span> </strong>
+                        <strong><button class="btn btn-danger btn-sm edit-onpage-runsheet-button" data-id="runsheet-${runsheetIndex}" data-run-number="${runsheetNumber}" data-run-date="${runsheetDate}">Edit</button></strong>
                         <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                     </div>
                 </th>
-            </tr>
-        `;
+            </tr>`;
 
                 // Append runsheet below the last item row
                 $(".table-container #tbody").append(runsheetRow);
@@ -603,6 +632,53 @@ mysqli_close($conn);
                 let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
                 $("#" + runsheetId).remove(); // Remove the respective runsheet row
             });
+
+
+            $(document).on("click", ".edit-onpage-runsheet-button", function() {
+                const button = $(this);
+                const runsheetId = button.data("id");
+                const runsheetNumber = button.data("run-number");
+                const runsheetDate = button.data("run-date");
+
+                $("#editRunsheetNumber").val(runsheetNumber);
+                $("#editRunsheetDate").val(runsheetDate);
+                $("#editRunsheetId").val(runsheetId);
+
+                $("#editRunsheetModal").modal("show");
+            });
+
+            $("#saveEditRunsheet").click(function() {
+                const runsheetNumber = $("#editRunsheetNumber").val();
+                const runsheetDate = $("#editRunsheetDate").val();
+                const runsheetId = $("#editRunsheetId").val();
+
+                // Validate inputs
+                if (!runsheetNumber || !runsheetDate) {
+                    alert("Please fill in both Runsheet Number and Runsheet Date.");
+                    return;
+                }
+
+                // Validate date format (basic check)
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
+                    alert("Invalid date format. Please use YYYY-MM-DD.");
+                    return;
+                }
+
+                const runsheetRow = $(`#${runsheetId}`);
+                runsheetRow.find(".runsheet-no").text(runsheetNumber);
+                runsheetRow.find(".runsheet-date").text(runsheetDate);
+                runsheetRow.attr("data-run-number", runsheetNumber);
+                runsheetRow.attr("data-run-date", runsheetDate);
+
+                $("#editRunsheetModal").modal("hide");
+            });
+
+            function showAddRunsheetModal() {
+                $("#addRunsheetNumber").val("");
+                $("#addRunsheetDate").val("");
+                $("#addRunsheetModal").modal("show");
+            }
+            
 
             function calculateRowAmount(row) {
                 let amount = 0;

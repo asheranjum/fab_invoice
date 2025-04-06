@@ -79,33 +79,7 @@ mysqli_close($conn);
 
 <body>
 
-    <!-- Edit Runsheet Modal -->
-    <div class="modal fade" id="updateOnpageRunsheet" tabindex="-1" aria-labelledby="updateOnpageRunsheetLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateOnpageRunsheetLabel">Edit Runsheet</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="updateRunsheetForm">
-                        <div class="mb-3">
-                            <label for="runsheetNumber" class="form-label">Runsheet Number</label>
-                            <input type="number" class="form-control" id="runsheetNumber" name="runsheetNumber" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="runsheetDate" class="form-label">Runsheet Date</label>
-                            <input type="date" class="form-control" id="runsheetDate" name="runsheetDate" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveRunsheet">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <!-- Edit Runsheet Modal -->
     <div class="modal fade" id="runsheetModal" tabindex="-1" aria-labelledby="runsheetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -129,6 +103,35 @@ mysqli_close($conn);
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="saveRunsheet">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Runsheet Modal -->
+    <div class="modal fade" id="editRunsheetModal" tabindex="-1" aria-labelledby="editRunsheetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRunsheetModalLabel">Edit Runsheet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editRunsheetForm">
+                        <div class="mb-3">
+                            <label for="editRunsheetNumber" class="form-label">Runsheet Number</label>
+                            <input type="text" class="form-control" id="editRunsheetNumber" name="editRunsheetNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editRunsheetDate" class="form-label">Runsheet Date</label>
+                            <input type="date" class="form-control" id="editRunsheetDate" name="editRunsheetDate" required>
+                        </div>
+                        <input type="hidden" id="editRunsheetId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveEditRunsheet">Save changes</button>
                 </div>
             </div>
         </div>
@@ -640,6 +643,53 @@ mysqli_close($conn);
                 let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
                 $("#" + runsheetId).remove(); // Remove the respective runsheet row
             });
+
+
+            $(document).on("click", ".edit-onpage-runsheet-button", function() {
+                const button = $(this);
+                const runsheetId = button.data("id");
+                const runsheetNumber = button.data("run-number");
+                const runsheetDate = button.data("run-date");
+
+                $("#editRunsheetNumber").val(runsheetNumber);
+                $("#editRunsheetDate").val(runsheetDate);
+                $("#editRunsheetId").val(runsheetId);
+
+                $("#editRunsheetModal").modal("show");
+            });
+
+            $("#saveEditRunsheet").click(function() {
+                const runsheetNumber = $("#editRunsheetNumber").val();
+                const runsheetDate = $("#editRunsheetDate").val();
+                const runsheetId = $("#editRunsheetId").val();
+
+                // Validate inputs
+                if (!runsheetNumber || !runsheetDate) {
+                    alert("Please fill in both Runsheet Number and Runsheet Date.");
+                    return;
+                }
+
+                // Validate date format (basic check)
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(runsheetDate)) {
+                    alert("Invalid date format. Please use YYYY-MM-DD.");
+                    return;
+                }
+
+                const runsheetRow = $(`#${runsheetId}`);
+                runsheetRow.find(".runsheet-no").text(runsheetNumber);
+                runsheetRow.find(".runsheet-date").text(runsheetDate);
+                runsheetRow.attr("data-run-number", runsheetNumber);
+                runsheetRow.attr("data-run-date", runsheetDate);
+
+                $("#editRunsheetModal").modal("hide");
+            });
+
+            function showAddRunsheetModal() {
+                $("#addRunsheetNumber").val("");
+                $("#addRunsheetDate").val("");
+                $("#addRunsheetModal").modal("show");
+            }
+
 
             function calculateRowAmount(row) {
                 let amount = 0;
