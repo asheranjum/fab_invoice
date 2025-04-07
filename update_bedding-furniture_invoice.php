@@ -538,6 +538,16 @@ mysqli_close($conn);
     </div>
 
     <script>
+        function getMaxItemRowId() {
+            let maxId = 0;
+            $(".table-container tbody tr#tabletr, .table-container tbody tr#table_exitisng").each(function() {
+                const itemRowId = parseInt($(this).attr("data-item-row-id"));
+                if (itemRowId > maxId) {
+                    maxId = itemRowId;
+                }
+            });
+            return maxId;
+        }
         $(document).ready(function() {
 
             // $('#runsheet_no').append(<?php echo $invoiceId; ?> + '1001')
@@ -771,6 +781,9 @@ mysqli_close($conn);
                 $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true);
             }
 
+
+
+
             function addRows(count) {
                 const rows = $(".table-container #tbody tr#tabletr");
                 let currentRows = rows.length;
@@ -780,7 +793,7 @@ mysqli_close($conn);
                     alert("You cannot add more than " + maxRows + " rows.");
                     return;
                 }
-
+                let maxItemRowId = getMaxItemRowId();
                 for (let i = 0; i < newRows; i++) {
                     const lastRow = $(".table-container #tbody tr#tabletr").last();
                     console.log('lastRow', lastRow);
@@ -802,9 +815,9 @@ mysqli_close($conn);
 
                     const newRow = lastRow.clone();
                     newRow.removeAttr("style");
-
+                    // maxItemRowId++;  
                     const rowIndex = $(".table-container #tbody tr#tabletr").length;
-
+                    // newRow.attr("data-item-row-id", maxItemRowId);
                     newRow.find("input, select").each(function() {
                         if (this.type === "checkbox") {
                             this.checked = false;
@@ -1046,7 +1059,7 @@ mysqli_close($conn);
 
             let currentRunsheetNumber = $("#runsheet_no").text().trim();
             let currentRunsheetDate = $("#runsheet_date").text().trim();
-            let maxItemRowId = 0;
+            let maxItemRowId = getMaxItemRowId();
             /** --------------------
              * ✅ Collect Existing Items
              * -------------------- **/
@@ -1152,6 +1165,8 @@ mysqli_close($conn);
                 });
 
                 maxItemRowId++;
+
+                // console.log('maxItemRowId', maxItemRowId);
                 if (hasCheckedItem && newItem.length > 0) {
                     formData.new_items.push({
                         item_row_id: `${maxItemRowId}`,
@@ -1184,7 +1199,7 @@ mysqli_close($conn);
             /** --------------------
              * ✅ Debugging: Log the Data Before Sending
              * -------------------- **/
-            console.log("Final Form Data:", formData);
+            // console.log("Final Form Data:", formData);
 
             /** --------------------
              * ✅ Submit Data to API
@@ -1200,7 +1215,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        window.location.href = "index.php"; // Redirect after success
+                        // window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }

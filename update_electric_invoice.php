@@ -529,6 +529,18 @@ mysqli_close($conn);
     </div>
 
     <script>
+
+function getMaxItemRowId() {
+            let maxId = 0;
+            $(".table-container tbody tr#tabletr, .table-container tbody tr#table_exitisng").each(function() {
+                const itemRowId = parseInt($(this).attr("data-item-row-id"));
+                if (itemRowId > maxId) {
+                    maxId = itemRowId;
+                }
+            });
+            return maxId;
+        }
+
         $(document).ready(function() {
 
             // $('#runsheet_no').append(<?php echo $invoiceId; ?> + '1001')
@@ -769,7 +781,7 @@ mysqli_close($conn);
                     alert("You cannot add more than " + maxRows + " rows.");
                     return;
                 }
-
+ let maxItemRowId = getMaxItemRowId();
                 for (let i = 0; i < newRows; i++) {
                     const lastRow = $(".table-container #tbody tr#tabletr").last();
                     console.log('lastRow', lastRow);
@@ -789,10 +801,9 @@ mysqli_close($conn);
                     }
 
 
-                    const newRow = lastRow.clone();
-                    newRow.removeAttr("style");
-
+                    // maxItemRowId++;  
                     const rowIndex = $(".table-container #tbody tr#tabletr").length;
+                    // newRow.attr("data-item-row-id", maxItemRowId);
 
                     newRow.find("input, select").each(function() {
                         if (this.type === "checkbox") {
@@ -1035,7 +1046,7 @@ mysqli_close($conn);
 
             let currentRunsheetNumber = $("#runsheet_no").text().trim();
             let currentRunsheetDate = $("#runsheet_date").text().trim();
-            let maxItemRowId = 0;
+            let maxItemRowId = getMaxItemRowId();
             /** --------------------
              * ✅ Collect Existing Items
              * -------------------- **/
@@ -1104,7 +1115,7 @@ mysqli_close($conn);
              * -------------------- **/
             $(".table-container #tbody tr#tabletr").each(function(index) {
 
-                console.log(index);
+                // console.log(index);
 
                 const row = $(this);
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
@@ -1173,7 +1184,7 @@ mysqli_close($conn);
             /** --------------------
              * ✅ Debugging: Log the Data Before Sending
              * -------------------- **/
-            console.log("Final Form Data:", formData);
+            // console.log("Final Form Data:", formData);
 
             /** --------------------
              * ✅ Submit Data to API

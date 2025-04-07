@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['invoice_id'])) {
 
     if ($invoice) {
         // Fetch invoice items
-        $sqlItems = "SELECT * FROM invoice_items WHERE invoice_id = ? ";
+        $sqlItems = "SELECT * FROM invoice_items WHERE invoice_id = ? ORDER BY created_at ASC";
+
         $stmt = $conn->prepare($sqlItems);
         $stmt->bind_param("i", $invoiceId);
         $stmt->execute();
