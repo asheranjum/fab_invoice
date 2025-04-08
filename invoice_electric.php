@@ -122,9 +122,8 @@ mysqli_close($conn);
 
 
                         <div class=" btn-group">
-
                             <button type="submit" class="btn btn-success export-button">Save Invoice</button>
-                            <button type="submit" class="btn btn-success export-button">Export Invoice</button>
+                            <!-- <button type="submit" class="btn btn-success export-button">Export Invoice</button> -->
                         </div>
 
                     </div>

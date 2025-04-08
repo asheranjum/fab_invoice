@@ -283,7 +283,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         $html .= '
         <tr >
-            <td style="text-align: left;"> Name:' . $customInvoiceName . '<br> No: ' . htmlspecialchars($customInvoiceNo) . ' </td>
+            <td style="text-align: left;">' . $customInvoiceName . '<br>' . htmlspecialchars($customInvoiceNo) . ' </td>
             <td style=" padding:0px">
                 <table class="checkbox-table">
                     <tr>';
