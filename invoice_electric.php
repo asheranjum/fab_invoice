@@ -139,7 +139,8 @@ mysqli_close($conn);
 
                     </div>
 
-                    <h3 class="mt-1 mb-2 heading">Bill To:</h3>
+                    <h3 class="mt-1 mb-2 heading" style="display: inline-block; margin-right: 10px;">Bill To:</h3>
+                    <h5 style="display: inline-block; position: relative; bottom: 5px; left: 420px;">Electric</h5>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>

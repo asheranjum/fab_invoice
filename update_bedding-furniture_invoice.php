@@ -187,7 +187,7 @@ mysqli_close($conn);
                             <button type="button" class="btn btn-dark remove-bulk-button">Remove Row</button>
                         </div>
                         <div class=" btn-group">
-                            <button type="submit" class="btn btn-success export-button">Save Invoice</button>
+                            <button type="submit" class="btn btn-success export-button">Update Invoice</button>
                             <!-- <button type="submit" class="btn btn-success export-button">Export Invoice</button> -->
                         </div>
                     </div>
@@ -202,7 +202,12 @@ mysqli_close($conn);
                         <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" readonly>
                     </div>
 
-                    <h3 class="mt-1 mb-2 heading">Bill To:</h3>
+                    <h3 class="mt-1 mb-2 heading" style="display: inline-block; margin-right: 10px;">Bill To:</h3>
+                    <select style="display: inline-block; position: relative; bottom: 5px; padding: 4px 8px; font-size: 16px;position: relative; bottom: 5px; left: 420px;">
+                        <option value="" disabled selected>Select Option</option>
+                        <option value="bedding">Bedding</option>
+                        <option value="furniture">Furniture</option>
+                    </select>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>
