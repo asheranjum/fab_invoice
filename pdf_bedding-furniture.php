@@ -26,7 +26,7 @@ if (!$invoice) {
 }
 
 // Fetch Invoice Items
-$sqlItems = "SELECT * FROM invoice_items WHERE invoice_id = ?";
+$sqlItems = "SELECT * FROM invoice_items WHERE invoice_id = ?  ORDER BY created_at ASC";
 $stmt = $conn->prepare($sqlItems);
 $stmt->bind_param("i", $invoiceId);
 $stmt->execute();
