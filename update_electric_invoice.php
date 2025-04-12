@@ -196,7 +196,7 @@ mysqli_close($conn);
                         <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3" style="font-size: 18px;" value="<?php echo $invoiceData['date'] ?? ''; ?>">
                         <div class="invalid-feedback">Invoice date is required.</div>
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
-                        <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" readonly>
+                        <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>">
                     </div>
 
                     <h3 class="mt-1 mb-2 heading" style="display: inline-block; margin-right: 10px;">Bill To:</h3>
