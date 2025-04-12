@@ -514,7 +514,7 @@ mysqli_close($conn);
                     <div class="form-group table-2-width">
                         <tr>
                             <td><label for="tax_rate">TAX RATE</label></td>
-                            <td><input type="text" id="tax_rate" name="tax_rate" class="form-control" placeholder="$0.00"></td>
+                            <td><input type="text" id="tax_rate" name="tax_rate" class="form-control" value="<?php echo $invoiceData['tax_rate'] ?? ''; ?>" placeholder="$0.00"></td>
                         </tr>
                     </div>
 
@@ -723,6 +723,7 @@ function getMaxItemRowId() {
                 const total = subTotal + taxRate + otherCost;
 
                 $("#sub_total").val(subTotal.toFixed(2));
+                $("#tax_rate").val(taxRate.toFixed(2));
                 $("#total_cost").val(total.toFixed(2));
             }
 
@@ -1030,6 +1031,7 @@ function getMaxItemRowId() {
             if (!isValid) return;
 
             const formData = {
+                invoice_type: 'Electric',
                 invoice_id: <?php echo $invoiceId ?? ''; ?>,
                 date: $("input[name='date']").val().trim(),
                 invoice: $("input[name='invoice']").val().trim(),
@@ -1044,7 +1046,7 @@ function getMaxItemRowId() {
                 new_items: [],
                 unchecked_items: [] // New array for unchecked items
             };
-
+            
             let currentRunsheetNumber = $("#runsheet_no").text().trim();
             let currentRunsheetDate = $("#runsheet_date").text().trim();
             let maxItemRowId = getMaxItemRowId();

@@ -203,10 +203,12 @@ mysqli_close($conn);
                     </div>
 
                     <h3 class="mt-1 mb-2 heading" style="display: inline-block; margin-right: 10px;">Bill To:</h3>
-                    <select style="display: inline-block; position: relative; bottom: 5px; padding: 4px 8px; font-size: 16px;position: relative; bottom: 5px; left: 420px;">
-                        <option value="" disabled selected>Select Option</option>
-                        <option value="bedding">Bedding</option>
-                        <option value="furniture">Furniture</option>
+                    <?php $selectedType = $invoiceData['invoice_type'] ?? ''; // Get selected value from DB or form 
+                    ?>
+                    <select name="invoice_type" style="display: inline-block; position: relative; bottom: 5px; padding: 4px 8px; font-size: 16px; left: 420px;">
+                        <option value="" disabled <?= $selectedType == '' ? 'selected' : '' ?>>Select Option</option>
+                        <option value="Bedding" <?= $selectedType == 'Bedding' ? 'selected' : '' ?>>Bedding</option>
+                        <option value="Furniture" <?= $selectedType == 'Furniture' ? 'selected' : '' ?>>Furniture</option>
                     </select>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -527,7 +529,7 @@ mysqli_close($conn);
                     <div class="form-group table-2-width">
                         <tr>
                             <td><label for="tax_rate">TAX RATE</label></td>
-                            <td><input type="text" id="tax_rate" name="tax_rate" class="form-control" placeholder="$0.00"></td>
+                            <td><input type="text" id="tax_rate" name="tax_rate" class="form-control" value="<?php echo $invoiceData['tax_rate'] ?? ''; ?>" placeholder="$0.00"></td>
                         </tr>
                     </div>
 
@@ -736,6 +738,7 @@ mysqli_close($conn);
                 const total = subTotal + taxRate + otherCost;
 
                 $("#sub_total").val(subTotal.toFixed(2));
+                $("#tax_rate").val(taxRate.toFixed(2));
                 $("#total_cost").val(total.toFixed(2));
             }
 
@@ -1045,8 +1048,9 @@ mysqli_close($conn);
             }
 
             if (!isValid) return;
-
+            // $('select[name="invoice_type"]').val("<?= $invoiceData['invoice_type'] ?? '' ?>");
             const formData = {
+                invoice_type: $('select[name="invoice_type"]').val(),
                 invoice_id: <?php echo $invoiceId ?? ''; ?>,
                 date: $("input[name='date']").val().trim(),
                 invoice: $("input[name='invoice']").val().trim(),
@@ -1220,7 +1224,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        // window.location.href = "index.php"; // Redirect after success
+                        window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }

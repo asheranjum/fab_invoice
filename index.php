@@ -102,7 +102,7 @@ require 'session.php';
                   <td style="color:#011f7f;"><?php echo htmlspecialchars($row['company_name']); ?></td>
                   <td style="color:#011f7f;"><?php echo htmlspecialchars($row['invoice_type']); ?></td>
                   <td>
-                    <?php if($row['invoice_type'] == 'Bedding'){ ?>
+                    <?php if($row['invoice_type'] == 'Bedding' || $row['invoice_type'] == 'Furniture'){ ?>
                       <button type="button" class="btn action-btn" onclick="window.open('pdf_bedding-furniture.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
                       <button type="button" class="btn action-btn" onclick="window.open('update_bedding-furniture_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
                       <?php } else{ ?>

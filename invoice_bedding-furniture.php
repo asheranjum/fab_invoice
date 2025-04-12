@@ -135,15 +135,15 @@ mysqli_close($conn);
 
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
 
-                        <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" readonly>
+                        <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" >
 
                     </div>
 
                     <h3 class="mt-1 mb-2 heading" style="display: inline-block; margin-right: 10px;">Bill To:</h3>
-                    <select style="display: inline-block; position: relative; bottom: 5px; padding: 4px 8px; font-size: 16px;position: relative; bottom: 5px; left: 420px;">
+                    <select id="invoice_type" name="invoice_type" style="display: inline-block; position: relative; bottom: 5px; padding: 4px 8px; font-size: 16px;position: relative; bottom: 5px; left: 420px;">
                        <option value="" disabled selected>Select Option</option>
-                        <option value="bedding">Bedding</option>
-                        <option value="furniture">Furniture</option>
+                        <option value="Bedding">Bedding</option>
+                        <option value="Furniture">Furniture</option>
                     </select>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -220,7 +220,7 @@ mysqli_close($conn);
                         <tr id="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
-                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no numeric-only" placeholder="Enter Invoice No">
+                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Invoice Name">
                             </td>
 
@@ -770,7 +770,7 @@ mysqli_close($conn);
                 if (!isValid) return;
 
                 const formData = {
-                    invoice_type: 'Bedding',
+                    invoice_type: $("select[name='invoice_type']").val(),
                     date: $("input[name='date']").val(),
                     invoice: $("input[name='invoice']").val(),
                     company: $("input[name='company']").val(),

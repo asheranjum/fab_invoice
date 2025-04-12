@@ -56,6 +56,7 @@ while ($row = $resultItems->fetch_assoc()) {
     if (!isset($groupedItems[$runsheetNumber]['items'][$itemRowId])) {
         $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
             'custom_invoice_no' => $customInvoiceNo,
+            'customInvoiceName' => $customInvoiceName,
             'items' => []
         ];
     }
@@ -64,13 +65,14 @@ while ($row = $resultItems->fetch_assoc()) {
     $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = $itemValue;
 }
 
-
-
+// print_r($groupedItems);
+// die();
 
 // Dynamic Values
 $date = $invoice['date'];
 $invoiceNo = $invoice['invoice_number'];
 $company = $invoice['company_name'];
+$invoice_type = $invoice['invoice_type'];
 $address = $invoice['address'];
 $phone = $invoice['phone'];
 $abn = $invoice['abn'];
@@ -238,6 +240,9 @@ $html = '
                 <td><span class="label">PHONE:</span>' . $phone . '</td>
                 <td style="text-align:right"><span class="label">ADDRESS: 5 LOUIS STREET DOVETON 3177 VIC</span></td>
             </tr>
+            <tr>
+                <td><span class="label">Invoice Type:</span>' . $invoice_type . '</td>
+            </tr>
 
              <tr>
               <td><span class="label"></span> </td>
@@ -279,11 +284,12 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
     foreach ($runsheetData['items'] as $itemRowId => $data) {
         $customInvoiceNo = $data['custom_invoice_no'];
+        $customInvoiceName2 = $data['customInvoiceName'];
         $items = $data['items'];
 
         $html .= '
         <tr >
-            <td style="text-align: left;">' . $customInvoiceName . '<br>' . htmlspecialchars($customInvoiceNo) . ' </td>
+            <td style="text-align: left;">' . $customInvoiceName2 . '<br>' . htmlspecialchars($customInvoiceNo) . ' </td>
             <td style=" padding:0px">
                 <table class="checkbox-table">
                     <tr>';
