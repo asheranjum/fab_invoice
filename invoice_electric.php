@@ -216,7 +216,7 @@ mysqli_close($conn);
                         <tr id="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
-                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no numeric-only" placeholder="Enter Invoice No">
+                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Invoice Name">
                             </td>
 
@@ -412,7 +412,7 @@ mysqli_close($conn);
                 runsheetIndex++;
                 currentRunsheet = {
                     number: runsheetNumber,
-                    date: runsheetDate
+                    date: formatDateToDDMMYYYY(runsheetDate)
                 };
 
                 const runsheetRow = `
@@ -420,7 +420,7 @@ mysqli_close($conn);
                 <th colspan="3" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
                         <strong>Runsheet No: <span class="runsheet-no">${runsheetNumber}</span> </strong>
-                        <strong>Runsheet Date: <span class="runsheet-date">${runsheetDate}</span> </strong>
+                        <strong>Runsheet Date: <span class="runsheet-date">${ formatDateToDDMMYYYY(runsheetDate)}</span> </strong>
                         <strong><button class="btn btn-danger btn-sm edit-onpage-runsheet-button" data-id="runsheet-${runsheetIndex}" data-run-number="${runsheetNumber}" data-run-date="${runsheetDate}">Edit</button></strong>
                         <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                     </div>
@@ -491,6 +491,15 @@ mysqli_close($conn);
 
                 $("#editRunsheetModal").modal("hide");
             });
+
+            function formatDateToDDMMYYYY(dateStr) {
+                if (!dateStr) return "";
+                const parts = dateStr.split("-");
+                if (parts.length === 3) {
+                    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+                return dateStr; // return as-is if format is unexpected
+            }
 
             function showAddRunsheetModal() {
                 $("#addRunsheetNumber").val("");
@@ -838,7 +847,20 @@ mysqli_close($conn);
                     });
             }
         });
+
+        $('#invoice_date, #addRunsheetDate').on('input', function() {
+            const inputDate = $(this).val(); // format is YYYY-MM-DD
+            if (inputDate) {
+                const [year, month, day] = inputDate.split('-');
+                const formatted = `${day}-${month}-${year}`;
+                $('#formatted_date_display').val(formatted);
+            } else {
+                $('#formatted_date_display').val('');
+            }
+        });
     </script>
+
+
 
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>

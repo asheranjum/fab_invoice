@@ -477,7 +477,7 @@ mysqli_close($conn);
                                                                 <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
                                                                 <input id="<?= $label . '-' . $itemRowId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemId ?>][<?= strtolower($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
                                                                 <label for="<?= $label . '-' . $itemRowId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
-                                                                <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
+                                                                <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1 numeric-only" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
                                                             </div>
 
                                                         <?php endif; ?>
@@ -763,15 +763,31 @@ mysqli_close($conn);
                     calculateRowAmount(row);
                 });
 
-                $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
-                    if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
+                // $(row).find("input[type='text']").off("keypress").on("keypress", function(e) {
+                //     if (!/^[0-9.]+$/.test(e.key) && e.key !== "Backspace") {
+                //         e.preventDefault();
+                //     }
+                // });
+
+                // $(row).find("#customer-inv-name").off("keypress").on("keypress", function(e) {
+                //     // Allow all alphanumeric characters and special characters (including space)
+                //     if (!/^[\w\s.,;!?()\-"'&@#$%^*+=<>_/|\\`~]+$/.test(e.key) && e.key !== "Backspace") {
+                //         e.preventDefault();
+                //     }
+                // });
+
+                // ✅ Numeric-only fields
+                $(row).find(".numeric-only").on("keypress", function(e) {
+                    const key = e.key;
+                    const allowedPattern = /^[0-9.]$/;
+                    if (!allowedPattern.test(key)) {
                         e.preventDefault();
                     }
                 });
 
-                $(row).find("#customer-inv-name").off("keypress").on("keypress", function(e) {
-                    // Allow all alphanumeric characters and special characters (including space)
-                    if (!/^[\w\s.,;!?()\-"'&@#$%^*+=<>_/|\\`~]+$/.test(e.key) && e.key !== "Backspace") {
+                $(row).find(".numeric-only").on("paste", function(e) {
+                    const pasted = (e.originalEvent || e).clipboardData.getData('text');
+                    if (!/^[0-9.]+$/.test(pasted)) {
                         e.preventDefault();
                     }
                 });

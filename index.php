@@ -74,7 +74,7 @@ require 'session.php';
     $total_records = $row_count['total'];
     $total_pages = ceil($total_records / $records_per_page);
     
-    $sql = "SELECT * FROM invoices WHERE company_name LIKE '%$search_query%' LIMIT $offset, $records_per_page";
+    $sql = "SELECT * FROM invoices WHERE company_name LIKE '%$search_query%'  ORDER BY created_at DESC LIMIT $offset, $records_per_page";
     $result = mysqli_query($conn, $sql);
     
     if (!$result) {
@@ -99,7 +99,7 @@ require 'session.php';
               <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>
                   <td style="color:#011f7f;"><?php echo htmlspecialchars($row['date']); ?></td>
-                  <td style="color:#011f7f;"><?php echo htmlspecialchars($row['company_name']); ?></td>
+                  <td style="color:#011f7f; width: 700px;"><?php echo htmlspecialchars($row['company_name']); ?></td>
                   <td style="color:#011f7f;"><?php echo htmlspecialchars($row['invoice_type']); ?></td>
                   <td>
                     <?php if($row['invoice_type'] == 'Bedding' || $row['invoice_type'] == 'Furniture'){ ?>

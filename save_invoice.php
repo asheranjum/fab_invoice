@@ -10,6 +10,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($input) {
         $invoice_type = mysqli_real_escape_string($conn, $input['invoice_type'] ?? '');
         $inv_date = mysqli_real_escape_string($conn, $input['date'] ?? '');
+
+
+        $inv_date_raw = $input['date'] ?? '';
+        $inv_date_formatted = '';
+
+        if (!empty($inv_date_raw)) {
+            // Convert only if date is in valid format
+            $timestamp = strtotime($inv_date_raw);
+            if ($timestamp !== false) {
+                $inv_date_formatted = date('d-m-Y', $timestamp);
+            }
+        }
+
+        $inv_date = mysqli_real_escape_string($conn, $inv_date_formatted);
+
         $inv_invoice = mysqli_real_escape_string($conn, $input['invoice'] ?? '');
         $inv_company = mysqli_real_escape_string($conn, $input['company'] ?? '');
         $inv_address = mysqli_real_escape_string($conn, $input['address'] ?? '');
@@ -50,7 +65,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $itemName = mysqli_real_escape_string($conn, $item['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $item['item_value'] ?? '0');
                 $runsheetNumber = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
-                $runsheetDate = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
+                // $runsheetDate = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
+
+                $runsheet_date_raw = $item['runsheet_date'] ?? '';
+                $runsheet_date_formatted = '';
+    
+                if (!empty($runsheet_date_raw)) {
+                    // Convert only if date is in valid format
+                    $timestamp = strtotime($runsheet_date_raw);
+                    if ($timestamp !== false) {
+                        $runsheet_date_formatted = date('d-m-Y', $timestamp);
+                    }
+                }
+    
+                $runsheetDate = mysqli_real_escape_string($conn, $runsheet_date_formatted);
 
                 $stmtItem->bind_param('isssssss', $invoiceId, $customerInvoiceName, $customerInvoiceNo, $itemRowId, $itemName, $itemValue, $runsheetNumber, $runsheetDate);
                 $stmtItem->execute();

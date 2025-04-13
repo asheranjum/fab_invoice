@@ -6,7 +6,7 @@ $response = ['success' => false, 'message' => 'Invalid request'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
-  
+
     if ($input) {
         $invoice_type = mysqli_real_escape_string($conn, $input['invoice_type'] ?? '');
         $invoiceId = mysqli_real_escape_string($conn, $input['invoice_id'] ?? '');
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Update invoice details
     $sqlUpdate = "UPDATE invoices SET date=?, invoice_type=?, company_name=?, address=?, phone=?, postal_code =?, abn=?, tax_rate=? WHERE id=?";
     $stmt = $conn->prepare($sqlUpdate);
-    $stmt->bind_param("ssssssssi", $inv_date, $invoice_type, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $tax_rate , $invoiceId);
+    $stmt->bind_param("ssssssssi", $inv_date, $invoice_type, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $tax_rate, $invoiceId);
 
     if ($stmt->execute()) {
         foreach ($items as $item) {
@@ -39,7 +39,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
             $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
             $runsheet_number = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
-            $runsheet_date = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
+            $runsheet_date_raw = $item['runsheet_date'] ?? '';
+            $runsheet_date_formatted = '';
+
+            if (!empty($runsheet_date_raw)) {
+                // Convert only if date is in valid format
+                $timestamp = strtotime($runsheet_date_raw);
+                if ($timestamp !== false) {
+                    $runsheet_date_formatted = date('d-m-Y', $timestamp);
+                }
+            }
+
+            $runsheet_date = mysqli_real_escape_string($conn, $runsheet_date_formatted);
 
             // Track items to keep
             $itemsToKeep = [];
@@ -76,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $itemsToKeep[] = $stmtInsert->insert_id;
                     }
                 }
-            }           
+            }
         }
 
         if (!empty($unchecked_items)) {
@@ -92,7 +103,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
             $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
             $runsheet_number = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
-            $runsheet_date = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
+            $runsheet_date_raw = $item['runsheet_date'] ?? '';
+            $runsheet_date_formatted = '';
+
+            if (!empty($runsheet_date_raw)) {
+                // Convert only if date is in valid format
+                $timestamp = strtotime($runsheet_date_raw);
+                if ($timestamp !== false) {
+                    $runsheet_date_formatted = date('d-m-Y', $timestamp);
+                }
+            }
+
+            $runsheet_date = mysqli_real_escape_string($conn, $runsheet_date_formatted);
 
             foreach ($item['items'] as $entry) {
                 $itemName = mysqli_real_escape_string($conn, $entry['item_name'] ?? '');
