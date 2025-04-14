@@ -98,9 +98,9 @@ require 'session.php';
             <tbody>
               <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>
-                  <td style="color:#011f7f;"><?php echo htmlspecialchars($row['date']); ?></td>
-                  <td style="color:#011f7f; width: 700px;"><?php echo htmlspecialchars($row['company_name']); ?></td>
-                  <td style="color:#011f7f;"><?php echo htmlspecialchars($row['invoice_type']); ?></td>
+                  <td style="color:#011f7f; width: 150px;"><?php echo htmlspecialchars($row['date']); ?></td>
+                  <td style="color:#011f7f; width: 400px;"><?php echo htmlspecialchars($row['company_name']); ?></td>
+                  <td style="color:#011f7f; width: 150px;"><?php echo htmlspecialchars($row['invoice_type']); ?></td>
                   <td>
                     <?php if($row['invoice_type'] == 'Bedding' || $row['invoice_type'] == 'Furniture'){ ?>
                       <button type="button" class="btn action-btn" onclick="window.open('pdf_bedding-furniture.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
