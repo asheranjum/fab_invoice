@@ -129,13 +129,13 @@ mysqli_close($conn);
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
+
                         <label for="date" class="form-label mb-0 me-2">DATE:</label>
                         <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3">
                         <div class="invalid-feedback">Invoice date is required.</div>
 
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
-
-                        <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" readonly>
+                        <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" >
 
                     </div>
 

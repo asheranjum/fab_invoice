@@ -120,7 +120,6 @@ mysqli_close($conn);
                             <button type="button" class="btn btn-dark remove-bulk-button">Remove Row</button>
                         </div>
 
-
                         <div class=" btn-group">
                             <button type="submit" class="btn btn-success export-button">Save Invoice</button>
                             <!-- <button type="submit" class="btn btn-success export-button">Export Invoice</button> -->
@@ -134,7 +133,6 @@ mysqli_close($conn);
                         <div class="invalid-feedback">Invoice date is required.</div>
 
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
-
                         <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" >
 
                     </div>
