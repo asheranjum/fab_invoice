@@ -14,7 +14,8 @@ if ($invoiceId) {
     $invoiceData = $invoiceData['invoice'];
 }
 
-$newInvoice = $invoiceData['invoice'] ?? '';
+
+$newInvoice = $invoiceData['invoice_number'] ?? '';
 
 $groupedItems = [];
 
