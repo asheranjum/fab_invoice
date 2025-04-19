@@ -85,6 +85,10 @@ body {
     position: relative;
 }
 
+/* .invoice-container .row {
+    height: 400px;
+} */
+
 .header-img {
     width: 100%;
     height: auto;
@@ -100,14 +104,14 @@ body {
 
 .info {
     position: absolute;
-    top: 40%;
+    top: 10%;
     left: 20%;
     font-weight: 200;
 }
 
 .service-items {
     position: absolute;
-    top: 70%;
+    top: 55%;
     right: -10%;
     width: 200px;
 }

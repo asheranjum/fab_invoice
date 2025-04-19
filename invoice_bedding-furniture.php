@@ -106,7 +106,7 @@ mysqli_close($conn);
             </div>
         </div>
 
-        <div class="row mt-3">
+        <div class="row mt-3 ">
             <div class="col-md-8">
 
                 <form id="invoiceForm" class="form-group p-1">
