@@ -69,7 +69,7 @@ while ($row = $resultItems->fetch_assoc()) {
 
 
 // Dynamic Values
-$date = $invoice['date'];
+$date =  date("d-m-Y", strtotime($invoice['date']));
 $invoiceNo = $invoice['invoice_number'];
 $invoice_type = $invoice['invoice_type'];
 $company = $invoice['company_name'];

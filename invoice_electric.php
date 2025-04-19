@@ -135,7 +135,7 @@ mysqli_close($conn);
                         <div class="invalid-feedback">Invoice date is required.</div>
 
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
-                        <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>" >
+                        <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>">
 
                     </div>
 
@@ -350,7 +350,7 @@ mysqli_close($conn);
             let runsheetIndex = 0;
             let isDataEntered = false;
 
-         
+
             initializePage();
 
             // $(".add-runsheet-button").click(addRunSheetValues);
@@ -661,7 +661,41 @@ mysqli_close($conn);
                     }
                 }
             }
+            $('#invoice_date, #addRunsheetDate').on('input', function() {
+            const inputDate = $(this).val(); // format is YYYY-MM-DD
+            if (inputDate) {
+                const [year, month, day] = inputDate.split('-');
+                const formatted = `${day}-${month}-${year}`;
+                $('#formatted_date_display').val(formatted);
+            } else {
+                $('#formatted_date_display').val('');
+            }
+        });
 
+
+        // Monitor changes in input fields
+        $("input, select, textarea").on("change keyup", function() {
+            isDataEntered = true;
+        });
+
+
+
+        // Monitor changes in runsheets
+        $(document).on("click", ".add-runsheet-button, .remove-runsheet", function() {
+            isDataEntered = true;
+        });
+
+        // Add beforeunload event listener
+        window.addEventListener("beforeunload", function(e) {
+            if (isDataEntered) {
+                // Display a confirmation dialog
+                const confirmationMessage = "You have unsaved changes. If you reload this page, your data will be lost.";
+                e.preventDefault(); // Prevent default behavior
+                e.returnValue = confirmationMessage; // Standard for modern browsers
+                return confirmationMessage; // Legacy browsers
+            }
+        });
+        
             function handleFormSubmit(e) {
                 e.preventDefault();
                 isDataEntered = false; // Data is saved, so no need for aler
@@ -850,42 +884,7 @@ mysqli_close($conn);
             }
         });
 
-        $('#invoice_date, #addRunsheetDate').on('input', function() {
-            const inputDate = $(this).val(); // format is YYYY-MM-DD
-            if (inputDate) {
-                const [year, month, day] = inputDate.split('-');
-                const formatted = `${day}-${month}-${year}`;
-                $('#formatted_date_display').val(formatted);
-            } else {
-                $('#formatted_date_display').val('');
-            }
-        });
-
-
-            // Monitor changes in input fields
-    $("input, select, textarea").on("change keyup", function () {
-        isDataEntered = true;
-    });
-
-    
-
- // Monitor changes in runsheets
- $(document).on("click", ".add-runsheet-button, .remove-runsheet", function () {
-        isDataEntered = true;
-    });
-
-    // Add beforeunload event listener
-    window.addEventListener("beforeunload", function (e) {
-        if (isDataEntered) {
-            // Display a confirmation dialog
-            const confirmationMessage = "You have unsaved changes. If you reload this page, your data will be lost.";
-            e.preventDefault(); // Prevent default behavior
-            e.returnValue = confirmationMessage; // Standard for modern browsers
-            return confirmationMessage; // Legacy browsers
-        }
-    });
-
-        
+      
     </script>
 
 
