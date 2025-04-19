@@ -218,8 +218,8 @@ mysqli_close($conn);
                         <tr id="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
-                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Invoice No">
-                                <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Invoice Name">
+                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Inv No">
+                                <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
                             </td>
 
                             <td>
@@ -355,7 +355,7 @@ mysqli_close($conn);
             const maxRows = 25;
             let currentRunsheet = null;
             let runsheetIndex = 0;
-
+            let isDataEntered = false;
             initializePage();
 
             // $(".add-runsheet-button").click(addRunSheetValues);
@@ -668,7 +668,7 @@ mysqli_close($conn);
 
             function handleFormSubmit(e) {
                 e.preventDefault();
-
+                isDataEntered = false; // Data is saved, so no need for aler
 
                 let isValid = true;
 
@@ -853,6 +853,42 @@ mysqli_close($conn);
                     });
             }
         });
+        $('#invoice_date, #addRunsheetDate').on('input', function() {
+            const inputDate = $(this).val(); // format is YYYY-MM-DD
+            if (inputDate) {
+                const [year, month, day] = inputDate.split('-');
+                const formatted = `${day}-${month}-${year}`;
+                $('#formatted_date_display').val(formatted);
+            } else {
+                $('#formatted_date_display').val('');
+            }
+        });
+
+
+            // Monitor changes in input fields
+    $("input, select, textarea").on("change keyup", function () {
+        isDataEntered = true;
+    });
+
+    
+
+ // Monitor changes in runsheets
+ $(document).on("click", ".add-runsheet-button, .remove-runsheet", function () {
+        isDataEntered = true;
+    });
+
+    // Add beforeunload event listener
+    window.addEventListener("beforeunload", function (e) {
+        if (isDataEntered) {
+            // Display a confirmation dialog
+            const confirmationMessage = "You have unsaved changes. If you reload this page, your data will be lost.";
+            e.preventDefault(); // Prevent default behavior
+            e.returnValue = confirmationMessage; // Standard for modern browsers
+            return confirmationMessage; // Legacy browsers
+        }
+    });
+
+        
     </script>
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>

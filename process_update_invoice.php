@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
 
     if ($input) {
+        $invoice_number = mysqli_real_escape_string($conn, $input['invoice'] ?? '');
         $invoice_type = mysqli_real_escape_string($conn, $input['invoice_type'] ?? '');
         $invoiceId = mysqli_real_escape_string($conn, $input['invoice_id'] ?? '');
         $inv_date = mysqli_real_escape_string($conn, $input['date'] ?? '');
@@ -29,9 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Update invoice details
-    $sqlUpdate = "UPDATE invoices SET date=?, invoice_type=?, company_name=?, address=?, phone=?, postal_code =?, abn=?, tax_rate=? WHERE id=?";
+    $sqlUpdate = "UPDATE invoices SET date=?, invoice_number=? , invoice_type=?, company_name=?, address=?, phone=?, postal_code =?, abn=?, tax_rate=? WHERE id=?";
     $stmt = $conn->prepare($sqlUpdate);
-    $stmt->bind_param("ssssssssi", $inv_date, $invoice_type, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $tax_rate, $invoiceId);
+    $stmt->bind_param("sssssssssi", $inv_date,$invoice_number, $invoice_type, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $tax_rate, $invoiceId);
 
     if ($stmt->execute()) {
         foreach ($items as $item) {
