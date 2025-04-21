@@ -625,8 +625,8 @@ mysqli_close($conn);
             <tr id="runsheet-${runsheetIndex}">
                 <th colspan="3" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
-                        <strong>Runsheet No: <span class="runsheet-no">${runsheetNumber}</span> </strong>
-                        <strong>Runsheet Date: <span class="runsheet-date">${runsheetDate}</span> </strong>
+                       <h5><strong>Runsheet No: <span class="runsheet-no">${runsheetNumber}</span> </strong></h5>
+                       <h5><strong>Runsheet Date: <span class="runsheet-date">${runsheetDate}</span> </strong></h5>
                         <strong><button class="btn btn-danger btn-sm edit-onpage-runsheet-button" data-id="runsheet-${runsheetIndex}" data-run-number="${runsheetNumber}" data-run-date="${runsheetDate}">Edit</button></strong>
                         <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                     </div>
