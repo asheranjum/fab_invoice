@@ -288,8 +288,8 @@ mysqli_close($conn);
                         USE THE FOLLOWING CONTACT INFORMATION</p>
                     <ul>
                         <li>CONTACT NAME: SAM</li>
-                        <li>PHONE: 8888 999 000</li>
-                        <li>EMAIL: example@gmail.com</li>
+                        <li>PHONE: 0403 729 966</li>
+                        <li>EMAIL: info@fabtransport.com.au</li>
                     </ul>
                     <h4>THANK YOU FOR YOUR BUSINESS!</h4>
                 </div>

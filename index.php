@@ -60,25 +60,25 @@ require 'session.php';
     $records_per_page = 25;
     $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $search_query = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
-    
+
     $offset = ($current_page - 1) * $records_per_page;
-    
+
     $sql_count = "SELECT COUNT(*) AS total FROM invoices WHERE company_name LIKE '%$search_query%'";
     $result_count = mysqli_query($conn, $sql_count);
-    
+
     if (!$result_count) {
-        die("Query failed: " . mysqli_error($conn));
+      die("Query failed: " . mysqli_error($conn));
     }
-    
+
     $row_count = mysqli_fetch_assoc($result_count);
     $total_records = $row_count['total'];
     $total_pages = ceil($total_records / $records_per_page);
-    
+
     $sql = "SELECT * FROM invoices WHERE company_name LIKE '%$search_query%'  ORDER BY created_at DESC LIMIT $offset, $records_per_page";
     $result = mysqli_query($conn, $sql);
-    
+
     if (!$result) {
-        die("Query failed: " . mysqli_error($conn));
+      die("Query failed: " . mysqli_error($conn));
     }
 
     ?>
@@ -98,16 +98,16 @@ require 'session.php';
             <tbody>
               <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>
-                  <td style="color:#011f7f; width: 150px;"><?php echo htmlspecialchars($row['date']); ?></td>
+                  <td style="color:#011f7f; width: 150px;"><?php echo date('d-m-Y', strtotime($row['date'])); ?> </td>
                   <td style="color:#011f7f; width: 400px;"><?php echo htmlspecialchars($row['company_name']); ?></td>
                   <td style="color:#011f7f; width: 150px;"><?php echo htmlspecialchars($row['invoice_type']); ?></td>
                   <td>
-                    <?php if($row['invoice_type'] == 'Bedding' || $row['invoice_type'] == 'Furniture'){ ?>
+                    <?php if ($row['invoice_type'] == 'Bedding' || $row['invoice_type'] == 'Furniture') { ?>
                       <button type="button" class="btn action-btn" onclick="window.open('pdf_bedding-furniture.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
                       <button type="button" class="btn action-btn" onclick="window.open('update_bedding-furniture_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
-                      <?php } else{ ?>
-                        <button type="button" class="btn action-btn" onclick="window.open('pdf_electric.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
-                    <button type="button" class="btn action-btn" onclick="window.open('update_electric_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
+                    <?php } else { ?>
+                      <button type="button" class="btn action-btn" onclick="window.open('pdf_electric.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
+                      <button type="button" class="btn action-btn" onclick="window.open('update_electric_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
                     <?php } ?>
                     <button type="button" class="btn action-btn" onclick="location.href='duplicate_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>'">Duplicate</button>
                     <button type="button" class="btn action-btn" onclick="if(confirm('Are you sure you want to delete this invoice?')) location.href='delete_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>'">Delete</button>

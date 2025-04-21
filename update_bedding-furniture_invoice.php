@@ -183,12 +183,12 @@ mysqli_close($conn);
 
                     <div class="top-nav">
                         <div class="topbtngr btn-group" role="group">
-                            <button type="button" class="btn btn-dark add-runsheet-button">Add Runsheet</button>
-                            <button type="button" class="btn btn-dark  add-bulk-button">Add Row</button>
-                            <button type="button" class="btn btn-dark remove-bulk-button">Remove Row</button>
+                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
                         </div>
                         <div class=" btn-group">
-                            <button type="submit" class="btn btn-success export-button">Update Invoice</button>
+                            <button type="submit" class="btn mergebtn export-button">Update Invoice</button>
                             <!-- <button type="submit" class="btn btn-success export-button">Export Invoice</button> -->
                         </div>
                     </div>
@@ -510,8 +510,8 @@ mysqli_close($conn);
                         USE THE FOLLOWING CONTACT INFORMATION</p>
                     <ul>
                         <li>CONTACT NAME: SAM</li>
-                        <li>PHONE: 8888 999 000</li>
-                        <li>EMAIL: example@gmail.com</li>
+                        <li>PHONE: 0403 729 966</li>
+                        <li>EMAIL: info@fabtransport.com.au</li>
                     </ul>
                     <h4>THANK YOU FOR YOUR BUSINESS!</h4>
                 </div>

@@ -599,3 +599,14 @@ label {
     top: -80px;
     left: 0px;
 }
+
+.mergebtn {
+    background: #011f7f;
+    color: #fff;
+  }
+  
+  .mergebtn:hover {
+    background: #ed9a1e;
+    color: #fff;
+  }
+  
