@@ -179,7 +179,7 @@ mysqli_close($conn);
                     <h6>FAB TRANSPORT SERVICES PTY LTD</h6>
                     <h6>PHONE: 0403729966</h6>
                     <h6>ABN: 123 121 211 222 222</h6>
-                    <h6>ADDRESS: 5 LOUIS STREET 3177 VIC</h6>
+                    <h6>ADDRESS: 5 LOUIS STREET DOVETON VIC 3177</h6>
                 </div>
 
                 <div class="service-items">
@@ -215,8 +215,8 @@ mysqli_close($conn);
                         <tr id="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
-                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Inv No">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
+                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Inv No">
                             </td>
 
                             <td>
@@ -661,40 +661,40 @@ mysqli_close($conn);
                 }
             }
             $('#invoice_date, #addRunsheetDate').on('input', function() {
-            const inputDate = $(this).val(); // format is YYYY-MM-DD
-            if (inputDate) {
-                const [year, month, day] = inputDate.split('-');
-                const formatted = `${day}-${month}-${year}`;
-                $('#formatted_date_display').val(formatted);
-            } else {
-                $('#formatted_date_display').val('');
-            }
-        });
+                const inputDate = $(this).val(); // format is YYYY-MM-DD
+                if (inputDate) {
+                    const [year, month, day] = inputDate.split('-');
+                    const formatted = `${day}-${month}-${year}`;
+                    $('#formatted_date_display').val(formatted);
+                } else {
+                    $('#formatted_date_display').val('');
+                }
+            });
 
 
-        // Monitor changes in input fields
-        $("input, select, textarea").on("change keyup", function() {
-            isDataEntered = true;
-        });
+            // Monitor changes in input fields
+            $("input, select, textarea").on("change keyup", function() {
+                isDataEntered = true;
+            });
 
 
 
-        // Monitor changes in runsheets
-        $(document).on("click", ".add-runsheet-button, .remove-runsheet", function() {
-            isDataEntered = true;
-        });
+            // Monitor changes in runsheets
+            $(document).on("click", ".add-runsheet-button, .remove-runsheet", function() {
+                isDataEntered = true;
+            });
 
-        // Add beforeunload event listener
-        window.addEventListener("beforeunload", function(e) {
-            if (isDataEntered) {
-                // Display a confirmation dialog
-                const confirmationMessage = "You have unsaved changes. If you reload this page, your data will be lost.";
-                e.preventDefault(); // Prevent default behavior
-                e.returnValue = confirmationMessage; // Standard for modern browsers
-                return confirmationMessage; // Legacy browsers
-            }
-        });
-        
+            // Add beforeunload event listener
+            window.addEventListener("beforeunload", function(e) {
+                if (isDataEntered) {
+                    // Display a confirmation dialog
+                    const confirmationMessage = "You have unsaved changes. If you reload this page, your data will be lost.";
+                    e.preventDefault(); // Prevent default behavior
+                    e.returnValue = confirmationMessage; // Standard for modern browsers
+                    return confirmationMessage; // Legacy browsers
+                }
+            });
+
             function handleFormSubmit(e) {
                 e.preventDefault();
                 isDataEntered = false; // Data is saved, so no need for aler
@@ -882,8 +882,6 @@ mysqli_close($conn);
                     });
             }
         });
-
-      
     </script>
 
 

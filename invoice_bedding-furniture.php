@@ -113,8 +113,6 @@ mysqli_close($conn);
                     <div class="top-nav">
 
                         <div class="topbtngr btn-group" role="group">
-                            <!-- <button type="button" class="btn btn-primary add-button">Add Row</button> -->
-                            <!-- <button type="button" class="btn btn-danger remove-button">Remove Row</button> -->
                             <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
                             <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
                             <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
@@ -181,7 +179,7 @@ mysqli_close($conn);
                     <h6>FAB TRANSPORT SERVICES PTY LTD</h6>
                     <h6>PHONE: 0403729966</h6>
                     <h6>ABN: 123 121 211 222 222</h6>
-                    <h6>ADDRESS: 5 LOUIS STREET 3177 VIC</h6>
+                    <h6>ADDRESS: 5 LOUIS STREET DOVETON VIC 3177</h6>
                 </div>
 
                 <div class="service-items">
@@ -217,8 +215,8 @@ mysqli_close($conn);
                         <tr id="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
-                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Inv No">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
+                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Inv No">
                             </td>
 
                             <td>

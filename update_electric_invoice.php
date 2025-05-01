@@ -238,7 +238,7 @@ mysqli_close($conn);
                     <h6>FAB TRANSPORT SERVICES PTY LTD</h6>
                     <h6>PHONE: 0403729966</h6>
                     <h6>ABN: 123 121 211 222 222</h6>
-                    <h6>ADDRESS: 5 LOUIS STREET 3177 VIC</h6>
+                    <h6>ADDRESS:5 LOUIS STREET DOVETON VIC 3177</h6>
                 </div>
 
                 <div class="service-items">
@@ -274,8 +274,8 @@ mysqli_close($conn);
                         <tr id="tabletr" class="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
-                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Inv No">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
+                                <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Inv No">
                             </td>
 
                             <td>

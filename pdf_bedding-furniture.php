@@ -238,7 +238,7 @@ $html = '
 
             <tr>
                 <td><span class="label">PHONE:</span>' . $phone . '</td>
-                <td style="text-align:right"><span class="label">ADDRESS: 5 LOUIS STREET DOVETON 3177 VIC</span></td>
+                <td style="text-align:right"><span class="label">ADDRESS: 5 LOUIS STREET DOVETON VIC 3177</span></td>
             </tr>
             <tr>
                 <td><span class="label">Invoice Type:</span>' . $invoice_type . '</td>
@@ -283,13 +283,13 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     </tr>';
 
     foreach ($runsheetData['items'] as $itemRowId => $data) {
-        $customInvoiceNo = $data['custom_invoice_no'];
         $customInvoiceName2 = $data['customInvoiceName'];
+        $customInvoiceNo = $data['custom_invoice_no'];
         $items = $data['items'];
 
         $html .= '
         <tr >
-            <td style="text-align: left;">' . htmlspecialchars($customInvoiceNo). '<br>' .  $customInvoiceName2  . ' </td>
+            <td style="text-align: left;">' . htmlspecialchars($customInvoiceName2). '<br>' .  $customInvoiceNo  . ' </td>
             <td style=" padding:0px">
                 <table class="checkbox-table">
                     <tr>';
