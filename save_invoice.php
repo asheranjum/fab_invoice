@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inv_date = mysqli_real_escape_string($conn, $inv_date_formatted);
 
         $inv_invoice = mysqli_real_escape_string($conn, $input['invoice'] ?? '');
+        $employer_company = mysqli_real_escape_string($conn, $input['employer_company'] ?? '');
         $inv_company = mysqli_real_escape_string($conn, $input['company'] ?? '');
         $inv_address = mysqli_real_escape_string($conn, $input['address'] ?? '');
         $inv_phone = mysqli_real_escape_string($conn, $input['phone'] ?? '');
@@ -42,15 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             // Insert new invoice
-            $sqlInvoice = "INSERT INTO invoices (date, invoice_number, invoice_type, company_name, address, phone, postal_code, abn, runsheet_number, sub_total, tax_rate, other_cost, total_cost) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sqlInvoice = "INSERT INTO invoices (date, invoice_number, invoice_type, employer_company, company_name, address, phone, postal_code, abn, runsheet_number, sub_total, tax_rate, other_cost, total_cost) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sqlInvoice);
             if (!$stmt) {
                 throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
             }
-            $stmt->bind_param('sssssssssdddd', $inv_date, $inv_invoice, $invoice_type, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $inv_runsheet, $sub_total, $tax_rate, $other_cost, $total_cost);
+            $stmt->bind_param('ssssssssssdddd', $inv_date, $inv_invoice, $invoice_type, $employer_company, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $inv_runsheet, $sub_total, $tax_rate, $other_cost, $total_cost);
             $stmt->execute();
             $invoiceId = $stmt->insert_id;
             $stmt->close();
+       
 
             // Insert items
             $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, item_row_id, item_name, item_value, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
