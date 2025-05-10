@@ -954,9 +954,9 @@ mysqli_close($conn);
                     message: "Invoice date is required."
                 },
                 {
-                        id: "#employer_company",
-                        message: "Employer company name is required."
-                    },
+                    id: "#employer_company",
+                    message: "Employer company name is required."
+                },
                 {
                     id: "#company_name",
                     message: "Company name is required."

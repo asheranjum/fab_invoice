@@ -142,6 +142,13 @@ mysqli_close($conn);
                     </select>
 
                     <div class="mb-2 d-flex align-items-center">
+                        <label for="employer_company" class="form-label mb-0 me-3">EMPLOYER COMPANY</label>
+                        <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="">
+                        <div class="invalid-feedback">Employer company name is required.</div>
+
+                    </div>
+
+                    <div class="mb-2 d-flex align-items-center">
                         <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>
                         <input type="text" name="company" id="company_name" class="form-control w-50" placeholder="Type Company Name" value="">
                         <div class="invalid-feedback">Company name is required.</div>
@@ -708,6 +715,10 @@ mysqli_close($conn);
                         message: "Invoice date is required."
                     },
                     {
+                        id: "#employer_company",
+                        message: "Employer company name is required."
+                    },
+                    {
                         id: "#company_name",
                         message: "Company name is required."
                     },
@@ -810,6 +821,7 @@ mysqli_close($conn);
                     invoice_type: $("select[name='invoice_type']").val(),
                     date: $("input[name='date']").val(),
                     invoice: $("input[name='invoice']").val(),
+                    employer_company: $("input[name='employer_company']").val(),
                     company: $("input[name='company']").val(),
                     address: $("input[name='address']").val(),
                     phone: $("input[name='phone']").val(),
