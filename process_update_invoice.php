@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     }
 
+
     // Update invoice details
     $sqlUpdate = "UPDATE invoices SET date=?, invoice_number=? , invoice_type=?, employer_company = ? ,  company_name=?, address=?, phone=?, postal_code =?, abn=?, tax_rate=? WHERE id=?";
     $stmt = $conn->prepare($sqlUpdate);
@@ -58,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $itemsToKeep = [];
 
             foreach ($item['items'] as $entry) {
+                $noteText = mysqli_real_escape_string($conn, $entry['note'] ?? '');
                 $itemName = mysqli_real_escape_string($conn, $entry['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $entry['item_value'] ?? 0);
                 $itemId = mysqli_real_escape_string($conn, $entry['item_id'] ?? 0);
@@ -74,15 +76,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     if ($result['count'] > 0) {
                         // Update existing item
-                        $sqlUpdateItem = "UPDATE invoice_items SET customer_invoice_name=?, customer_invoice_no=?, item_value=? WHERE id=? AND invoice_id=? AND item_row_id=? AND item_name=? AND runsheet_number=? AND runsheet_date=?";
+                        $sqlUpdateItem = "UPDATE invoice_items SET customer_invoice_name=?, customer_invoice_no=?, note_text=?, item_value=? WHERE id=? AND invoice_id=? AND item_row_id=? AND item_name=? AND runsheet_number=? AND runsheet_date=?";
                         $stmtUpdate = $conn->prepare($sqlUpdateItem);
-                        $stmtUpdate->bind_param("ssssissss", $customerInvoiceName, $customerInvoiceNo, $itemValue, $itemId, $invoiceId, $itemRowId, $itemName, $runsheet_number, $runsheet_date);
+                        $stmtUpdate->bind_param("sssssissss", $customerInvoiceName, $customerInvoiceNo, $noteText, $itemValue, $itemId, $invoiceId, $itemRowId, $itemName, $runsheet_number, $runsheet_date);
                         $stmtUpdate->execute();
                     } else {
                         // Insert new item
-                        $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, item_row_id, item_name, item_value, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                        $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, note_text, item_row_id, item_name, item_value, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                         $stmtInsert = $conn->prepare($sqlInsertItem);
-                        $stmtInsert->bind_param("isssssss", $invoiceId, $customerInvoiceName, $customerInvoiceNo, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date);
+                        $stmtInsert->bind_param("issssssss", $invoiceId, $customerInvoiceName, $customerInvoiceNo, $noteText, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date);
                         $stmtInsert->execute();
 
                         // Get the last inserted ID and add to itemsToKeep
@@ -101,6 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insert New Items
         foreach ($newItems as $item) {
+            
+           
             $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
             $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
             $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
@@ -119,12 +123,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $runsheet_date = mysqli_real_escape_string($conn, $runsheet_date_formatted);
 
             foreach ($item['items'] as $entry) {
+                $noteText = mysqli_real_escape_string($conn, $entry['note'] ?? '');
                 $itemName = mysqli_real_escape_string($conn, $entry['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $entry['item_value'] ?? '0');
 
-                $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, item_row_id, item_name, item_value, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?, ?,?,?,?)";
+                $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, note_text, item_row_id, item_name, item_value, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?, ?,?,?,?,?)";
                 $stmtInsert = $conn->prepare($sqlInsertItem);
-                $stmtInsert->bind_param("isssssss", $invoiceId, $customerInvoiceName, $customerInvoiceNo, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date);
+                $stmtInsert->bind_param("issssssss", $invoiceId, $customerInvoiceName, $customerInvoiceNo, $noteText, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date);
                 $stmtInsert->execute();
             }
         }

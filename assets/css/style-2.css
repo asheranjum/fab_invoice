@@ -267,7 +267,7 @@ label {
     position: relative;
 }
 
-.form-checkboxes {
+.form-checkboxes, .note-checkbox {
     appearance: none;
     width: 14px;
     height: 14px;
@@ -277,13 +277,12 @@ label {
     cursor: pointer;
 }
 
-.form-checkboxes:checked {
+.form-checkboxes:checked, .note-checkbox:checked {
     background-color: #011F7F;
-    ;
     border-color: #011F7F;
 }
 
-.form-checkboxes:checked::after {
+.form-checkboxes:checked::after, .note-checkbox:checked::after {
     content: '';
     position: absolute;
     bottom: 2px;
@@ -295,6 +294,14 @@ label {
     transform: rotate(45deg);
 }
 
+.note-text
+{
+    font-size: 12px;
+}
+.note-text::placeholder
+{
+    font-size: 12px;
+}
 .d-flex {
     gap: 0px;
     flex-wrap: nowrap;

@@ -27,6 +27,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $itemId = $item['id'];
         $itemName = $item['item_name'];
         $itemValue = $item['item_value'];
+        $note = $item['note_text'];
         $customInvoiceNo = $item['customer_invoice_no'];
         $customInvoiceName = $item['customer_invoice_name'];
         $createdAt = isset($item['created_at']) ? $item['created_at'] : null;
@@ -53,7 +54,8 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = [
             'value' => $itemValue,
             'created_at' => $createdAt,
-            'item_id' => $itemId
+            'item_id' => $itemId,
+            'note' => $note,
         ];
     }
 }
@@ -295,7 +297,7 @@ mysqli_close($conn);
                             </td>
 
                             <td>
-                                <div class="d-flex">
+                                <div class="d-flex item_names_check">
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="deliv-0" name="item[0][deliv]">
                                         <label for="deliv-0" class="form-check-label">DELIV+</label>
@@ -367,7 +369,7 @@ mysqli_close($conn);
                                     </div>
                                 </div>
 
-                                <div class="d-flex">
+                                <div class="d-flex item_note">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-deliv-0">
                                         <label for="note-checkbox-deliv-0" class="form-check-label">Add Deliv Note</label>
@@ -1182,7 +1184,7 @@ mysqli_close($conn);
                 let updatedItems = [];
 
 
-                row.find(".form-check").each(function() {
+                row.find(".item_names_check > .form-check").each(function() {
                     const checkbox = $(this).find("input[type='checkbox']");
                     const inputField = $(this).find("input[type='text']");
                     const noteField = $(this).find(".note-text")
@@ -1248,12 +1250,16 @@ mysqli_close($conn);
                 let hasCheckedItem = false;
                 let newItem = [];
 
-                row.find(".form-check").each(function() {
+                row.find(".item_names_check > .form-check").each(function() {
                     const checkbox = $(this).find("input[type='checkbox']");
                     const inputField = $(this).find("input[type='text']");
-                    const noteField = $(this).find(".note-text"); // Get the note field
                     const itemName = $(this).find("label").text().trim();
-                    // console.log('noteField',noteField.val());
+
+                    // Get the corresponding note field for the current item
+                    const noteField = row.find(".item_note > .form-check")
+                        .eq($(this).index()) // Match the index of the current item
+                        .find(".note-text"); // Find the note-text field
+
                     if (checkbox.prop("checked")) {
                         hasCheckedItem = true;
                         newItem.push({
@@ -1263,18 +1269,22 @@ mysqli_close($conn);
                         });
                     }
                 });
-
                 row.find("select").each(function() {
                     const select = $(this);
                     const selectedValue = select.val();
-                    const noteField = $(this).find(".note-text"); // Get the note field
+
+                    // Get the corresponding note field for the current item
+                    const noteField = row.find(".item_note > .form-check")
+                        .eq($(this).index()) // Match the index of the current item
+                        .find(".note-text"); // Find the note-text field
+
 
                     if (selectedValue && selectedValue !== "0") {
                         hasCheckedItem = true;
                         newItem.push({
                             item_name: select.find("option:selected").text().trim(),
                             item_value: select.siblings("input[type='text']").val().trim() || "0",
-                             note: noteField.val() || "" // Add the note value
+                            note: noteField.val() || "" // Add the note value
                         });
                     }
                 });

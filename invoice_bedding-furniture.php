@@ -227,7 +227,7 @@ mysqli_close($conn);
                             </td>
 
                             <td>
-                                <div class="d-flex">
+                                <div class="d-flex item_names_check">
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="deliv-0" name="item[0][deliv]">
                                         <label for="deliv-0" class="form-check-label">DELIV+</label>
@@ -297,6 +297,74 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
                                 </div>
+
+                                <div class="d-flex item_note">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-deliv-0">
+                                        <label for="note-checkbox-deliv-0" class="form-check-label">Deliv Note</label>
+                                        <input type="text" name="item[0][deliv_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-disas-0">
+                                        <label for="note-checkbox-disas-0" class="form-check-label">Disas Note</label>
+                                        <input type="text" name="item[0][disas_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-assem-0">
+                                        <label for="note-checkbox-assem-0" class="form-check-label">Assem Note</label>
+                                        <input type="text" name="item[0][assem_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-rub-0">
+                                        <label for="note-checkbox-rub-0" class="form-check-label">Rub Note</label>
+                                        <input type="text" name="item[0][rub_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-upst-0">
+                                        <label for="note-checkbox-upst-0" class="form-check-label">Upst Note</label>
+                                        <input type="text" name="item[0][upst_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-downst-0">
+                                        <label for="note-checkbox-downst-0" class="form-check-label">Downst Note</label>
+                                        <input type="text" name="item[0][downst_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-prem-0">
+                                        <label for="note-checkbox-prem-0" class="form-check-label">Prem Note</label>
+                                        <input type="text" name="item[0][prem_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-brtrans-0">
+                                        <label for="note-checkbox-brtrans-0" class="form-check-label">Brtrans Note</label>
+                                        <input type="text" name="item[0][brtrans_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-h_dliv-0">
+                                        <label for="note-checkbox-h_dliv-0" class="form-check-label">H_Dliv Note</label>
+                                        <input type="text" name="item[0][h_dliv_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-vol-0">
+                                        <label for="note-checkbox-vol-0" class="form-check-label">Vol Note</label>
+                                        <input type="text" name="item[0][vol_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-pup-0">
+                                        <label for="note-checkbox-pup-0" class="form-check-label">P/UP Note</label>
+                                        <input type="text" name="item[0][pup_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+                                </div>
+
                             </td>
                             <td style="width: 180px;">
                                 <input type="text" class="form-control amount-field" name="amount[]" readonly placeholder="$0.00">
@@ -386,6 +454,16 @@ mysqli_close($conn);
             $(".remove-bulk-button").click(() => removeRows(promptForRowCount("remove")));
             $("#invoiceForm").on("submit", handleFormSubmit);
             $("#tax_rate, #other_cost").on("input", calculateSubTotal);
+
+
+            $(document).on("change", ".note-checkbox", function() {
+                const noteTextArea = $(this).closest(".form-check").find(".note-text");
+                if ($(this).is(":checked")) {
+                    noteTextArea.prop("disabled", false); // Enable the textarea
+                } else {
+                    noteTextArea.prop("disabled", true).val(""); // Disable and clear the textarea
+                }
+            });
 
             function initializePage() {
                 // Initialization logic
@@ -839,9 +917,13 @@ mysqli_close($conn);
                     const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
                     const amount = $(this).find(".amount-field").val() || 0;
                     let row = $(this);
-                    $(this).find(".form-check").each(function() {
+                    $(this).find(".item_names_check > .form-check").each(function() {
                         const checkbox = $(this).find("input[type='checkbox']");
                         const inputField = $(this).find("input[type='text']");
+                         // Get the corresponding note field for the current item
+                        const noteField = row.find(".item_note > .form-check")
+                        .eq($(this).index()) // Match the index of the current item
+                        .find(".note-text"); // Find the note-text field
 
                         if (checkbox.prop("checked")) {
                             formData.items.push({
@@ -850,6 +932,7 @@ mysqli_close($conn);
                                 customer_inv_name: customer_inv_name,
                                 item_name: $(this).find("label").text().trim(),
                                 item_value: inputField.val() || 0,
+                                note: noteField.val() || "", // Add the note value
                                 amount: amount,
                                 runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
                                 runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
@@ -865,6 +948,7 @@ mysqli_close($conn);
                             customer_inv_name: customer_inv_name,
                             item_name: selectField.find("option:selected").text().trim(),
                             item_value: selectField.siblings("input[type='text']").val() || 0,
+                            note: "", // Add the note value
                             amount: amount,
                             runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
                             runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
@@ -872,7 +956,7 @@ mysqli_close($conn);
                     }
                 });
 
-                console.log(formData);
+                // console.log(formData);
                 fetch("save_invoice.php", {
                         method: "POST",
                         headers: {
@@ -884,7 +968,7 @@ mysqli_close($conn);
                     .then((data) => {
                         if (data.success) {
                             alert(data.message);
-                            window.location.href = "index.php"; // Redirect after success
+                            // window.location.href = "index.php"; // Redirect after success
                         } else {
                             alert("Error: " + data.message);
                         }
@@ -893,6 +977,10 @@ mysqli_close($conn);
                         console.error("Error:", error);
                         alert("An error occurred. Please try again.");
                     });
+
+
+
+
             }
 
         });
