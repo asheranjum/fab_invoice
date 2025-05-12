@@ -301,6 +301,7 @@ mysqli_close($conn);
                                         <label for="deliv-0" class="form-check-label">DELIV+</label>
                                         <input type="text" name="item[0][deliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
+
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="disas-0" name="item[0][disas]">
                                         <label for="disas-0" class="form-check-label">DISAS+</label>
@@ -365,6 +366,74 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
                                 </div>
+
+                                <div class="d-flex">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-deliv-0">
+                                        <label for="note-checkbox-deliv-0" class="form-check-label">Add Deliv Note</label>
+                                        <input type="text" name="item[0][deliv_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-disas-0">
+                                        <label for="note-checkbox-disas-0" class="form-check-label">Add Disas Note</label>
+                                        <input type="text" name="item[0][disas_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-assem-0">
+                                        <label for="note-checkbox-assem-0" class="form-check-label">Add Assem Note</label>
+                                        <input type="text" name="item[0][assem_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-rub-0">
+                                        <label for="note-checkbox-rub-0" class="form-check-label">Add Rub Note</label>
+                                        <input type="text" name="item[0][rub_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-upst-0">
+                                        <label for="note-checkbox-upst-0" class="form-check-label">Add Upst Note</label>
+                                        <input type="text" name="item[0][upst_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-downst-0">
+                                        <label for="note-checkbox-downst-0" class="form-check-label">Add Downst Note</label>
+                                        <input type="text" name="item[0][downst_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-prem-0">
+                                        <label for="note-checkbox-prem-0" class="form-check-label">Add Prem Note</label>
+                                        <input type="text" name="item[0][prem_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-brtrans-0">
+                                        <label for="note-checkbox-brtrans-0" class="form-check-label">Add Brtrans Note</label>
+                                        <input type="text" name="item[0][brtrans_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-h_dliv-0">
+                                        <label for="note-checkbox-h_dliv-0" class="form-check-label">Add H_Dliv Note</label>
+                                        <input type="text" name="item[0][h_dliv_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-vol-0">
+                                        <label for="note-checkbox-vol-0" class="form-check-label">Add Vol Note</label>
+                                        <input type="text" name="item[0][vol_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input note-checkbox" id="note-checkbox-pup-0">
+                                        <label for="note-checkbox-pup-0" class="form-check-label">Add P/UP Note</label>
+                                        <input type="text" name="item[0][pup_note]" class="form-control note-text mt-1" placeholder="Enter note..." disabled>
+                                    </div>
+                                </div>
+
 
                             </td>
                             <td style="width: 180px;">
@@ -1116,6 +1185,8 @@ mysqli_close($conn);
                 row.find(".form-check").each(function() {
                     const checkbox = $(this).find("input[type='checkbox']");
                     const inputField = $(this).find("input[type='text']");
+                    // const noteField = $(this).find(".note-text"); // Get the note field
+                    const noteField = 'adasds' // Get the note field
                     const itemName = $(this).find("label").text().trim();
                     const itemId = $(this).find("input[type='hidden']").val();
 
@@ -1124,6 +1195,7 @@ mysqli_close($conn);
                         updatedItems.push({
                             item_name: itemName,
                             item_value: inputField.val().trim() || "0",
+                            note: noteField || "", // Add the note value
                             item_id: itemId
                         });
                     } else if (itemId) {
@@ -1134,6 +1206,8 @@ mysqli_close($conn);
                 row.find("select").each(function() {
                     const select = $(this);
                     const selectedValue = select.val();
+                    // const noteField = $(this).find(".note-text"); // Get the note field
+                    const noteField = 'adasds' // Get the note field
                     const itemId = select.siblings("input[type='hidden']").val();
 
                     if (selectedValue && selectedValue !== "0") {
@@ -1141,6 +1215,7 @@ mysqli_close($conn);
                         updatedItems.push({
                             item_name: select.find("option:selected").text().trim(),
                             item_value: select.siblings("input[type='text']").val().trim() || "0",
+                            note: noteField || "", // Add the note value
                             item_id: itemId
                         });
                     } else if (itemId) {
@@ -1164,7 +1239,7 @@ mysqli_close($conn);
              * -------------------- **/
             $(".table-container #tbody tr#tabletr").each(function(index) {
 
-                console.log(index);
+                // console.log(index);
 
                 const row = $(this);
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
@@ -1176,13 +1251,15 @@ mysqli_close($conn);
                 row.find(".form-check").each(function() {
                     const checkbox = $(this).find("input[type='checkbox']");
                     const inputField = $(this).find("input[type='text']");
+                    const noteField = $(this).find(".note-text"); // Get the note field
                     const itemName = $(this).find("label").text().trim();
-
+                    // console.log('noteField',noteField.val());
                     if (checkbox.prop("checked")) {
                         hasCheckedItem = true;
                         newItem.push({
                             item_name: itemName,
-                            item_value: inputField.val().trim() || "0"
+                            item_value: inputField.val().trim() || "0",
+                            note: noteField.val() || "" // Add the note value
                         });
                     }
                 });
@@ -1190,12 +1267,14 @@ mysqli_close($conn);
                 row.find("select").each(function() {
                     const select = $(this);
                     const selectedValue = select.val();
+                    const noteField = $(this).find(".note-text"); // Get the note field
 
                     if (selectedValue && selectedValue !== "0") {
                         hasCheckedItem = true;
                         newItem.push({
                             item_name: select.find("option:selected").text().trim(),
-                            item_value: select.siblings("input[type='text']").val().trim() || "0"
+                            item_value: select.siblings("input[type='text']").val().trim() || "0",
+                             note: noteField.val() || "" // Add the note value
                         });
                     }
                 });
@@ -1251,7 +1330,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        window.location.href = "index.php"; // Redirect after success
+                        // window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }
@@ -1295,8 +1374,6 @@ mysqli_close($conn);
                 // updateRunsheetForm
             });
             // Show Modal with existing runsheet data
-
-
 
             $(document).on("click", ".delete-runsheet-items", function() {
                 const button = $(this);
@@ -1363,6 +1440,15 @@ mysqli_close($conn);
                 });
 
                 $("#runsheetModal").modal("hide");
+            });
+
+            $(document).on("change", ".note-checkbox", function() {
+                const noteTextArea = $(this).closest(".form-check").find(".note-text");
+                if ($(this).is(":checked")) {
+                    noteTextArea.prop("disabled", false); // Enable the textarea
+                } else {
+                    noteTextArea.prop("disabled", true).val(""); // Disable and clear the textarea
+                }
             });
 
             // // Add Runsheet Button Click Handler
