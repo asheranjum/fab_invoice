@@ -1185,8 +1185,8 @@ mysqli_close($conn);
                 row.find(".form-check").each(function() {
                     const checkbox = $(this).find("input[type='checkbox']");
                     const inputField = $(this).find("input[type='text']");
-                    // const noteField = $(this).find(".note-text"); // Get the note field
-                    const noteField = 'adasds' // Get the note field
+                    const noteField = $(this).find(".note-text")
+                    // const noteField = 'adasds' // Get the note field
                     const itemName = $(this).find("label").text().trim();
                     const itemId = $(this).find("input[type='hidden']").val();
 
@@ -1195,7 +1195,7 @@ mysqli_close($conn);
                         updatedItems.push({
                             item_name: itemName,
                             item_value: inputField.val().trim() || "0",
-                            note: noteField || "", // Add the note value
+                            note: noteField.val() || "", // Add the note value
                             item_id: itemId
                         });
                     } else if (itemId) {
@@ -1206,8 +1206,8 @@ mysqli_close($conn);
                 row.find("select").each(function() {
                     const select = $(this);
                     const selectedValue = select.val();
-                    // const noteField = $(this).find(".note-text"); // Get the note field
-                    const noteField = 'adasds' // Get the note field
+                    const noteField = $(this).find(".note-text"); // Get the note field
+                    // const noteField = 'adasds' // Get the note field
                     const itemId = select.siblings("input[type='hidden']").val();
 
                     if (selectedValue && selectedValue !== "0") {
@@ -1215,7 +1215,7 @@ mysqli_close($conn);
                         updatedItems.push({
                             item_name: select.find("option:selected").text().trim(),
                             item_value: select.siblings("input[type='text']").val().trim() || "0",
-                            note: noteField || "", // Add the note value
+                            note: noteField.val() || "", // Add the note value
                             item_id: itemId
                         });
                     } else if (itemId) {
