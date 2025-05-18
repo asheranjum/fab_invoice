@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $unchecked_items = $input['unchecked_items'] ?? []; // Unchecked items to delete
 
     }
-
+   
 
     // Update invoice details
     $sqlUpdate = "UPDATE invoices SET date=?, invoice_number=? , invoice_type=?, employer_company = ? ,  company_name=?, address=?, phone=?, postal_code =?, abn=?, tax_rate=? WHERE id=?";
@@ -41,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
             $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
             $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
+            $noteText = mysqli_real_escape_string($conn, $item['note_text_value'] ?? '');
+    
             $runsheet_number = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
             $runsheet_date_raw = $item['runsheet_date'] ?? '';
             $runsheet_date_formatted = '';
@@ -57,13 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Track items to keep
             $itemsToKeep = [];
-
             foreach ($item['items'] as $entry) {
-                $noteText = mysqli_real_escape_string($conn, $entry['note'] ?? '');
                 $itemName = mysqli_real_escape_string($conn, $entry['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $entry['item_value'] ?? 0);
                 $itemId = mysqli_real_escape_string($conn, $entry['item_id'] ?? 0);
-
+                
+              
                 if ($itemValue != 0) {
                     $itemsToKeep[] = $itemId;
 
@@ -73,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtCheck->bind_param("iiis", $itemId, $invoiceId, $itemRowId, $itemName);
                     $stmtCheck->execute();
                     $result = $stmtCheck->get_result()->fetch_assoc();
-
+                  
                     if ($result['count'] > 0) {
                         // Update existing item
                         $sqlUpdateItem = "UPDATE invoice_items SET customer_invoice_name=?, customer_invoice_no=?, note_text=?, item_value=? WHERE id=? AND invoice_id=? AND item_row_id=? AND item_name=? AND runsheet_number=? AND runsheet_date=?";
@@ -108,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
             $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
             $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
+            $noteText = mysqli_real_escape_string($conn, $item['note_text_value'] ?? '');
             $runsheet_number = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
             $runsheet_date_raw = $item['runsheet_date'] ?? '';
             $runsheet_date_formatted = '';
@@ -123,7 +125,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $runsheet_date = mysqli_real_escape_string($conn, $runsheet_date_formatted);
 
             foreach ($item['items'] as $entry) {
-                $noteText = mysqli_real_escape_string($conn, $entry['note'] ?? '');
                 $itemName = mysqli_real_escape_string($conn, $entry['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $entry['item_value'] ?? '0');
 

@@ -45,6 +45,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
             $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
                 'custom_invoice_no' => $customInvoiceNo,
                 'custom_invoice_name' => $customInvoiceName,
+                'note_text' => $note,
                 'item_row_id' => $itemRowId,
                 'items' => []
             ];
@@ -55,12 +56,10 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
             'value' => $itemValue,
             'created_at' => $createdAt,
             'item_id' => $itemId,
-            'note' => $note,
         ];
     }
 }
 
-// print_r(json_encode($groupedItems));
 // die();
 // Close the connection
 mysqli_close($conn);
@@ -245,7 +244,16 @@ mysqli_close($conn);
                         <div class="invalid-feedback">Phone is required.</div>
                     </div>
 
-
+                    <div class="top-nav">
+                        <div class="topbtngr btn-group" role="group">
+                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                        </div>
+                        <div class=" btn-group">
+                            <button type="submit" class="btn mergebtn export-button">Update Invoice</button>
+                        </div>
+                    </div>
                 </form>
             </div>
 
@@ -275,13 +283,14 @@ mysqli_close($conn);
                         <tr>
                             <th>CUSTOMER'S INFO</th>
                             <th>DESCRIPTION & CHARGES</th>
+                            <th>NOTE</th>
                             <th>AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody id="tbody">
 
                         <tr style="display: none;">
-                            <th colspan="3">
+                            <th colspan="4">
                                 <div style=" gap: 50px; display: flex;">
                                     <strong>Runsheet No: <span id="runsheet_no"></span> </strong>
                                     <strong>Runsheet Date: <span id="runsheet_date"></span> </strong>
@@ -368,16 +377,18 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
 
-                                    <div class="form-check note-text-value">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="note-0" name="item[0][note]">
-                                        <label for="note-0" class="form-check-label">Add Note</label>
-                                        <input type="text" name="item[0][note_value]" class="form-control mt-1" disabled placeholder="">
-                                    </div>
                                 </div>
 
-                            
 
                             </td>
+
+                           <td>
+                           <div class="note-text">        
+                                <label for="note-text" class="form-check-label">Add Note</label>
+                                <input type="text" id="note-text"  name="note-text-value[]" class="form-control note-text-value mt-1"  placeholder="">
+                            </div>
+                           </td>
+
                             <td style="width: 180px;">
                                 <input type="text" class="form-control amount-field" name="amount[]" readonly placeholder="$0.00">
                             </td>
@@ -387,7 +398,7 @@ mysqli_close($conn);
                         <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
 
                             <tr id="runsheet-">
-                                <th colspan="3" id='runsheet-data'>
+                                <th colspan="4" id='runsheet-data'>
                                     <div style="gap: 50px; display: flex;">
 
                                         <strong>Runsheet No: <span id="runsheet_no"><?= htmlspecialchars($runsheetNumber) ?></span> </strong>
@@ -408,7 +419,7 @@ mysqli_close($conn);
                             </tr>
 
                             <?php foreach ($runsheetData['items'] as $itemRowId => $data):
-
+                    
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
                             ?>
 
@@ -433,6 +444,7 @@ mysqli_close($conn);
                                                     'BRTRANS+' => 'BRTRANS+',
                                                     'H/DLIV+' => 'H/DLIV+',
                                                     'VOL+' => 'VOL+',
+                                                    'Add Note' => 'Add Note',
                                                 ];
                                                 $pupOptions = [
                                                     '1' => 'P/UP(1)',
@@ -469,6 +481,7 @@ mysqli_close($conn);
                                                 ?>
 
                                                 <?php $totalValue = 0;
+                                            
                                                 foreach ($allOptions as $key => $label):
                                                     $value = isset($data['items'][$key]) ? (float)$data['items'][$key]['value'] : 0.00;
                                                     $totalValue += $value;
@@ -495,7 +508,13 @@ mysqli_close($conn);
                                                                 <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
                                                                 <input id="<?= $label . '-' . $itemRowId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemId ?>][<?= strtolower($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
                                                                 <label for="<?= $label . '-' . $itemRowId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
-                                                                <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1 numeric-only" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
+                                                                
+                                                                <?php
+                                                                $value = isset($data['items'][$key]['value']) ? $data['items'][$key]['value'] : '';
+                                                                $isNumeric = is_numeric($value);
+                                                                ?>
+                                                                <input type="text"  name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1 <?= $isNumeric ? 'numeric-only' : '' ?>"  value="<?= $isNumeric ? number_format((float)$value, 2) : htmlspecialchars($value) ?>">
+
                                                             </div>
 
                                                         <?php endif; ?>
@@ -505,14 +524,28 @@ mysqli_close($conn);
                                             </tr>
                                         </table>
                                     </td>
+
+                                    <td>
+                                        <div class="note-text">        
+                                            <label for="note-text" class="form-check-label">Add Note</label>
+                                            <input type="text" id="note-text"  name="note-text-value[]" class="form-control note-text-value mt-1" value="<?= htmlspecialchars($data['note_text'] ?? '') ?>"  placeholder="">
+                                        </div>
+                                    </td>
                                     <td>
                                         <input type="text" class="form-control amount-field" name="amount[]" value="<?= number_format($totalValue, 2) ?>" readonly>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endforeach; ?>
+                    
+                        
                     </tbody>
                 </table>
+                <div class="topbtngr btn-group" role="group">
+                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                        </div>
             </div>
         </div>
 
@@ -1121,7 +1154,7 @@ mysqli_close($conn);
                 }
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
                 const customerInvoiceName = row.find(".customer-inv-name").val().trim() || "";
-
+                const note_text_value = $(this).find(".note-text-value").val() || '';
                 const amount = row.find(".amount-field").val().trim() || "0";
                 let hasCheckedItem = false;
                 let updatedItems = [];
@@ -1169,6 +1202,7 @@ mysqli_close($conn);
                     item_row_id: itemRowId,
                     customer_inv_no: customerInvoiceNo,
                     customer_inv_name: customerInvoiceName,
+                    note_text_value: note_text_value,
                     items: updatedItems,
                     amount: amount,
                     runsheet_number: row.attr("data-runsheet-number") || currentRunsheetNumber,
@@ -1186,6 +1220,7 @@ mysqli_close($conn);
                 const row = $(this);
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
                 const customerInvoiceName = row.find(".customer-inv-name").val().trim() || "";
+                const note_text_value = $(this).find(".note-text-value").val() || '';
                 const amount = row.find(".amount-field").val().trim() || "0";
                 let hasCheckedItem = false;
                 let newItem = [];
@@ -1227,6 +1262,7 @@ mysqli_close($conn);
                         item_row_id: `${maxItemRowId}`,
                         customer_inv_no: customerInvoiceNo,
                         customer_inv_name: customerInvoiceName,
+                        note_text_value: note_text_value,
                         items: newItem,
                         amount: amount,
                         runsheet_number: row.attr("data-runsheet-number") || 0,

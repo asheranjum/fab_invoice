@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $itemName = mysqli_real_escape_string($conn, $item['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $item['item_value'] ?? '0');
                 $runsheetNumber = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
-                $noteText = mysqli_real_escape_string($conn, $item['note'] ?? '');
+                $noteText = mysqli_real_escape_string($conn, $item['note_text_value'] ?? '');
                 // $runsheetDate = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
 
                 $runsheet_date_raw = $item['runsheet_date'] ?? '';

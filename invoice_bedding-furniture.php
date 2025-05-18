@@ -205,13 +205,14 @@ mysqli_close($conn);
                         <tr>
                             <th>CUSTOMER'S INFO</th>
                             <th>DESCRIPTION & CHARGES</th>
+                            <th>NOTE</th>
                             <th>AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody>
 
                         <tr style="display: none;">
-                            <th colspan="3">
+                            <th colspan="4">
                                 <div style=" gap: 50px; display: flex;">
                                     <strong>Runsheet No: <span id="runsheet_no"></span> </strong>
                                     <strong>Runsheet Date: <span id="runsheet_date"></span> </strong>
@@ -219,7 +220,7 @@ mysqli_close($conn);
                             </th>
                         </tr>
 
-                        <tr id="tabletr" style="display: none;">
+                        <tr id="tabletr"  style="display: none;">
 
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
@@ -297,14 +298,16 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
 
-                                    <div class="form-check note-text-value">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="note-0" name="item[0][note]">
-                                        <label for="note-0" class="form-check-label">Add Note</label>
-                                        <input type="text" name="item[0][note_value]" class="form-control mt-1" disabled placeholder="">
-                                    </div>
+                                    
                                 </div>
 
 
+                            </td>
+                            <td>
+                            <div class="note-text">        
+                                <label for="note-text" class="form-check-label">Add Note</label>
+                                <input type="text" id="note-text"  name="note-text-value[]" class="form-control note-text-value mt-1"  placeholder="">
+                            </div>
                             </td>
                             <td style="width: 180px;">
                                 <input type="text" class="form-control amount-field" name="amount[]" readonly placeholder="$0.00">
@@ -313,7 +316,13 @@ mysqli_close($conn);
                     </tbody>
                 </table>
             </div>
+       
         </div>
+        <div class="topbtngr btn-group" role="group">
+                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                        </div>
 
 
 
@@ -358,8 +367,10 @@ mysqli_close($conn);
                     </div>
                 </table>
             </div>
+            
         </div>
     </div>
+    
 
     <script>
         $(document).ready(function() {
@@ -445,7 +456,7 @@ mysqli_close($conn);
 
                 const runsheetRow = `
             <tr id="runsheet-${runsheetIndex}">
-                <th colspan="3" id="runsheet-${runsheetIndex}">
+                <th colspan="4" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
                       <h5><strong>Runsheet No: <span class="runsheet-no">${runsheetNumber}</span></strong></h5>
                       <h5><strong>Runsheet Date: <span class="runsheet-date">${formatDateToDDMMYYYY(runsheetDate)}</span></strong></h5>
@@ -602,7 +613,7 @@ mysqli_close($conn);
 
 
 
-                $(row).find(".form-check input[type='text']").prop("disabled", true);
+                // $(row).find(".form-check input[type='text']").prop("disabled", true);
                 $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true);
             }
 
@@ -850,8 +861,11 @@ mysqli_close($conn);
                 };
 
                 $(".table-container tbody tr#tabletr").each(function(index) {
+                    console.log(index);
                     const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
                     const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
+                    const note_text_value = $(this).find(".note-text-value").val() || '';
+                    
                     const amount = $(this).find(".amount-field").val() || 0;
                     let row = $(this);
                     $(this).find(".item_names_check > .form-check").each(function() {
@@ -863,6 +877,7 @@ mysqli_close($conn);
                                 item_row_id: `${index + 1}`,
                                 customer_inv_no: customerInvoiceNo,
                                 customer_inv_name: customer_inv_name,
+                                note_text_value: note_text_value,
                                 item_name: $(this).find("label").text().trim(),
                                 item_value: inputField.val() || 0,
                                 amount: amount,
@@ -878,6 +893,7 @@ mysqli_close($conn);
                             item_row_id: `${index + 1}`,
                             customer_inv_no: customerInvoiceNo,
                             customer_inv_name: customer_inv_name,
+                            note_text_value: note_text_value,
                             item_name: selectField.find("option:selected").text().trim(),
                             item_value: selectField.siblings("input[type='text']").val() || 0,
                             amount: amount,

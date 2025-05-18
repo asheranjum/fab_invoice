@@ -305,6 +305,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
             'BRTRANS+' => 'BRTRANS+',
             'H/DLIV+' => 'H/DLIV+',
             'VOL+' => 'VOL+',
+            'Add Note' => 'Add Note',
         ];
 
         // Check for any key matching P/UP(x)
@@ -327,7 +328,14 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
         foreach ($allOptions as $key => $label) {
             $checked = isset($items[$key]);
             $image = $checked ? 'assets/images/check.png' : 'assets/images/uncheck.png';
-            $value = $checked ? '$' . number_format($items[$key], 2) : '-';
+            $value = '-';
+            if ($checked) {
+                if (is_numeric($items[$key])) {
+                    $value = '$' . number_format((float)$items[$key], 2);
+                } else {
+                    $value = $items[$key]; // show string as is
+                }
+            }
 
             $html .= '
             <td  style="  ">
@@ -345,10 +353,11 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         // Add a second row to display the values for each option
         foreach ($allOptions as $key => $label) {
-            $value = isset($items[$key]) ? htmlspecialchars($items[$key]) : '0.00';
-
-            $html .= '<td style=""><span style="font-size:12px;">$' . $value . '</span></td>';
+            $value = isset($items[$key]) ? $items[$key] : '0.00';
+            $displayValue = is_numeric($value) ? '$' . number_format((float)$value, 2) : htmlspecialchars($value);
+            $html .= '<td><span style="font-size:12px;">' . $displayValue . '</span></td>';
         }
+        
 
         $html .= '
                     </tr>
