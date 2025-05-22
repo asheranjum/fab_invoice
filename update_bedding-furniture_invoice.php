@@ -55,11 +55,12 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = [
             'value' => $itemValue,
             'created_at' => $createdAt,
-            'item_id' => $itemId,
+            'item_id' => $itemId
         ];
     }
 }
 
+// print_r(json_encode($groupedItems));
 // die();
 // Close the connection
 mysqli_close($conn);
@@ -244,16 +245,7 @@ mysqli_close($conn);
                         <div class="invalid-feedback">Phone is required.</div>
                     </div>
 
-                    <div class="top-nav">
-                        <div class="topbtngr btn-group" role="group">
-                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
-                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
-                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
-                        </div>
-                        <div class=" btn-group">
-                            <button type="submit" class="btn mergebtn export-button">Update Invoice</button>
-                        </div>
-                    </div>
+
                 </form>
             </div>
 
@@ -290,7 +282,7 @@ mysqli_close($conn);
                     <tbody id="tbody">
 
                         <tr style="display: none;">
-                            <th colspan="4">
+                            <th colspan="3">
                                 <div style=" gap: 50px; display: flex;">
                                     <strong>Runsheet No: <span id="runsheet_no"></span> </strong>
                                     <strong>Runsheet Date: <span id="runsheet_date"></span> </strong>
@@ -306,13 +298,12 @@ mysqli_close($conn);
                             </td>
 
                             <td>
-                                <div class="d-flex item_names_check">
+                                <div class="d-flex">
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="deliv-0" name="item[0][deliv]">
                                         <label for="deliv-0" class="form-check-label">DELIV+</label>
                                         <input type="text" name="item[0][deliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
-
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="disas-0" name="item[0][disas]">
                                         <label for="disas-0" class="form-check-label">DISAS+</label>
@@ -376,13 +367,11 @@ mysqli_close($conn);
 
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
-
                                 </div>
-
 
                             </td>
 
-                           <td>
+                            <td>
                            <div class="note-text">        
                                 <label for="note-text" class="form-check-label">Add Note</label>
                                 <input type="text" id="note-text"  name="note-text-value[]" class="form-control note-text-value mt-1"  placeholder="">
@@ -398,7 +387,7 @@ mysqli_close($conn);
                         <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
 
                             <tr id="runsheet-">
-                                <th colspan="4" id='runsheet-data'>
+                                <th colspan="3" id='runsheet-data'>
                                     <div style="gap: 50px; display: flex;">
 
                                         <strong>Runsheet No: <span id="runsheet_no"><?= htmlspecialchars($runsheetNumber) ?></span> </strong>
@@ -416,10 +405,11 @@ mysqli_close($conn);
                                         </button>
                                     </div>
                                 </th>
+                                <th></th>
                             </tr>
 
                             <?php foreach ($runsheetData['items'] as $itemRowId => $data):
-                    
+
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
                             ?>
 
@@ -444,7 +434,6 @@ mysqli_close($conn);
                                                     'BRTRANS+' => 'BRTRANS+',
                                                     'H/DLIV+' => 'H/DLIV+',
                                                     'VOL+' => 'VOL+',
-                                                    'Add Note' => 'Add Note',
                                                 ];
                                                 $pupOptions = [
                                                     '1' => 'P/UP(1)',
@@ -481,7 +470,6 @@ mysqli_close($conn);
                                                 ?>
 
                                                 <?php $totalValue = 0;
-                                            
                                                 foreach ($allOptions as $key => $label):
                                                     $value = isset($data['items'][$key]) ? (float)$data['items'][$key]['value'] : 0.00;
                                                     $totalValue += $value;
@@ -508,13 +496,7 @@ mysqli_close($conn);
                                                                 <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
                                                                 <input id="<?= $label . '-' . $itemRowId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemId ?>][<?= strtolower($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
                                                                 <label for="<?= $label . '-' . $itemRowId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
-                                                                
-                                                                <?php
-                                                                $value = isset($data['items'][$key]['value']) ? $data['items'][$key]['value'] : '';
-                                                                $isNumeric = is_numeric($value);
-                                                                ?>
-                                                                <input type="text"  name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1 <?= $isNumeric ? 'numeric-only' : '' ?>"  value="<?= $isNumeric ? number_format((float)$value, 2) : htmlspecialchars($value) ?>">
-
+                                                                <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1 numeric-only" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
                                                             </div>
 
                                                         <?php endif; ?>
@@ -531,14 +513,13 @@ mysqli_close($conn);
                                             <input type="text" id="note-text"  name="note-text-value[]" class="form-control note-text-value mt-1" value="<?= htmlspecialchars($data['note_text'] ?? '') ?>"  placeholder="">
                                         </div>
                                     </td>
+
                                     <td>
                                         <input type="text" class="form-control amount-field" name="amount[]" value="<?= number_format($totalValue, 2) ?>" readonly>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endforeach; ?>
-                    
-                        
                     </tbody>
                 </table>
                 <div class="topbtngr btn-group" role="group">
@@ -761,14 +742,11 @@ mysqli_close($conn);
             function calculateRowAmount(row) {
                 let amount = 0;
 
-                $(row).find(".form-checkboxes:checked").each(function() {
-                    const $formCheck = $(this).closest(".form-check");
+                $(row).find(".form-checkboxes").each(function() {
+                    const inputField = $(this).closest(".form-check").find("input[type='text']");
+                    const value = parseFloat(inputField.val()) || 0;
 
-                    // Skip if the parent has class "note-text-value"
-                    if ($formCheck.hasClass("note-text-value")) return;
-
-                    const value = parseFloat($formCheck.find("input[type='text']").val()) || 0;
-                    amount += value;
+                    if (this.checked) amount += value;
                 });
 
                 const selectField = $(row).find(".form-contro");
@@ -1160,11 +1138,9 @@ mysqli_close($conn);
                 let updatedItems = [];
 
 
-                row.find(".item_names_check > .form-check").each(function() {
+                row.find(".form-check").each(function() {
                     const checkbox = $(this).find("input[type='checkbox']");
                     const inputField = $(this).find("input[type='text']");
-                  
-                    // const noteField = 'adasds' // Get the note field
                     const itemName = $(this).find("label").text().trim();
                     const itemId = $(this).find("input[type='hidden']").val();
 
@@ -1183,7 +1159,6 @@ mysqli_close($conn);
                 row.find("select").each(function() {
                     const select = $(this);
                     const selectedValue = select.val();
-                    // const noteField = 'adasds' // Get the note field
                     const itemId = select.siblings("input[type='hidden']").val();
 
                     if (selectedValue && selectedValue !== "0") {
@@ -1215,7 +1190,7 @@ mysqli_close($conn);
              * -------------------- **/
             $(".table-container #tbody tr#tabletr").each(function(index) {
 
-                // console.log(index);
+                console.log(index);
 
                 const row = $(this);
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
@@ -1225,12 +1200,11 @@ mysqli_close($conn);
                 let hasCheckedItem = false;
                 let newItem = [];
 
-                row.find(".item_names_check > .form-check").each(function() {
+                row.find(".form-check").each(function() {
                     const checkbox = $(this).find("input[type='checkbox']");
                     const inputField = $(this).find("input[type='text']");
                     const itemName = $(this).find("label").text().trim();
 
-                  
                     if (checkbox.prop("checked")) {
                         hasCheckedItem = true;
                         newItem.push({
@@ -1239,17 +1213,16 @@ mysqli_close($conn);
                         });
                     }
                 });
+
                 row.find("select").each(function() {
                     const select = $(this);
                     const selectedValue = select.val();
-
-                 
 
                     if (selectedValue && selectedValue !== "0") {
                         hasCheckedItem = true;
                         newItem.push({
                             item_name: select.find("option:selected").text().trim(),
-                            item_value: select.siblings("input[type='text']").val().trim() || "0",
+                            item_value: select.siblings("input[type='text']").val().trim() || "0"
                         });
                     }
                 });
@@ -1306,7 +1279,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        // window.location.href = "index.php"; // Redirect after success
+                        window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }
@@ -1332,6 +1305,7 @@ mysqli_close($conn);
 
                 $("#runsheetNumber").val(currentRunsheetNumber);
                 $("#runsheetDate").val(currentRunsheetDate);
+
                 $("#runsheetModal").modal("show");
             });
 
@@ -1349,6 +1323,8 @@ mysqli_close($conn);
                 // updateRunsheetForm
             });
             // Show Modal with existing runsheet data
+
+
 
             $(document).on("click", ".delete-runsheet-items", function() {
                 const button = $(this);

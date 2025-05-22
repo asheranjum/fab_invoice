@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmtUpdate->execute();
                     } else {
                         // Insert new item
-                        $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, note_text, item_row_id, item_name, item_value, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                        $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, note_text, item_row_id, item_name, item_value, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?)";
                         $stmtInsert = $conn->prepare($sqlInsertItem);
                         $stmtInsert->bind_param("issssssss", $invoiceId, $customerInvoiceName, $customerInvoiceNo, $noteText, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date);
                         $stmtInsert->execute();

@@ -41,6 +41,7 @@ while ($row = $resultItems->fetch_assoc()) {
     $itemRowId = $row['item_row_id'];
     $itemName = $row['item_name'];
     $itemValue = $row['item_value'];
+    $note = $row['note_text'];
     $customInvoiceNo = $row['customer_invoice_no'];
     $customInvoiceName = $row['customer_invoice_name'];
 
@@ -57,6 +58,7 @@ while ($row = $resultItems->fetch_assoc()) {
         $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
             'custom_invoice_no' => $customInvoiceNo,
             'customInvoiceName' => $customInvoiceName,
+            'note_text' => $note,
             'items' => []
         ];
     }
@@ -268,6 +270,7 @@ $html = '
                 <tr>
                     <th>CUSTOMERS INFO </th>
                     <th>DESCRIPTION & CHARGES</th>
+                    <th>NOTE</th>
                     <th>AMOUNT</th>
                 </tr>
             </thead>
@@ -279,12 +282,13 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     // Add Runsheet Header
     $html .= '
     <tr class="runsheet-header">
-       <td colspan="3">RUNSHEET NO: ' . $runsheetNumber . ' | RUNSHEET DATE: ' . $runsheetDate . '</td>
+       <td colspan="4">RUNSHEET NO: ' . $runsheetNumber . ' | RUNSHEET DATE: ' . $runsheetDate . '</td>
     </tr>';
 
     foreach ($runsheetData['items'] as $itemRowId => $data) {
         $customInvoiceName2 = $data['customInvoiceName'];
         $customInvoiceNo = $data['custom_invoice_no'];
+        $note_text = $data['note_text'];
         $items = $data['items'];
 
         $html .= '
@@ -305,7 +309,6 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
             'BRTRANS+' => 'BRTRANS+',
             'H/DLIV+' => 'H/DLIV+',
             'VOL+' => 'VOL+',
-            'Add Note' => 'Add Note',
         ];
 
         // Check for any key matching P/UP(x)
@@ -344,7 +347,8 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                     <div style="font-size:12px; margin-left:5px;">' . htmlspecialchars($label) . '</div>
                 </div>
                
-            </td>';
+            </td>'
+            ;
         }
 
         $html .= '
@@ -363,6 +367,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                     </tr>
                 </table>
             </td>
+            <td>' . $note_text . '</td>
             <td>$' . number_format(array_sum($items), 2) . '</td>
         </tr>';
     }
