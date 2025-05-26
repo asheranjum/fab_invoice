@@ -96,10 +96,10 @@ body {
 }
 
 .service-items {
-    position: absolute;
-    top: 36%;
-    right: 0%;
-    z-index: 111;
+    width: 48%;
+    float: inline-end;
+    margin-right: 0px;
+    margin-top: 5%;
 }
 
 .info {
@@ -109,12 +109,12 @@ body {
     font-weight: 200;
 }
 
-.service-items {
+/* .service-items {
     position: absolute;
     top: 55%;
     right: -10%;
     width: 200px;
-}
+} */
 
 /* .d-flex.flex-wrap
 {
