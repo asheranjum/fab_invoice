@@ -78,6 +78,12 @@ $invoice_type = $invoice['invoice_type'];
 $address = $invoice['address'];
 $phone = $invoice['phone'];
 $abn = $invoice['abn'];
+
+$employer_company = $invoice['employer_company'];
+$employer_abn = $invoice['employer_abn'];
+$employer_address = $invoice['employer_address'];
+$employer_phone = $invoice['employer_phone'];
+
 $postalCode = $invoice['postal_code'];
 $runSheetNo = $invoice['runsheet_number'];
 
@@ -224,23 +230,23 @@ $html = '
 
             <tr>
                 <td><span class="label">COMPANY NAME:</span> ' . $company . '</td>
-                <td style="text-align:right"><span class="label">FAB TRANSPORT SERVICES PTY LTD</span></td>
+                <td style="text-align:right"><span class="label">'.$employer_company .'</span></td>
             </tr>
             
 
             <tr>
                 <td><span class="label">ADDRESS:</span> ' . $address . '</td>
-                <td style="text-align:right"><span class="label">PHONE:0403729966</span></td>
+                <td style="text-align:right"><span class="label">PHONE:'.$employer_phone.'</span></td>
             </tr>
             
             <tr>
                 <td><span class="label">ABN:</span>' . $abn . '</td>
-                <td style="text-align:right"><span class="label">ABN:123 121 211 222 222</span></td>
+                <td style="text-align:right"><span class="label">ABN:'.$employer_abn.'</span></td>
             </tr>
 
             <tr>
                 <td><span class="label">PHONE:</span>' . $phone . '</td>
-                <td style="text-align:right"><span class="label">ADDRESS: 5 LOUIS STREET DOVETON VIC 3177</span></td>
+                <td style="text-align:right"><span class="label">ADDRESS: '.$employer_address.'</span></td>
             </tr>
             <tr>
                 <td><span class="label">Invoice Type:</span>' . $invoice_type . '</td>
