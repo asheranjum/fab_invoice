@@ -295,7 +295,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
        
         $html .= '
         <tr >
-            <td style="text-align: left; width: 15%;">' . htmlspecialchars($customInvoiceName2). '<br>' .  $customInvoiceNo  . ' </td>
+            <td style="text-align: left; width: 20.5%;">' . htmlspecialchars($customInvoiceName2). '<br>' .  $customInvoiceNo  . ' </td>
             <td style="padding:0px; width: 73%;">
                 <table class="checkbox-table">
                     <tr>';
@@ -335,7 +335,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         $html .= '
 
-        <td style="text-align:left; font-size:12px;"><b>Text</b></td>
+        <td style="text-align:center; font-size:12px;"><b>Note</b></td>
         </tr>
         <tr>';
 
@@ -352,7 +352,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                     </tr>
                 </table>
             </td>
-            <td style="width: 12%;">$' . number_format(array_sum($items), 2) . '</td>
+            <td style="width: 6%;">$' . number_format(array_sum($items), 2) . '</td>
         </tr>';
     }
 }
