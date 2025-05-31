@@ -335,7 +335,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         if (!empty(trim($note_text))) {
         $html .= '
-        <td style="text-align:center; font-size:12px; border:1px solid black; padding: 0px;"><b>Note</b></td>';
+        <td style="text-align:left; font-size:12px; border-left:1px solid #ddd; padding: 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
         }
 
         $html .= '
@@ -350,7 +350,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
         }
         
        if (!empty(trim($note_text))) {
-    $html .= '<td style="text-align:center; font-size:12px; border:1px solid black;">' . nl2br(htmlspecialchars($note_text)) . '</td>';
+    $html .= '<td style="text-align:left; font-size:12px; border-left:1px solid #ddd; padding: 0px;"></td>';
 }
 
         $html .= '</td>
