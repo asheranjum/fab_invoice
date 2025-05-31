@@ -185,22 +185,22 @@ mysqli_close($conn);
                         <div class="mb-2 d-flex align-items-center">
                             <label for="employer_company" class="form-label mb-0 me-3 w-50">EMPLOYER COMPANY</label>
                             <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="">
-                            <div class="invalid-feedback">Employer company name is required.</div>
+                            <!-- <div class="invalid-feedback">Employer company name is required.</div> -->
                         </div>
                         <div class="mb-2 d-flex align-items-center">
                             <label for="employer_phone" class="form-label mb-0 me-3 w-50">EMPLOYER PHONE</label>
                             <input type="text" name="employer_phone" id="employer_phone" class="form-control w-50" placeholder="Employer Phone" value="">
-                            <div class="invalid-feedback">Employer company phone is required.</div>
+                            <!-- <div class="invalid-feedback">Employer company phone is required.</div> -->
                         </div>
                         <div class="mb-2 d-flex align-items-center">
                             <label for="employer_abn" class="form-label mb-0 me-3 w-50">EMPLOYER ABN</label>
                             <input type="text" name="employer_abn" id="employer_abn" class="form-control w-50" placeholder="Employer ABN" value="">
-                            <div class="invalid-feedback">Employer company abn is required.</div>
+                            <!-- <div class="invalid-feedback">Employer company abn is required.</div> -->
                         </div>
                         <div class="mb-2 d-flex align-items-center">
                             <label for="employer_address" class="form-label mb-0 me-3 w-50">EMPLOYER ADDRESS</label>
                             <input type="text" name="employer_address" id="employer_address" class="form-control w-50" placeholder="Employer Address" value="">
-                            <div class="invalid-feedback">Employer company address is required.</div>
+                            <!-- <div class="invalid-feedback">Employer company address is required.</div> -->
                         </div>
                     </div>
 
@@ -760,22 +760,6 @@ mysqli_close($conn);
                 const requiredFields = [{
                         id: "#invoice_date",
                         message: "Invoice date is required."
-                    },
-                    {
-                        id: "#employer_company",
-                        message: "Employer company name is required."
-                    },
-                    {
-                        id: "#employer_phone",
-                        message: "Employer company phone is required."
-                    },
-                    {
-                        id: "#employer_abn",
-                        message: "Employer abn  is required."
-                    },
-                    {
-                        id: "#employer_address",
-                        message: "Employer company address is required."
                     },
                     {
                         id: "#company_name",

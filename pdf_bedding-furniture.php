@@ -333,9 +333,12 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
             ;
         }
 
+        if (!empty(trim($note_text))) {
         $html .= '
+        <td style="text-align:center; font-size:12px; border:1px solid black; padding: 0px;"><b>Note</b></td>';
+        }
 
-        <td style="text-align:center; font-size:12px;"><b>Note</b></td>
+        $html .= '
         </tr>
         <tr>';
 
@@ -346,14 +349,17 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
             $html .= '<td><span style="font-size:12px;">' . $displayValue . '</span></td>';
         }
         
+       if (!empty(trim($note_text))) {
+    $html .= '<td style="text-align:center; font-size:12px; border:1px solid black;">' . nl2br(htmlspecialchars($note_text)) . '</td>';
+}
 
-        $html .= '
-        <td style="text-align:left; font-size:12px;">' . nl2br(htmlspecialchars($note_text)) . '</td>
-                    </tr>
-                </table>
-            </td>
-            <td style="width: 6%;">$' . number_format(array_sum($items), 2) . '</td>
+        $html .= '</td>
+                </tr>
+            </table>
+        </td>
+        <td style="width: 6%;">$' . number_format(array_sum($items), 2) . '</td>
         </tr>';
+
     }
 }
 
@@ -410,7 +416,7 @@ try {
         'margin_right' => 0,
     ]);
 
-    // Prevent page breaks
+    // // Prevent page breaks
     $mpdf->SetAutoPageBreak(false);
     $mpdf->WriteHTML($html);
     $mpdf->Output('invoice.pdf', 'I');
