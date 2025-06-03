@@ -14,6 +14,7 @@ if ($invoiceId) {
     $invoiceData = $invoiceData['invoice'];
 }
 
+
 $newInvoice = $invoiceData['invoice_number'] ?? '';
 
 $groupedItems = [];
@@ -26,6 +27,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $itemId = $item['id'];
         $itemName = $item['item_name'];
         $itemValue = $item['item_value'];
+        $note = $item['note_text'];
         $customInvoiceNo = $item['customer_invoice_no'];
         $customInvoiceName = $item['customer_invoice_name'];
         $createdAt = isset($item['created_at']) ? $item['created_at'] : null;
@@ -43,6 +45,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
             $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
                 'custom_invoice_no' => $customInvoiceNo,
                 'custom_invoice_name' => $customInvoiceName,
+                'note_text' => $note,
                 'item_row_id' => $itemRowId,
                 'items' => []
             ];
@@ -78,6 +81,7 @@ mysqli_close($conn);
 </head>
 
 <body>
+
 
     <!-- Edit Runsheet Modal -->
     <div class="modal fade" id="runsheetModal" tabindex="-1" aria-labelledby="runsheetModalLabel" aria-hidden="true">
@@ -175,9 +179,10 @@ mysqli_close($conn);
         </div>
 
         <div class="row mt-3">
-            <div class="col-md-8">
+            <div class="col-md-7">
 
                 <form id="invoiceForm" class="form-group p-1">
+
                     <div class="top-nav">
                         <div class="topbtngr btn-group" role="group">
                             <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
@@ -186,51 +191,57 @@ mysqli_close($conn);
                         </div>
                         <div class=" btn-group">
                             <button type="submit" class="btn mergebtn export-button">Update Invoice</button>
-                            <!-- <button type="submit" class="btn btn-success export-button">Export Invoice</button> -->
                         </div>
                     </div>
 
+
                     <div class="mb-2 d-flex align-items-center">
                         <input type="hidden" name="invoice_id" value="<?php echo $invoiceId ?? ''; ?>">
-                        <label for="date" class="form-label mb-0 me-2">DATE:</label>
-                        <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3" style="font-size: 18px;" value="<?php echo  date("Y-m-d", strtotime($invoiceData['date'])) ?? ''; ?>">
-                        <div class="invalid-feedback">Invoice date is required.</div>
                         <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
                         <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>">
                     </div>
+                    
+                    <div class="mb-2 d-flex align-items-center">
+                        <label for="date" class="form-label w-25">DATE:</label>
+                        <input type="date" name="date" id="invoice_date" class="form-control w-50" style="font-size: 18px;" value="<?php echo  date("Y-m-d", strtotime($invoiceData['date'])) ?? ''; ?>">
+                        <div class="invalid-feedback">Invoice date is required.</div>
+                    </div>
 
-                    <h3 class="mt-1 mb-2 heading" style="display: inline-block; margin-right: 10px;">Bill To:</h3>
-                    <h5 style="display: inline-block; position: relative; bottom: 5px; left: 420px;">Electric</h5>
+                   
+                  
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="employer_company" class="form-label mb-0 me-3">EMPLOYER COMPANY</label>
-                        <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="<?php echo $invoiceData['employer_company'] ?? ''; ?>">
-                        <div class="invalid-feedback">Employer company name is required.</div>
+                         <label class="form-label w-25">BILL TO:</label>
+                          <?php $selectedType = $invoiceData['invoice_type'] ?? '';    ?>
+
+                    <select id="invoice_type" name="invoice_type" class="form-control w-50 " >
+                        <option value="Electric" <?= $selectedType == 'Electric' ? 'selected' : '' ?>>Electric</option>
+                    </select>
 
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>
+                        <label for="Company" class="form-label w-25">COMPANY NAME:</label>
                         <input type="text" name="company" id="company_name" class="form-control w-50" placeholder="Type Company Name" value="<?php echo $invoiceData['company_name'] ?? ''; ?>">
                         <div class="invalid-feedback">Company name is required.</div>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="address" class="form-label mb-0 me-4">ADDRESS:</label>
-                        <input type="text" name="address" id="company_address" class="form-control custom-width-2" placeholder="Enter Address Here" value="<?php echo $invoiceData['address'] ?? ''; ?>">
+                        <label for="address" class="form-label  w-25">ADDRESS:</label>
+                        <input type="text" name="address" id="company_address" class="form-control w-50" placeholder="Enter Address Here" value="<?php echo $invoiceData['address'] ?? ''; ?>">
                         <div class="invalid-feedback">Address is required.</div>
 
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="abn" class="form-label mb-0 me-5">ABN:</label>
-                        <input type="text" name="abn" id="company_abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="<?php echo $invoiceData['abn'] ?? ''; ?>">
+                        <label for="abn" class="form-label  w-25">ABN:</label>
+                        <input type="text" name="abn" id="company_abn" class="form-control w-50" placeholder="Insert ABN Number" value="<?php echo $invoiceData['abn'] ?? ''; ?>">
                         <div class="invalid-feedback">ABN is required.</div>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="phone" class="form-label mb-0 me-2">PHONE NO:</label>
-                        <input type="text" name="phone" id="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="<?php echo $invoiceData['phone'] ?? ''; ?>">
+                        <label for="phone" class="form-label  w-25">PHONE NO:</label>
+                        <input type="text" name="phone" id="phone" class="form-control w-50" placeholder="Insert Phone Number" value="<?php echo $invoiceData['phone'] ?? ''; ?>">
                         <div class="invalid-feedback">Phone is required.</div>
                     </div>
 
@@ -239,14 +250,37 @@ mysqli_close($conn);
             </div>
 
 
-            <div class="col-md-4 position-relative">
+            <div class="col-md-5 position-relative">
 
-                <div class="info">
+            <div class="">
+                        <div class="mb-2 d-flex align-items-center">
+                            <label for="employer_company" class="form-label mb-0 me-3 w-50">EMPLOYER COMPANY</label>
+                            <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="<?php echo $invoiceData['employer_company'] ?? ''; ?>">
+                            
+                        </div>
+                        <div class="mb-2 d-flex align-items-center">
+                            <label for="employer_phone" class="form-label mb-0 me-3 w-50">EMPLOYER PHONE</label>
+                            <input type="text" name="employer_phone" id="employer_phone" class="form-control w-50" placeholder="Employer Phone" value="<?php echo $invoiceData['employer_phone'] ?? ''; ?>">
+                           
+                        </div>
+                        <div class="mb-2 d-flex align-items-center">
+                            <label for="employer_abn" class="form-label mb-0 me-3 w-50">EMPLOYER ABN</label>
+                            <input type="text" name="employer_abn" id="employer_abn" class="form-control w-50" placeholder="Employer ABN" value="<?php echo $invoiceData['employer_abn'] ?? ''; ?>">
+                           
+                        </div>
+                        <div class="mb-2 d-flex align-items-center">
+                            <label for="employer_address" class="form-label mb-0 me-3 w-50">EMPLOYER ADDRESS</label>
+                            <input type="text" name="employer_address" id="employer_address" class="form-control w-50" placeholder="Employer Address" value="<?php echo $invoiceData['employer_address'] ?? ''; ?>">
+                         
+                        </div>
+                    </div>
+                    
+                <!-- <div class="info">
                     <h6>FAB TRANSPORT SERVICES PTY LTD</h6>
                     <h6>PHONE: 0403729966</h6>
                     <h6>ABN: 123 121 211 222 222</h6>
-                    <h6>ADDRESS:5 LOUIS STREET DOVETON VIC 3177</h6>
-                </div>
+                    <h6>ADDRESS: 5 LOUIS STREET DOVETON VIC 3177</h6>
+                </div> -->
 
                 <div class="service-items">
                     <h4>For:</h4>
@@ -264,6 +298,7 @@ mysqli_close($conn);
                         <tr>
                             <th>CUSTOMER'S INFO</th>
                             <th>DESCRIPTION & CHARGES</th>
+                            <th>NOTE</th>
                             <th>AMOUNT</th>
                         </tr>
                     </thead>
@@ -352,7 +387,16 @@ mysqli_close($conn);
                                     </div>
                                 </div>
 
+
                             </td>
+
+                            <td>
+                           <div class="note-text">        
+                                <label for="note-text" class="form-check-label">Add Note</label>
+                                <input type="text" id="note-text"  name="note-text-value[]" class="form-control note-text-value mt-1"  placeholder="">
+                            </div>
+                           </td>
+
                             <td style="width: 180px;">
                                 <input type="text" class="form-control amount-field" name="amount[]" readonly placeholder="$0.00">
                             </td>
@@ -380,6 +424,7 @@ mysqli_close($conn);
                                         </button>
                                     </div>
                                 </th>
+                                <th></th>
                             </tr>
 
                             <?php foreach ($runsheetData['items'] as $itemRowId => $data):
@@ -397,7 +442,8 @@ mysqli_close($conn);
                                             <tr>
                                                 <?php
                                                 // Define all options
-                                                $allOptions = [
+                                                
+                                                  $allOptions = [
                                                     'DELIV+' => 'DELIV+',
                                                     'INST+' => 'INST+',
                                                     'RUB+' => 'RUB+',
@@ -420,6 +466,7 @@ mysqli_close($conn);
                                                     '9' => 'P/UP(9)',
                                                     '10' => 'P/UP(10)'
                                                 ];
+                                                
                                                 // Check for any key matching P/UP(x)
                                                 $selectedPUP = null; // To store the matched P/UP key
 
@@ -479,6 +526,14 @@ mysqli_close($conn);
                                             </tr>
                                         </table>
                                     </td>
+
+                                    <td>
+                                        <div class="note-text">        
+                                            <label for="note-text" class="form-check-label">Add Note</label>
+                                            <input type="text" id="note-text"  name="note-text-value[]" class="form-control note-text-value mt-1" value="<?= htmlspecialchars($data['note_text'] ?? '') ?>"  placeholder="">
+                                        </div>
+                                    </td>
+
                                     <td>
                                         <input type="text" class="form-control amount-field" name="amount[]" value="<?= number_format($totalValue, 2) ?>" readonly>
                                     </td>
@@ -487,6 +542,11 @@ mysqli_close($conn);
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <div class="topbtngr btn-group" role="group">
+                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                        </div>
             </div>
         </div>
 
@@ -502,7 +562,7 @@ mysqli_close($conn);
                     <ul>
                         <li>CONTACT NAME: SAM</li>
                         <li>PHONE: 0403 729 966</li>
-                        <li>EMAIL: info@fabtransport.com.au/li>
+                        <li>EMAIL: info@fabtransport.com.au</li>
                     </ul>
                     <h4>THANK YOU FOR YOUR BUSINESS!</h4>
                 </div>
@@ -547,7 +607,6 @@ mysqli_close($conn);
             });
             return maxId;
         }
-
         $(document).ready(function() {
 
             // $('#runsheet_no').append(<?php echo $invoiceId; ?> + '1001')
@@ -632,13 +691,14 @@ mysqli_close($conn);
             <tr id="runsheet-${runsheetIndex}">
                 <th colspan="3" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
-                       <h5><strong>Runsheet No: <span class="runsheet-no">${runsheetNumber}</span> </strong></h5>
-                       <h5><strong>Runsheet Date: <span class="runsheet-date">${runsheetDate}</span> </strong></h5>
-                        <strong><button class="btn btn-danger btn-sm edit-onpage-runsheet-button" data-id="runsheet-${runsheetIndex}" data-run-number="${runsheetNumber}" data-run-date="${runsheetDate}">Edit</button></strong>
+                         <h5><strong>Runsheet No: <span id="runsheet_no">${runsheetNumber}</span> </strong></h5>
+                         <h5><strong>Runsheet Date: <span id="runsheet_date">${runsheetDate}</span> </strong></h5>
+                        <strong><button class="btn btn-danger btn-sm edit-onpage-runsheet-button" data-id="runsheet-${runsheetIndex}" data-run-number="${runsheetNumber}>"data-run-date="${runsheetDate}">Edit</button></strong>
                         <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                     </div>
                 </th>
-            </tr>`;
+            </tr>
+        `;
 
                 // Append runsheet below the last item row
                 $(".table-container #tbody").append(runsheetRow);
@@ -796,6 +856,9 @@ mysqli_close($conn);
                 $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true);
             }
 
+
+
+
             function addRows(count) {
                 const rows = $(".table-container #tbody tr#tabletr");
                 let currentRows = rows.length;
@@ -825,10 +888,11 @@ mysqli_close($conn);
                     }
 
 
+                    const newRow = lastRow.clone();
+                    newRow.removeAttr("style");
                     // maxItemRowId++;  
                     const rowIndex = $(".table-container #tbody tr#tabletr").length;
                     // newRow.attr("data-item-row-id", maxItemRowId);
-
                     newRow.find("input, select").each(function() {
                         if (this.type === "checkbox") {
                             this.checked = false;
@@ -954,10 +1018,6 @@ mysqli_close($conn);
                     message: "Invoice date is required."
                 },
                 {
-                    id: "#employer_company",
-                    message: "Employer company name is required."
-                },
-                {
                     id: "#company_name",
                     message: "Company name is required."
                 },
@@ -1055,14 +1115,17 @@ mysqli_close($conn);
             }
 
             if (!isValid) return;
-
+            // $('select[name="invoice_type"]').val("<?= $invoiceData['invoice_type'] ?? '' ?>");
             const formData = {
-                invoice_type: 'Electric',
+                invoice_type: $('select[name="invoice_type"]').val(),
                 invoice_id: <?php echo $invoiceId ?? ''; ?>,
                 date: $("input[name='date']").val().trim(),
                 invoice: $("input[name='invoice']").val().trim(),
                 company: $("input[name='company']").val().trim(),
                 employer_company: $("input[name='employer_company']").val(),
+                employer_phone: $("input[name='employer_phone']").val(),
+                employer_abn: $("input[name='employer_abn']").val(),
+                employer_address: $("input[name='employer_address']").val(),
                 address: $("input[name='address']").val().trim(),
                 phone: $("input[name='phone']").val().trim(),
                 abn: $("input[name='abn']").val().trim(),
@@ -1088,7 +1151,7 @@ mysqli_close($conn);
                 }
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
                 const customerInvoiceName = row.find(".customer-inv-name").val().trim() || "";
-
+                const note_text_value = $(this).find(".note-text-value").val() || '';
                 const amount = row.find(".amount-field").val().trim() || "0";
                 let hasCheckedItem = false;
                 let updatedItems = [];
@@ -1133,6 +1196,7 @@ mysqli_close($conn);
                     item_row_id: itemRowId,
                     customer_inv_no: customerInvoiceNo,
                     customer_inv_name: customerInvoiceName,
+                    note_text_value: note_text_value,
                     items: updatedItems,
                     amount: amount,
                     runsheet_number: row.attr("data-runsheet-number") || currentRunsheetNumber,
@@ -1145,11 +1209,12 @@ mysqli_close($conn);
              * -------------------- **/
             $(".table-container #tbody tr#tabletr").each(function(index) {
 
-                // console.log(index);
+                console.log(index);
 
                 const row = $(this);
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
                 const customerInvoiceName = row.find(".customer-inv-name").val().trim() || "";
+                const note_text_value = $(this).find(".note-text-value").val() || '';
                 const amount = row.find(".amount-field").val().trim() || "0";
                 let hasCheckedItem = false;
                 let newItem = [];
@@ -1182,11 +1247,14 @@ mysqli_close($conn);
                 });
 
                 maxItemRowId++;
+
+                // console.log('maxItemRowId', maxItemRowId);
                 if (hasCheckedItem && newItem.length > 0) {
                     formData.new_items.push({
                         item_row_id: `${maxItemRowId}`,
                         customer_inv_no: customerInvoiceNo,
                         customer_inv_name: customerInvoiceName,
+                        note_text_value: note_text_value,
                         items: newItem,
                         amount: amount,
                         runsheet_number: row.attr("data-runsheet-number") || 0,
@@ -1258,6 +1326,20 @@ mysqli_close($conn);
                 $("#runsheetDate").val(currentRunsheetDate);
 
                 $("#runsheetModal").modal("show");
+            });
+
+
+            $(document).on("click", ".edit-onpage-runsheet-button", function() {
+
+                let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
+                currentRunsheetNumber = $(this).data("run-number");
+                currentRunsheetDate = $(this).data("run-date");
+
+                $("#runsheetNumber").val(currentRunsheetNumber);
+                $("#runsheetDate").val(currentRunsheetDate);
+
+                $("#updateOnpageRunsheet").modal("show");
+                // updateRunsheetForm
             });
             // Show Modal with existing runsheet data
 

@@ -936,7 +936,7 @@ mysqli_close($conn);
                     .then((data) => {
                         if (data.success) {
                             alert(data.message);
-                            // window.location.href = "index.php"; // Redirect after success
+                            window.location.href = "index.php"; // Redirect after success
                         } else {
                             alert("Error: " + data.message);
                         }

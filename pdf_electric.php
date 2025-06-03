@@ -19,7 +19,7 @@ $stmt->bind_param("i", $invoiceId);
 $stmt->execute();
 $resultInvoice = $stmt->get_result();
 
-$invoice = $resultInvoice->fetch_assoc();   
+$invoice = $resultInvoice->fetch_assoc();
 
 if (!$invoice) {
     die('Invoice not found');
@@ -41,6 +41,7 @@ while ($row = $resultItems->fetch_assoc()) {
     $itemRowId = $row['item_row_id'];
     $itemName = $row['item_name'];
     $itemValue = $row['item_value'];
+    $note = $row['note_text'];
     $customInvoiceNo = $row['customer_invoice_no'];
     $customInvoiceName = $row['customer_invoice_name'];
 
@@ -57,6 +58,7 @@ while ($row = $resultItems->fetch_assoc()) {
         $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
             'custom_invoice_no' => $customInvoiceNo,
             'customInvoiceName' => $customInvoiceName,
+            'note_text' => $note,
             'items' => []
         ];
     }
@@ -65,17 +67,23 @@ while ($row = $resultItems->fetch_assoc()) {
     $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = $itemValue;
 }
 
-
-
+// print_r($groupedItems);
+// die();
 
 // Dynamic Values
 $date =  date("d-m-Y", strtotime($invoice['date']));
 $invoiceNo = $invoice['invoice_number'];
-$invoice_type = $invoice['invoice_type'];
 $company = $invoice['company_name'];
+$invoice_type = $invoice['invoice_type'];
 $address = $invoice['address'];
 $phone = $invoice['phone'];
 $abn = $invoice['abn'];
+
+$employer_company = $invoice['employer_company'];
+$employer_abn = $invoice['employer_abn'];
+$employer_address = $invoice['employer_address'];
+$employer_phone = $invoice['employer_phone'];
+
 $postalCode = $invoice['postal_code'];
 $runSheetNo = $invoice['runsheet_number'];
 
@@ -137,7 +145,7 @@ $html = '
             color:#263278;
         }
         .checkbox-table {
-            width: 100%;
+        width: 100%;
             text-align: center;
             border-collapse: collapse;
         }
@@ -218,29 +226,27 @@ $html = '
            <h4 style=" margin-left:5px; color:#001f80" ><span class="label">INVOICE DATE:</span> ' . $date . '</h4>
            <h2 style=" margin-left:5px; color:#001f80">Bill To </h2>
         <table class="bill-to">
-
-
             <tr>
                 <td><span class="label">COMPANY NAME:</span> ' . $company . '</td>
-                <td style="text-align:right"><span class="label">FAB TRANSPORT SERVICES PTY LTD</span></td>
+                <td style="text-align:right"><span class="label">'.$employer_company .'</span></td>
             </tr>
             
 
             <tr>
                 <td><span class="label">ADDRESS:</span> ' . $address . '</td>
-                <td style="text-align:right"><span class="label">PHONE:0403729966</span></td>
+                <td style="text-align:right"><span class="label">PHONE:'.$employer_phone.'</span></td>
             </tr>
             
             <tr>
                 <td><span class="label">ABN:</span>' . $abn . '</td>
-                <td style="text-align:right"><span class="label">ABN:123 121 211 222 222</span></td>
+                <td style="text-align:right"><span class="label">ABN:'.$employer_abn.'</span></td>
             </tr>
 
             <tr>
                 <td><span class="label">PHONE:</span>' . $phone . '</td>
-                <td style="text-align:right"><span class="label">ADDRESS: 5 LOUIS STREET DOVETON VIC 3177</span></td>
+                <td style="text-align:right"><span class="label">ADDRESS: '.$employer_address.'</span></td>
             </tr>
-             <tr>
+            <tr>
                 <td><span class="label">Invoice Type:</span>' . $invoice_type . '</td>
             </tr>
 
@@ -257,10 +263,8 @@ $html = '
              </div>
           </td>
         </tr>
-
         </table>
 
-        
         <!-- Description Table -->
 
         <table class="details">
@@ -268,6 +272,7 @@ $html = '
                 <tr>
                     <th>CUSTOMERS INFO </th>
                     <th>DESCRIPTION & CHARGES</th>
+                 
                     <th>AMOUNT</th>
                 </tr>
             </thead>
@@ -285,27 +290,17 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     foreach ($runsheetData['items'] as $itemRowId => $data) {
         $customInvoiceName2 = $data['customInvoiceName'];
         $customInvoiceNo = $data['custom_invoice_no'];
+        $note_text = $data['note_text'];
         $items = $data['items'];
-
+       
         $html .= '
         <tr >
-            <td style="text-align: left;">' . htmlspecialchars($customInvoiceName2). '<br>' .  $customInvoiceNo. ' </td>
-            <td style=" padding:0px">
+            <td style="text-align: left; width: 20.5%;">' . htmlspecialchars($customInvoiceName2). '<br>' .  $customInvoiceNo  . ' </td>
+            <td style="padding:0px; width: 73%;">
                 <table class="checkbox-table">
                     <tr>';
 
-        $allOptions = [
-            'DELIV+' => 'DELIV+',
-            'INST+' => 'INST+',
-            'RUB+' => 'RUB+',
-            'UPST+' => 'UPST+',
-            'DOWNST+' => 'DOWNST+',
-            'DOOR/CH+' => 'DOOR/CH+',
-            'DOOR/RE+' => 'DOOR/RE+',
-            'RELO+' => 'RELO+',
-            'WATERCON+' => 'WATERCON+',
-        ];
-
+        $allOptions = $items; // Only use items fetched from DB
         // Check for any key matching P/UP(x)
         $selectedPUP = null; // To store the matched P/UP key
         foreach ($items as $key => $value) {
@@ -315,27 +310,32 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
             }
         }
 
-        // If a P/UP key is found, add it dynamically
-        if ($selectedPUP) {
-            $allOptions[$selectedPUP] = $selectedPUP;
-        } else {
-            $pupKey = 'P/UP';
-            $allOptions[$pupKey] = 'P/UP';
-        }
-
+    
         foreach ($allOptions as $key => $label) {
             $checked = isset($items[$key]);
             $image = $checked ? 'assets/images/check.png' : 'assets/images/uncheck.png';
-            $value = $checked ? '$' . number_format($items[$key], 2) : '-';
-
+            $value = '-';
+            if ($checked) {
+                if (is_numeric($items[$key])) {
+                    $value = '$' . number_format((float)$items[$key], 2);
+                } else {
+                    $value = $items[$key]; // show string as is
+                }
+            }
             $html .= '
-            <td  style="  ">
+            <td>
                 <div style="display:flex; align-items:center;">
                     <img src="' . $image . '" width="20" height="20" style="padding-top:5px; padding-bottom:5px;" />
-                    <div style="font-size:12px; margin-left:5px;">' . htmlspecialchars($label) . '</div>
+                    <div style="font-size:12px; margin-left:5px;">' . htmlspecialchars($key) . '</div>
                 </div>
                
-            </td>';
+            </td> '
+            ;
+        }
+
+        if (!empty(trim($note_text))) {
+        $html .= '
+        <td style="text-align:left; font-size:12px; border-left:1px solid #ddd; padding: 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
         }
 
         $html .= '
@@ -344,27 +344,29 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         // Add a second row to display the values for each option
         foreach ($allOptions as $key => $label) {
-            $value = isset($items[$key]) ? htmlspecialchars($items[$key]) : '0.00';
-
-            $html .= '<td style=""><span style="font-size:12px;">$' . $value . '</span></td>';
+            $value = isset($items[$key]) ? $items[$key] : '0.00';
+            $displayValue = is_numeric($value) ? '$' . number_format((float)$value, 2) : htmlspecialchars($value);
+            $html .= '<td><span style="font-size:12px;">' . $displayValue . '</span></td>';
         }
+        
+       if (!empty(trim($note_text))) {
+    $html .= '<td style="text-align:left; font-size:12px; border-left:1px solid #ddd; padding: 0px;"></td>';
+}
 
-        $html .= '
-                    </tr>
-                </table>
-            </td>
-            <td>$' . number_format(array_sum($items), 2) . '</td>
+        $html .= '</td>
+                </tr>
+            </table>
+        </td>
+        <td style="width: 6%;">$' . number_format(array_sum($items), 2) . '</td>
         </tr>';
+
     }
 }
 
 $html .= '
             </tbody>
         </table>
-       
-
-            <table class="summary" >
-
+            <table class="summary">
                     <tr>
                         <th style="background:#f89c1c;  color:#011f7f;">Total</td>
                         <td style="color:#011f7f; font-weight:bold;">$' . $sub_total . '</td>
@@ -414,10 +416,12 @@ try {
         'margin_right' => 0,
     ]);
 
-    // Prevent page breaks
+    // // Prevent page breaks
     $mpdf->SetAutoPageBreak(false);
     $mpdf->WriteHTML($html);
     $mpdf->Output('invoice.pdf', 'I');
+
+    // echo $html;
 } catch (Exception $e) {
     echo $e->getMessage();
 }

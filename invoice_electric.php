@@ -106,20 +106,17 @@ mysqli_close($conn);
             </div>
         </div>
 
-        <div class="row mt-3">
-            <div class="col-md-8">
+        <div class="row mt-3 ">
+            <div class="col-md-7">
 
                 <form id="invoiceForm" class="form-group p-1">
                     <div class="top-nav">
 
                         <div class="topbtngr btn-group" role="group">
-                            <!-- <button type="button" class="btn btn-primary add-button">Add Row</button> -->
-                            <!-- <button type="button" class="btn btn-danger remove-button">Remove Row</button> -->
                             <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
                             <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
                             <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
                         </div>
-
 
                         <div class=" btn-group">
                             <button type="submit" class="btn mergebtn export-button">Save Invoice</button>
@@ -128,65 +125,89 @@ mysqli_close($conn);
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-
-                        <label for="date" class="form-label mb-0 me-2">DATE:</label>
-                        <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3">
-                        <div class="invalid-feedback">Invoice date is required.</div>
-
-                        <label for="invoice" class="form-label mb-0 me-2">INVOICE NO</label>
+                        <label for="invoice" class="form-label mb-0 me-3 w-25">INVOICE NO</label>
                         <input type="text" id="invoice" name="invoice" style="border: none; font-size: 18px;" value="<?php echo htmlspecialchars($newInvoice); ?>">
 
                     </div>
 
-                    <h3 class="mt-1 mb-2 heading" style="display: inline-block; margin-right: 10px;">Bill To:</h3>
-                    <h5 style="display: inline-block; position: relative; bottom: 5px; left: 420px;">Electric</h5>
+                    
+                    <div class="mb-2 d-flex align-items-center">
+                        <label for="date" class="form-label mb-0 me-3 w-25">DATE:</label>
+                        <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3">
+                        <div class="invalid-feedback">Invoice date is required.</div>
+                    </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="employer_company" class="form-label mb-0 me-3">EMPLOYER COMPANY</label>
-                        <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="">
-                        <div class="invalid-feedback">Employer company name is required.</div>
+                         <label class="form-label mb-0 me-3 w-25">BILL TO:</label>
+                    <select id="invoice_type" disabled name="invoice_type" class="form-control w-50 me-3" >
+                        <option value="Electric">Electric</option>
+                    </select>
 
                     </div>
+
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="Company" class="form-label mb-0 me-3">COMPANY NAME:</label>
+                        <label for="Company" class="form-label mb-0 me-3 w-25">COMPANY NAME:</label>
                         <input type="text" name="company" id="company_name" class="form-control w-50" placeholder="Type Company Name" value="">
                         <div class="invalid-feedback">Company name is required.</div>
 
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="address" class="form-label mb-0 me-4">ADDREESS:</label>
-                        <input type="text" name="address" id="company_address" class="form-control custom-width-2" placeholder="Enter Address Here" value="">
+                        <label for="address" class="form-label mb-0 me-3 w-25">ADDREESS:</label>
+                        <input type="text" name="address" id="company_address" class="form-control w-50" placeholder="Enter Address Here" value="">
                         <div class="invalid-feedback">Address is required.</div>
 
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="abn" class="form-label mb-0 me-5">ABN:</label>
-                        <input type="text" name="abn" id="company_abn" class="form-control custom-width-1" placeholder="Insert ABN Number" value="">
+                        <label for="abn" class="form-label mb-0 me-3 w-25">ABN:</label>
+                        <input type="text" name="abn" id="company_abn" class="form-control w-50" placeholder="Insert ABN Number" value="">
                         <div class="invalid-feedback">ABN is required.</div>
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="phone" class="form-label mb-0 me-2">PHONE:</label>
-                        <input type="text" name="phone" id="phone" class="form-control custom-width-1 me-3" placeholder="Insert Phone Number" value="">
+                        <label for="phone" class="form-label mb-0 me-3 w-25">PHONE:</label>
+                        <input type="text" name="phone" id="phone" class="form-control w-50 me-3" placeholder="Insert Phone Number" value="">
                         <div class="invalid-feedback">Phone is required.</div>
                         <!-- <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
                         <input type="text" name="postal_code" class="form-control custom-width-3" placeholder="Postal Code" value=""> -->
                     </div>
+                    
 
                 </form>
             </div>
 
 
-            <div class="col-md-4 position-relative">
+            <div class="col-md-5 position-relative" >
+                    <div class="">
+                        <div class="mb-2 d-flex align-items-center">
+                            <label for="employer_company" class="form-label mb-0 me-3 w-50">EMPLOYER COMPANY</label>
+                            <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="">
+                            <!-- <div class="invalid-feedback">Employer company name is required.</div> -->
+                        </div>
+                        <div class="mb-2 d-flex align-items-center">
+                            <label for="employer_phone" class="form-label mb-0 me-3 w-50">EMPLOYER PHONE</label>
+                            <input type="text" name="employer_phone" id="employer_phone" class="form-control w-50" placeholder="Employer Phone" value="">
+                            <!-- <div class="invalid-feedback">Employer company phone is required.</div> -->
+                        </div>
+                        <div class="mb-2 d-flex align-items-center">
+                            <label for="employer_abn" class="form-label mb-0 me-3 w-50">EMPLOYER ABN</label>
+                            <input type="text" name="employer_abn" id="employer_abn" class="form-control w-50" placeholder="Employer ABN" value="">
+                            <!-- <div class="invalid-feedback">Employer company abn is required.</div> -->
+                        </div>
+                        <div class="mb-2 d-flex align-items-center">
+                            <label for="employer_address" class="form-label mb-0 me-3 w-50">EMPLOYER ADDRESS</label>
+                            <input type="text" name="employer_address" id="employer_address" class="form-control w-50" placeholder="Employer Address" value="">
+                            <!-- <div class="invalid-feedback">Employer company address is required.</div> -->
+                        </div>
+                    </div>
 
-                <div class="info">
+                <!-- <div class="info">
                     <h6>FAB TRANSPORT SERVICES PTY LTD</h6>
                     <h6>PHONE: 0403729966</h6>
                     <h6>ABN: 123 121 211 222 222</h6>
                     <h6>ADDRESS: 5 LOUIS STREET DOVETON VIC 3177</h6>
-                </div>
+                </div> -->
 
                 <div class="service-items">
                     <h4>For:</h4>
@@ -204,13 +225,14 @@ mysqli_close($conn);
                         <tr>
                             <th>CUSTOMER'S INFO</th>
                             <th>DESCRIPTION & CHARGES</th>
+                            <th>NOTE</th>
                             <th>AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody>
 
                         <tr style="display: none;">
-                            <th colspan="3">
+                            <th colspan="4">
                                 <div style=" gap: 50px; display: flex;">
                                     <strong>Runsheet No: <span id="runsheet_no"></span> </strong>
                                     <strong>Runsheet Date: <span id="runsheet_date"></span> </strong>
@@ -218,7 +240,7 @@ mysqli_close($conn);
                             </th>
                         </tr>
 
-                        <tr id="tabletr" style="display: none;">
+                        <tr id="tabletr"  style="display: none;">
 
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
@@ -226,16 +248,22 @@ mysqli_close($conn);
                             </td>
 
                             <td>
-                                <div class="d-flex">
+                               
+<div class="d-flex item_names_check">
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="deliv-0" name="item[0][deliv]">
                                         <label for="deliv-0" class="form-check-label">DELIV+</label>
                                         <input type="text" name="item[0][deliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="ins-0" name="item[0][ins]">
-                                        <label for="ins-0" class="form-check-label">INST+</label>
-                                        <input type="text" name="item[0][ins_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="disas-0" name="item[0][disas]">
+                                        <label for="disas-0" class="form-check-label">DISAS+</label>
+                                        <input type="text" name="item[0][disas_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="assem-0" name="item[0][assem]">
+                                        <label for="assem-0" class="form-check-label">ASSEM+</label>
+                                        <input type="text" name="item[0][assem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="rub-0" name="item[0][rub]">
@@ -253,24 +281,24 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][downst_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_chnage]">
-                                        <label for="door_chnage-0" class="form-check-label">DOOR/CH+</label>
-                                        <input type="text" name="item[0][door_chnage_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="prem-0" name="item[0][prem]">
+                                        <label for="prem-0" class="form-check-label">PREM+</label>
+                                        <input type="text" name="item[0][prem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_remove]">
-                                        <label for="door_remove-0" class="form-check-label">DOOR/RE+</label>
-                                        <input type="text" name="item[0][door_remove_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="brtrans-0" name="item[0][brtrans]">
+                                        <label for="brtrans-0" class="form-check-label">BRTRANS+</label>
+                                        <input type="text" name="item[0][brtrans_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="h_dliv-0" name="item[0][relo]">
-                                        <label for="relo-0" class="form-check-label">RELO+</label>
-                                        <input type="text" name="item[0][relo_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="h_dliv-0" name="item[0][h_dliv]">
+                                        <label for="h_dliv-0" class="form-check-label">H/DLIV+</label>
+                                        <input type="text" name="item[0][h_dliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="water_con-0" name="item[0][water_con]">
-                                        <label for="water_con-0" class="form-check-label">WATERCON+</label>
-                                        <input type="text" name="item[0][water_con_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="vol-0" name="item[0][vol]">
+                                        <label for="vol-0" class="form-check-label">VOL+</label>
+                                        <input type="text" name="item[0][vol_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
 
                                     <div class="form-check ">
@@ -290,8 +318,16 @@ mysqli_close($conn);
 
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
+
+                                    
                                 </div>
 
+                            </td>
+                            <td>
+                            <div class="note-text">        
+                                <label for="note-text" class="form-check-label">Add Note</label>
+                                <input type="text" id="note-text"  name="note-text-value[]" class="form-control note-text-value mt-1"  placeholder="">
+                            </div>
                             </td>
                             <td style="width: 180px;">
                                 <input type="text" class="form-control amount-field" name="amount[]" readonly placeholder="$0.00">
@@ -300,7 +336,13 @@ mysqli_close($conn);
                     </tbody>
                 </table>
             </div>
+       
         </div>
+        <div class="topbtngr btn-group" role="group">
+                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                        </div>
 
 
 
@@ -345,8 +387,10 @@ mysqli_close($conn);
                     </div>
                 </table>
             </div>
+            
         </div>
     </div>
+    
 
     <script>
         $(document).ready(function() {
@@ -354,8 +398,6 @@ mysqli_close($conn);
             let currentRunsheet = null;
             let runsheetIndex = 0;
             let isDataEntered = false;
-
-
             initializePage();
 
             // $(".add-runsheet-button").click(addRunSheetValues);
@@ -384,6 +426,8 @@ mysqli_close($conn);
             $("#invoiceForm").on("submit", handleFormSubmit);
             $("#tax_rate, #other_cost").on("input", calculateSubTotal);
 
+
+
             function initializePage() {
                 // Initialization logic
                 attachRowListeners($(".table-container tbody tr"));
@@ -400,6 +444,14 @@ mysqli_close($conn);
                 return count;
             }
 
+            function formatDateToDDMMYYYY(dateStr) {
+                if (!dateStr) return "";
+                const parts = dateStr.split("-");
+                if (parts.length === 3) {
+                    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+                return dateStr; // return as-is if format is unexpected
+            }
 
             function addRunsheet() {
 
@@ -424,10 +476,10 @@ mysqli_close($conn);
 
                 const runsheetRow = `
             <tr id="runsheet-${runsheetIndex}">
-                <th colspan="3" id="runsheet-${runsheetIndex}">
+                <th colspan="4" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
-                        <h5><strong>Runsheet No: <span class="runsheet-no">${runsheetNumber}</span> </strong></h5>
-                        <h5><strong>Runsheet Date: <span class="runsheet-date">${ formatDateToDDMMYYYY(runsheetDate)}</span> </strong></h5>
+                      <h5><strong>Runsheet No: <span class="runsheet-no">${runsheetNumber}</span></strong></h5>
+                      <h5><strong>Runsheet Date: <span class="runsheet-date">${formatDateToDDMMYYYY(runsheetDate)}</span></strong></h5>
                         <strong><button class="btn btn-danger btn-sm edit-onpage-runsheet-button" data-id="runsheet-${runsheetIndex}" data-run-number="${runsheetNumber}" data-run-date="${runsheetDate}">Edit</button></strong>
                         <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                     </div>
@@ -499,15 +551,6 @@ mysqli_close($conn);
                 $("#editRunsheetModal").modal("hide");
             });
 
-            function formatDateToDDMMYYYY(dateStr) {
-                if (!dateStr) return "";
-                const parts = dateStr.split("-");
-                if (parts.length === 3) {
-                    return `${parts[2]}-${parts[1]}-${parts[0]}`;
-                }
-                return dateStr; // return as-is if format is unexpected
-            }
-
             function showAddRunsheetModal() {
                 $("#addRunsheetNumber").val("");
                 $("#addRunsheetDate").val("");
@@ -517,7 +560,12 @@ mysqli_close($conn);
             function calculateRowAmount(row) {
                 let amount = 0;
                 $(row).find(".form-checkboxes:checked").each(function() {
-                    const value = parseFloat($(this).closest(".form-check").find("input[type='text']").val()) || 0;
+                    const $formCheck = $(this).closest(".form-check");
+
+                    // Skip if the parent has class "note-text-value"
+                    if ($formCheck.hasClass("note-text-value")) return;
+
+                    const value = parseFloat($formCheck.find("input[type='text']").val()) || 0;
                     amount += value;
                 });
 
@@ -585,7 +633,7 @@ mysqli_close($conn);
 
 
 
-                $(row).find(".form-check input[type='text']").prop("disabled", true);
+                // $(row).find(".form-check input[type='text']").prop("disabled", true);
                 $(row).find(".form-contro").siblings("input[type='text']").prop("disabled", true);
             }
 
@@ -666,6 +714,8 @@ mysqli_close($conn);
                     }
                 }
             }
+
+
             $('#invoice_date, #addRunsheetDate').on('input', function() {
                 const inputDate = $(this).val(); // format is YYYY-MM-DD
                 if (inputDate) {
@@ -676,8 +726,6 @@ mysqli_close($conn);
                     $('#formatted_date_display').val('');
                 }
             });
-
-
             // Monitor changes in input fields
             $("input, select, textarea").on("change keyup", function() {
                 isDataEntered = true;
@@ -689,7 +737,6 @@ mysqli_close($conn);
             $(document).on("click", ".add-runsheet-button, .remove-runsheet", function() {
                 isDataEntered = true;
             });
-
             // Add beforeunload event listener
             window.addEventListener("beforeunload", function(e) {
                 if (isDataEntered) {
@@ -701,6 +748,7 @@ mysqli_close($conn);
                 }
             });
 
+
             function handleFormSubmit(e) {
                 e.preventDefault();
                 isDataEntered = false; // Data is saved, so no need for aler
@@ -710,10 +758,6 @@ mysqli_close($conn);
                 const requiredFields = [{
                         id: "#invoice_date",
                         message: "Invoice date is required."
-                    },
-                    {
-                        id: "#employer_company",
-                        message: "Employer company name is required."
                     },
                     {
                         id: "#company_name",
@@ -815,10 +859,13 @@ mysqli_close($conn);
                 if (!isValid) return;
 
                 const formData = {
-                    invoice_type: 'Electric',
+                    invoice_type: $("select[name='invoice_type']").val(),
                     date: $("input[name='date']").val(),
                     invoice: $("input[name='invoice']").val(),
                     employer_company: $("input[name='employer_company']").val(),
+                    employer_phone: $("input[name='employer_phone']").val(),
+                    employer_abn: $("input[name='employer_abn']").val(),
+                    employer_address: $("input[name='employer_address']").val(),
                     company: $("input[name='company']").val(),
                     address: $("input[name='address']").val(),
                     phone: $("input[name='phone']").val(),
@@ -833,19 +880,23 @@ mysqli_close($conn);
                 };
 
                 $(".table-container tbody tr#tabletr").each(function(index) {
+                    console.log(index);
                     const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
                     const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
+                    const note_text_value = $(this).find(".note-text-value").val() || '';
+                    
                     const amount = $(this).find(".amount-field").val() || 0;
                     let row = $(this);
-                    $(this).find(".form-check").each(function() {
+                    $(this).find(".item_names_check > .form-check").each(function() {
                         const checkbox = $(this).find("input[type='checkbox']");
                         const inputField = $(this).find("input[type='text']");
-
+                        // Get the corresponding note field for the current item
                         if (checkbox.prop("checked")) {
                             formData.items.push({
                                 item_row_id: `${index + 1}`,
                                 customer_inv_no: customerInvoiceNo,
                                 customer_inv_name: customer_inv_name,
+                                note_text_value: note_text_value,
                                 item_name: $(this).find("label").text().trim(),
                                 item_value: inputField.val() || 0,
                                 amount: amount,
@@ -861,6 +912,7 @@ mysqli_close($conn);
                             item_row_id: `${index + 1}`,
                             customer_inv_no: customerInvoiceNo,
                             customer_inv_name: customer_inv_name,
+                            note_text_value: note_text_value,
                             item_name: selectField.find("option:selected").text().trim(),
                             item_value: selectField.siblings("input[type='text']").val() || 0,
                             amount: amount,
@@ -870,7 +922,7 @@ mysqli_close($conn);
                     }
                 });
 
-                console.log(formData);
+                // console.log(formData);
                 fetch("save_invoice.php", {
                         method: "POST",
                         headers: {
@@ -891,14 +943,17 @@ mysqli_close($conn);
                         console.error("Error:", error);
                         alert("An error occurred. Please try again.");
                     });
+
+
+
+
             }
+
         });
     </script>
 
-
-
-
     <script src="assets/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
