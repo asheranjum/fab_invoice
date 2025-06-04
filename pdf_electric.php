@@ -353,7 +353,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     $html .= '<td style="text-align:left; font-size:12px; border-left:1px solid #ddd; padding: 0px;"></td>';
 }
 
-        $html .= '</td>
+        $html .= '
                 </tr>
             </table>
         </td>

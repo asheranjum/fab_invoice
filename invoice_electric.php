@@ -507,9 +507,14 @@ mysqli_close($conn);
 
 
             $(document).on("click", ".remove-runsheet", function() {
+                  
                 const runsheetId = $(this).data("id");
-                $(`#${runsheetId}`).remove();
-                $(`#tabletr-${runsheetId.split('-')[1]}`).remove();
+
+                if (confirm(`Would you like to remove runsheet?`)) {
+                      
+                    $(`#${runsheetId}`).remove();
+                    $(`#tabletr-${runsheetId.split('-')[1]}`).remove();
+                    }
             });
 
             $(document).on("click", ".edit-onpage-runsheet-button", function() {
@@ -663,6 +668,7 @@ mysqli_close($conn);
                     newRow.find(".form-contro").prop("disabled", false);
 
                     newRow.find("#customer-inv-name").val("");
+                    newRow.find("#note-text").val("");
 
                     newRow.find(".form-check").each(function() {
                         const labelText = $(this).find("label").text().trim();
@@ -678,6 +684,8 @@ mysqli_close($conn);
                         $(this).find("label").attr("for", uniqueId);
 
                         const inputField = $(this).find("input[type='text']");
+                        inputField.val("");
+                        inputField.prop("disabled", true);;
                         inputField.attr("name", `item[${rowIndex}][${baseName}_value]`);
                     });
 

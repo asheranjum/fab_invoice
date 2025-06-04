@@ -6,7 +6,7 @@ $invoiceId = isset($_GET['invoice_id']) ? intval($_GET['invoice_id']) : null;
 $invoiceData = null;
 
 if ($invoiceId) {
-    $invoiceData = file_get_contents("http://localhost/fab_invoice/edit_invoice.php?invoice_id=$invoiceId");
+    $invoiceData = file_get_contents("https://" .$_SERVER['HTTP_HOST'] . "/edit_invoice.php?invoice_id=$invoiceId");
     $invoiceData = json_decode($invoiceData, true);
     if (!$invoiceData['success']) {
         die("Invoice not found.");
@@ -694,7 +694,7 @@ mysqli_close($conn);
                 const runsheetIndex = new Date().getTime(); // Unique index based on timestamp
                 const runsheetRow = `
             <tr id="runsheet-${runsheetIndex}">
-                <th colspan="3" id="runsheet-${runsheetIndex}">
+                <th colspan="4" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
                          <h5><strong>Runsheet No: <span id="runsheet_no">${runsheetNumber}</span> </strong></h5>
                          <h5><strong>Runsheet Date: <span id="runsheet_date">${runsheetDate}</span> </strong></h5>
@@ -713,10 +713,15 @@ mysqli_close($conn);
             });
 
             $(document).on("click", ".remove-runsheet", function() {
-                let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
-                $("#" + runsheetId).remove(); // Remove the respective runsheet row
-            });
+                  
+                const runsheetId = $(this).data("id");
 
+                if (confirm(`Would you like to remove runsheet?`)) {
+                      
+                    $(`#${runsheetId}`).remove();
+                    $(`#tabletr-${runsheetId.split('-')[1]}`).remove();
+                    }
+            });
 
             $(document).on("click", ".edit-onpage-runsheet-button", function() {
                 const button = $(this);

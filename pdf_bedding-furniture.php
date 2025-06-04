@@ -353,7 +353,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     $html .= '<td style="text-align:left; font-size:12px; border-left:1px solid #ddd; padding: 0px;"></td>';
 }
 
-        $html .= '</td>
+        $html .= '
                 </tr>
             </table>
         </td>
@@ -421,7 +421,7 @@ try {
     $mpdf->WriteHTML($html);
     $mpdf->Output('invoice.pdf', 'I');
 
-    // echo $html;
+    echo $html;
 } catch (Exception $e) {
     echo $e->getMessage();
 }
