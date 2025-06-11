@@ -35,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
 
     // Update invoice details
-    $sqlUpdate = "UPDATE invoices SET date=?, invoice_number=? , invoice_type=?, employer_company = ?, employer_abn = ? , employer_address = ?, employer_phone = ? ,  company_name=?, address=?, phone=?, postal_code =?, abn=?, tax_rate=? WHERE id=?";
+    $sqlUpdate = "UPDATE invoices SET date=?, invoice_number=? , invoice_type=?, employer_company = ?, employer_abn = ? , employer_address = ?, employer_phone = ? ,  company_name=?, address=?, phone=?, postal_code =?, abn=?, tax_rate=?, sub_total=? ,total_cost=? WHERE id=?";
     $stmt = $conn->prepare($sqlUpdate);
-    $stmt->bind_param("sssssssssssssi", $inv_date,$invoice_number, $invoice_type, $employer_company, $employer_abn, $employer_address, $employer_phone ,  $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $tax_rate, $invoiceId);
+    $stmt->bind_param("sssssssssssssssi", $inv_date,$invoice_number, $invoice_type, $employer_company, $employer_abn, $employer_address, $employer_phone ,  $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $tax_rate, $sub_total ,$total_cost , $invoiceId);
 
     if ($stmt->execute()) {
         foreach ($items as $item) {

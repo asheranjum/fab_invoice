@@ -6,7 +6,7 @@ $invoiceId = isset($_GET['invoice_id']) ? intval($_GET['invoice_id']) : null;
 $invoiceData = null;
 
 if ($invoiceId) {
-    $invoiceData = file_get_contents("https://" .$_SERVER['HTTP_HOST'] . "/edit_invoice.php?invoice_id=$invoiceId");
+ $invoiceData = file_get_contents("https://" .$_SERVER['HTTP_HOST'] . "/edit_invoice.php?invoice_id=$invoiceId");
     $invoiceData = json_decode($invoiceData, true);
     if (!$invoiceData['success']) {
         die("Invoice not found.");
