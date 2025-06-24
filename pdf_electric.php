@@ -416,8 +416,6 @@ try {
         'margin_right' => 0,
     ]);
 
-    // // Prevent page breaks
-    $mpdf->SetAutoPageBreak(false);
     $mpdf->WriteHTML($html);
     $mpdf->Output('invoice.pdf', 'I');
 
