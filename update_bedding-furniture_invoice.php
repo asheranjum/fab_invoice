@@ -447,8 +447,8 @@ mysqli_close($conn);
 
                                 <tr id="table_exitisng" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
-                                        <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
                                         <input type="text" name="customer_invoice_name[]" id="customer-inv-name" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
+                                        <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
                                     </td>
                                     <td style="padding:0px">
                                         <table class="checkbox-table">
