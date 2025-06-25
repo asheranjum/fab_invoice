@@ -440,7 +440,11 @@ mysqli_close($conn);
                                 <th></th>
                             </tr>
 
-                            <?php foreach ($runsheetData['items'] as $itemRowId => $data):
+                            <?php 
+                            uasort($runsheetData['items'], function($a, $b) {
+                    return strcmp($a['custom_invoice_name'], $b['custom_invoice_name']);
+                });
+                            foreach ($runsheetData['items'] as $itemRowId => $data):
 
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
                             ?>
