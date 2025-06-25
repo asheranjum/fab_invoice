@@ -67,6 +67,16 @@ while ($row = $resultItems->fetch_assoc()) {
     $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = $itemValue;
 }
 
+
+$totalItems = 0;
+
+foreach ($groupedItems as $runsheet) {
+    if (isset($runsheet['items']) && is_array($runsheet['items'])) {
+        $totalItems += count($runsheet['items']);
+    }
+}
+
+
 // print_r($groupedItems);
 // die();
 
@@ -108,7 +118,7 @@ $html = '
         }
         .invoice-container {
             width: 100%;
-            padding: 20px;
+            padding: 0px;
         }
         .header {
             text-align: center;
@@ -382,44 +392,55 @@ $html .= '
                         <td style="color:#011f7f; font-weight:bold;">$' . $total_cost . '</td>
                     </tr>
                 </table>
+    ';
 
-        <div class="footer">
-            <div class="footer-text">
-                <p>Make all checks payable to "FAB TRANSPORT SERVICES PTY LTD"
-                        If you have any questions concerning about this invoice,
-                        use the following contact information</p>
-                    <ul>
-                        <li>Contact Name: SAM</li>
-                        <li>Phone: 0403 729 966</li>
-                        <li>Email: info@fabtransport.com.au</li>
-                    </ul>
-                    <h4>Thank You For Your Business!</h4>
+
+  
+ 
+    if($totalItems == 3 || $totalItems == 4 || $totalItems ==  16)
+    {
+            $html .= '<pagebreak />';
+    }
+    
+     $html .= '
+            <div class="footer">
+                <div class="footer-text">
+                    <p>Make all checks payable to "FAB TRANSPORT SERVICES PTY LTD"
+                            If you have any questions concerning about this invoice,
+                            use the following contact information</p>
+                        <ul>
+                            <li>Contact Name: SAM</li>
+                            <li>Phone: 0403 729 966</li>
+                            <li>Email: info@fabtransport.com.au</li>
+                        </ul>
+                        <h4>Thank You For Your Business!</h4>
+                </div>
             </div>
         </div>
-    </div>
-</body>
-</html>
-';
+    </body>
+    </html>
+    ';
 
 try {
     // Estimate content height based on item count
-    $itemCount = count($groupedItems) * 20; // Approximate row height
+    $itemCount = $totalItems * 20; // Approximate row height
     $baseHeight = 297; // A4 standard height in mm
     $maxHeight = $baseHeight + ($itemCount > 20 ? ($itemCount - 20) * 5 : 0); // Increase height dynamically
 
     $mpdf = new Mpdf([
         'mode' => 'utf-8',
-        'format' => [210, $maxHeight], // 210mm width, dynamic height
-        'margin_top' => 0,
-        'margin_bottom' => 0,
-        'margin_left' => 0,
-        'margin_right' => 0,
+        // 'format' => [210, $maxHeight], // 210mm width, dynamic height
+        'format' => 'A4', // 210mm width, dynamic height
+        'margin_top' => 5,
+        'margin_bottom' => 5,
+        'margin_left' =>5,
+        'margin_right' => 5,
     ]);
 
     $mpdf->WriteHTML($html);
     $mpdf->Output('invoice.pdf', 'I');
 
-    // echo $html;
+    echo $html;
 } catch (Exception $e) {
     echo $e->getMessage();
 }

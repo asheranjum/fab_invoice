@@ -435,9 +435,13 @@ mysqli_close($conn);
 
                             <?php 
                 
-                uasort($runsheetData['items'], function($a, $b) {
-                    return strcmp($a['custom_invoice_name'], $b['custom_invoice_name']);
-                });
+                                                        uasort($runsheetData['items'], function ($a, $b) {
+    // Get first created_at from each
+    $aCreated = reset($a['items'])['created_at'] ?? null;
+    $bCreated = reset($b['items'])['created_at'] ?? null;
+
+    return strcmp($aCreated, $bCreated); // Ascending (earliest first)
+});
 
  foreach ($runsheetData['items'] as $itemRowId => $data):
 
@@ -1340,8 +1344,12 @@ $(document).on("click", ".remove-runsheet", function() {
                 currentRunsheetNumber = $(this).data("run-number");
                 currentRunsheetDate = $(this).data("run-date");
 
+                   // Convert from DD-MM-YYYY to YYYY-MM-DD
+                const dateParts = currentRunsheetDate.split("-");
+                const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`; // YYYY-MM-DD
+
                 $("#runsheetNumber").val(currentRunsheetNumber);
-                $("#runsheetDate").val(currentRunsheetDate);
+                $("#runsheetDate").val(formattedDate); 
 
                 $("#runsheetModal").modal("show");
             });
@@ -1401,11 +1409,15 @@ $(document).on("click", ".remove-runsheet", function() {
                 const runsheetNumber = $("#runsheetNumber").val();
                 const runsheetDate = $("#runsheetDate").val();
 
+                const inputDate = $("#runsheetDate").val(); // '2025-06-21'
+                const [year, month, day] = inputDate.split("-");
+                const formattedDate = `${day}-${month}-${year}`; // '21-06-2025'
+
                 const runsheetData = {
                     oldNumber: currentRunsheetNumber,
                     oldDate: currentRunsheetDate,
                     newNumber: runsheetNumber,
-                    newDate: runsheetDate
+                    newDate: formattedDate
                 };
 
                 $.ajax({
