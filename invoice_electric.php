@@ -511,21 +511,21 @@ mysqli_close($conn);
             });
 
           $(document).on("click", ".edit-onpage-runsheet-button", function () {
-    const button = $(this);
-    const runsheetId = button.attr("data-id");
-    const runsheetNumber = button.attr("data-run-number");
-    const runsheetDate = button.attr("data-run-date");
+            const button = $(this);
+            const runsheetId = button.attr("data-id");
+            const runsheetNumber = button.attr("data-run-number");
+            const runsheetDate = button.attr("data-run-date");
 
-    console.log('runsheetId', runsheetId);
-    console.log('runsheetNumber', runsheetNumber);
-    console.log('runsheetDate', runsheetDate);
+            console.log('runsheetId', runsheetId);
+            console.log('runsheetNumber', runsheetNumber);
+            console.log('runsheetDate', runsheetDate);
 
-    $("#editRunsheetNumber").val(runsheetNumber);
-    $("#editRunsheetDate").val(runsheetDate);
-    $("#editRunsheetId").val(runsheetId);
+            $("#editRunsheetNumber").val(runsheetNumber);
+            $("#editRunsheetDate").val(runsheetDate);
+            $("#editRunsheetId").val(runsheetId);
 
-    $("#editRunsheetModal").modal("show");
-});
+            $("#editRunsheetModal").modal("show");
+        });
 
 
             $("#saveEditRunsheet").click(function() {

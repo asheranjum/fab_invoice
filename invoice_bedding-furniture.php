@@ -519,11 +519,16 @@ mysqli_close($conn);
                     }
             });
 
-            $(document).on("click", ".edit-onpage-runsheet-button", function() {
+
+            $(document).on("click", ".edit-onpage-runsheet-button", function () {
                 const button = $(this);
-                const runsheetId = button.data("id");
-                const runsheetNumber = button.data("run-number");
-                const runsheetDate = button.data("run-date");
+                const runsheetId = button.attr("data-id");
+                const runsheetNumber = button.attr("data-run-number");
+                const runsheetDate = button.attr("data-run-date");
+
+                console.log('runsheetId', runsheetId);
+                console.log('runsheetNumber', runsheetNumber);
+                console.log('runsheetDate', runsheetDate);
 
                 $("#editRunsheetNumber").val(runsheetNumber);
                 $("#editRunsheetDate").val(runsheetDate);
@@ -536,7 +541,8 @@ mysqli_close($conn);
                 const runsheetNumber = $("#editRunsheetNumber").val();
                 const runsheetDate = $("#editRunsheetDate").val();
                 const runsheetId = $("#editRunsheetId").val();
-
+                
+              
                 // Validate inputs
                 if (!runsheetNumber || !runsheetDate) {
                     alert("Please fill in both Runsheet Number and Runsheet Date.");
@@ -548,12 +554,18 @@ mysqli_close($conn);
                     alert("Invalid date format. Please use YYYY-MM-DD.");
                     return;
                 }
-
+                const [year, month, day] = runsheetDate.split('-');
+                const formatted = `${day}-${month}-${year}`;
                 const runsheetRow = $(`#${runsheetId}`);
                 runsheetRow.find(".runsheet-no").text(runsheetNumber);
-                runsheetRow.find(".runsheet-date").text(runsheetDate);
-                runsheetRow.attr("data-run-number", runsheetNumber);
-                runsheetRow.attr("data-run-date", runsheetDate);
+                runsheetRow.find(".runsheet-date").text(formatted);
+                // runsheetRow.attr("data-run-number", runsheetNumber);
+                // runsheetRow.attr("data-run-date", runsheetDate);
+
+                // Update the button's attributes directly
+                runsheetRow.find(".edit-onpage-runsheet-button")
+                .attr("data-run-number", runsheetNumber)
+                .attr("data-run-date", runsheetDate);
 
                 $("#editRunsheetModal").modal("hide");
             });
