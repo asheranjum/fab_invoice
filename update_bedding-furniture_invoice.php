@@ -627,6 +627,16 @@ mysqli_close($conn);
             });
             return maxId;
         }
+
+        function formatDateToDDMMYYYY(dateStr) {
+            if (!dateStr) return "";
+            const parts = dateStr.split("-");
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            return dateStr; // return as-is if format is unexpected
+        }
+
         $(document).ready(function() {
 
             // $('#runsheet_no').append(<?php echo $invoiceId; ?> + '1001')
@@ -699,10 +709,9 @@ mysqli_close($conn);
                     alert("Invalid date format. Please use YYYY-MM-DD.");
                     return;
                 }
-
                 currentRunsheet = {
                     number: runsheetNumber,
-                    date: runsheetDate
+                    date: formatDateToDDMMYYYY(runsheetDate)
                 };
 
                 // Create new runsheet row
@@ -712,7 +721,7 @@ mysqli_close($conn);
                 <th colspan="4" id="runsheet-${runsheetIndex}">
                     <div style="gap: 50px; display: flex;">
                          <h5><strong>Runsheet No: <span id="runsheet_no">${runsheetNumber}</span> </strong></h5>
-                         <h5><strong>Runsheet Date: <span id="runsheet_date">${runsheetDate}</span> </strong></h5>
+                         <h5><strong>Runsheet Date: <span id="runsheet_date">${formatDateToDDMMYYYY(runsheetDate)}</span> </strong></h5>
                         <strong><button class="btn btn-danger btn-sm edit-onpage-runsheet-button" data-id="runsheet-${runsheetIndex}" data-run-number="${runsheetNumber}"data-run-date="${runsheetDate}">Edit</button></strong>
                         <strong><button class="btn btn-danger btn-sm remove-runsheet" data-id="runsheet-${runsheetIndex}">Remove</button></strong>
                     </div>
@@ -740,9 +749,10 @@ mysqli_close($conn);
 
             $(document).on("click", ".edit-onpage-runsheet-button", function() {
                 const button = $(this);
-                const runsheetId = button.data("id");
-                const runsheetNumber = button.data("run-number");
-                const runsheetDate = button.data("run-date");
+                const runsheetId = button.attr("data-id");
+                const runsheetNumber = button.attr("data-run-number");
+                const runsheetDate = button.attr("data-run-date");
+            
 
                 $("#editRunsheetNumber").val(runsheetNumber);
                 $("#editRunsheetDate").val(runsheetDate);
@@ -755,7 +765,7 @@ mysqli_close($conn);
                 const runsheetNumber = $("#editRunsheetNumber").val();
                 const runsheetDate = $("#editRunsheetDate").val();
                 const runsheetId = $("#editRunsheetId").val();
-
+            
                 // Validate inputs
                 if (!runsheetNumber || !runsheetDate) {
                     alert("Please fill in both Runsheet Number and Runsheet Date.");
@@ -767,13 +777,18 @@ mysqli_close($conn);
                     alert("Invalid date format. Please use YYYY-MM-DD.");
                     return;
                 }
-
+                const [year, month, day] = runsheetDate.split('-');
+                const formatted = `${day}-${month}-${year}`;
                 const runsheetRow = $(`#${runsheetId}`);
-                runsheetRow.find(".runsheet-no").text(runsheetNumber);
-                runsheetRow.find(".runsheet-date").text(runsheetDate);
-                runsheetRow.attr("data-run-number", runsheetNumber);
-                runsheetRow.attr("data-run-date", runsheetDate);
-
+           
+                runsheetRow.find("#runsheet_no").text(runsheetNumber);
+                runsheetRow.find("#runsheet_date").text(formatted);
+                
+                // runsheetRow.attr("data-run-number", runsheetNumber);
+                // runsheetRow.attr("data-run-date", formatted);
+                runsheetRow.find(".edit-onpage-runsheet-button")
+                                .attr("data-run-number", runsheetNumber)
+                                .attr("data-run-date", runsheetDate);
                 $("#editRunsheetModal").modal("hide");
             });
 
@@ -1358,16 +1373,17 @@ mysqli_close($conn);
             });
 
             $(document).on("click", ".edit-onpage-runsheet-button", function() {
+                const button = $(this);
+                const runsheetId = button.attr("data-id");
+                const runsheetNumber = button.attr("data-run-number");
+                const runsheetDate = button.attr("data-run-date");
+            
 
-                let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
-                currentRunsheetNumber = $(this).data("run-number");
-                currentRunsheetDate = $(this).data("run-date");
+                $("#editRunsheetNumber").val(runsheetNumber);
+                $("#editRunsheetDate").val(runsheetDate);
+                $("#editRunsheetId").val(runsheetId);
 
-                $("#runsheetNumber").val(currentRunsheetNumber);
-                $("#runsheetDate").val(currentRunsheetDate);
-
-                $("#updateOnpageRunsheet").modal("show");
-                // updateRunsheetForm
+                $("#editRunsheetModal").modal("show");
             });
             // Show Modal with existing runsheet data
 

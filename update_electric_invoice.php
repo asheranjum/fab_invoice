@@ -624,14 +624,14 @@ mysqli_close($conn);
             return maxId;
         }
 
-            function formatDateToDDMMYYYY(dateStr) {
-                if (!dateStr) return "";
-                const parts = dateStr.split("-");
-                if (parts.length === 3) {
-                    return `${parts[2]}-${parts[1]}-${parts[0]}`;
-                }
-                return dateStr; // return as-is if format is unexpected
+        function formatDateToDDMMYYYY(dateStr) {
+            if (!dateStr) return "";
+            const parts = dateStr.split("-");
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
             }
+            return dateStr; // return as-is if format is unexpected
+        }
 
         $(document).ready(function() {
 
