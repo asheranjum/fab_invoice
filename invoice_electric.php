@@ -510,19 +510,23 @@ mysqli_close($conn);
                     }
             });
 
-            $(document).on("click", ".edit-onpage-runsheet-button", function() {
-                const button = $(this);
-                const runsheetId = button.data("id");
-                const runsheetNumber = button.data("run-number");
-                const runsheetDate = button.data("run-date");
-                console.log('runsheetNumber',runsheetNumber);
-                console.log('runsheetDate',runsheetDate);
-                $("#editRunsheetNumber").val(runsheetNumber);
-                $("#editRunsheetDate").val(runsheetDate);
-                $("#editRunsheetId").val(runsheetId);
+          $(document).on("click", ".edit-onpage-runsheet-button", function () {
+    const button = $(this);
+    const runsheetId = button.attr("data-id");
+    const runsheetNumber = button.attr("data-run-number");
+    const runsheetDate = button.attr("data-run-date");
 
-                $("#editRunsheetModal").modal("show");
-            });
+    console.log('runsheetId', runsheetId);
+    console.log('runsheetNumber', runsheetNumber);
+    console.log('runsheetDate', runsheetDate);
+
+    $("#editRunsheetNumber").val(runsheetNumber);
+    $("#editRunsheetDate").val(runsheetDate);
+    $("#editRunsheetId").val(runsheetId);
+
+    $("#editRunsheetModal").modal("show");
+});
+
 
             $("#saveEditRunsheet").click(function() {
                 const runsheetNumber = $("#editRunsheetNumber").val();
@@ -542,12 +546,17 @@ mysqli_close($conn);
                     return;
                 }
                 const [year, month, day] = runsheetDate.split('-');
-                const formattedDate = `${day}-${month}-${year}`;
+                const formatted = `${day}-${month}-${year}`;
                 const runsheetRow = $(`#${runsheetId}`);
                 runsheetRow.find(".runsheet-no").text(runsheetNumber);
-                runsheetRow.find(".runsheet-date").text(formattedDate);
-                runsheetRow.attr("data-run-number", runsheetNumber);
-                runsheetRow.attr("data-run-date", runsheetDate);
+                runsheetRow.find(".runsheet-date").text(formatted);
+                // runsheetRow.attr("data-run-number", runsheetNumber);
+                // runsheetRow.attr("data-run-date", runsheetDate);
+
+                // Update the button's attributes directly
+                runsheetRow.find(".edit-onpage-runsheet-button")
+                .attr("data-run-number", runsheetNumber)
+                .attr("data-run-date", runsheetDate);
 
                 $("#editRunsheetModal").modal("hide");
             });
