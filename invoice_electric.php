@@ -387,7 +387,7 @@ mysqli_close($conn);
 
     <script>
         $(document).ready(function() {
-            const maxRows = 25;
+            const maxRows = 200;
             let currentRunsheet = null;
             let runsheetIndex = 0;
             let isDataEntered = false;
@@ -428,10 +428,10 @@ mysqli_close($conn);
             }
 
             function promptForRowCount(action) {
-                let count = prompt(`How many rows do you want to ${action}? (1-25)`, "1");
+                let count = prompt(`How many rows do you want to ${action}? (1-200)`, "1");
                 count = parseInt(count, 10);
-                if (isNaN(count) || count <= 0 || count > 25) {
-                    alert("Please enter a valid number between 1 and 25.");
+                if (isNaN(count) || count <= 0 || count > 200) {
+                    alert("Please enter a valid number between 1 and 200.");
                     return 0;
                 }
                 return count;

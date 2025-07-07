@@ -453,7 +453,7 @@ mysqli_close($conn);
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
                             ?>
 
-                                <tr id="table_exitisng" data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                <tr id="table_exitisng" class="table_exitisng"  data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
                                         <input type="text" name="customer_invoice_name[]" id="customer-inv-name" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
                                         <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
@@ -619,7 +619,7 @@ mysqli_close($conn);
     <script>
         function getMaxItemRowId() {
             let maxId = 0;
-            $(".table-container tbody tr#tabletr, .table-container tbody tr#table_exitisng").each(function() {
+            $(".table-container tbody tr#tabletr, .table-container tbody trztable_exitisng").each(function() {
                 const itemRowId = parseInt($(this).attr("data-item-row-id"));
                 if (itemRowId > maxId) {
                     maxId = itemRowId;
@@ -647,7 +647,7 @@ mysqli_close($conn);
             // Append the date to the element
             // $('#runsheet_date').append(formattedDate);
 
-            const maxRows = 25;
+            const maxRows = 200;
             let currentRunsheet = null; // Store current runsheet data
             let runsheetIndex = 0; // Unique identifier for runsheets
             //     $(".add-runsheet-button").click(function() {
@@ -799,23 +799,20 @@ mysqli_close($conn);
             }
 
 
-            function calculateRowAmount(row) {
-                let amount = 0;
+function calculateRowAmount(row) {
+    let amount = 0;
+    $(row).find(".form-checkboxes").each(function() {
+        const inputField = $(this).closest(".form-check").find("input[type='text']");
+        const value = parseFloat(inputField.val()) || 0;
+        if (this.checked) amount += value;
+    });
+    const selectField = $(row).find(".form-contro");
+    const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
+    amount += selectValue;
+    $(row).find(".amount-field").val(amount.toFixed(2));
+    calculateSubTotal();
+}
 
-                $(row).find(".form-checkboxes").each(function() {
-                    const inputField = $(this).closest(".form-check").find("input[type='text']");
-                    const value = parseFloat(inputField.val()) || 0;
-
-                    if (this.checked) amount += value;
-                });
-
-                const selectField = $(row).find(".form-contro");
-                const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
-                amount += selectValue;
-
-                $(row).find(".amount-field").val(amount.toFixed(2));
-                calculateSubTotal();
-            }
 
             function calculateSubTotal() {
                 let subTotal = 0;
@@ -833,6 +830,7 @@ mysqli_close($conn);
                 $("#total_cost").val(total.toFixed(2));
             }
 
+
             function attachRowListeners(row) {
                 $(row).find(".form-checkboxes").off("change").on("change", function() {
                     const inputField = $(this).closest(".form-check").find("input[type='text']");
@@ -848,6 +846,10 @@ mysqli_close($conn);
                         // inputField.prop("disabled", true).val("");
                     }
                     calculateRowAmount($(this).closest("tr"));
+                });
+
+                $(row).find(".form-contro").siblings("input[type='text']").off("input").on("input", function() {
+                    calculateRowAmount(row);
                 });
 
                 $(row).find(".form-check input[type='text']").off("input").on("input", function() {
@@ -921,7 +923,7 @@ mysqli_close($conn);
                     var lastRunsheetDate = lastRow.attr("data-runsheet-date") || "";
 
                     if (lastRunsheetNumber == '' && lastRunsheetDate == '') {
-                        const table_exitisng = $(".table-container #tbody tr#table_exitisng").last();
+                        const table_exitisng = $(".table-container #tbody tr.table_exitisng").last();
 
                         lastRunsheetNumber = table_exitisng.attr("data-runsheet-number") || "";
                         lastRunsheetDate = table_exitisng.attr("data-runsheet-date") || "";
@@ -1017,12 +1019,12 @@ mysqli_close($conn);
                     return;
                 }
 
-                let count = prompt("How many rows do you want to add? (1-25)", "1");
+                let count = prompt("How many rows do you want to add? (1-200)", "1");
                 count = parseInt(count, 10);
-                if (!isNaN(count) && count > 0 && count <= 25) {
+                if (!isNaN(count) && count > 0 && count <= 200) {
                     addRows(count);
                 } else {
-                    alert("Please enter a valid number between 1 and 25.");
+                    alert("Please enter a valid number between 1 and 200.");
                 }
             });
 
@@ -1041,9 +1043,15 @@ mysqli_close($conn);
             });
 
             attachRowListeners($(".table-container #tbody tr#tabletr"));
-            attachRowListeners($(".table-container #tbody tr#table_exitisng"));
+            attachRowListeners($(".table-container #tbody tr.table_exitisng"));
             $("#tax_rate, #other_cost").on("input", calculateSubTotal);
             calculateSubTotal();
+
+
+            $(".table-container tbody tr[data-item-row-id]").each(function() {
+                calculateRowAmount(this);
+                attachRowListeners(this);
+            });
         });
 
 
@@ -1098,7 +1106,7 @@ mysqli_close($conn);
             // Check if at least one valid item row is added
             let hasValidItem = false;
 
-            $(".table-container tbody tr#tabletr, .table-container tbody tr#table_exitisng").each(function() {
+            $(".table-container tbody tr#tabletr, .table-container tbody tr.table_exitisng").each(function() {
                 const row = $(this);
                 const invNo = row.find(".customer-inv-no").val().trim();
                 const invName = row.find(".customer-inv-name").val().trim();
@@ -1137,7 +1145,7 @@ mysqli_close($conn);
             let invoiceNumbers = new Set();
             let duplicateInvoiceNoFound = false;
 
-            $(".table-container tbody tr#tabletr, .table-container tbody tr#table_exitisng").each(function() {
+            $(".table-container tbody tr#tabletr, .table-container tbody tr.table_exitisng").each(function() {
                 const invNo = $(this).find(".customer-inv-no").val().trim();
 
                 if (invNo !== "") {
@@ -1183,7 +1191,7 @@ mysqli_close($conn);
             /** --------------------
              * ✅ Collect Existing Items
              * -------------------- **/
-            $(".table-container #tbody tr#table_exitisng").each(function() {
+            $(".table-container #tbody tr.table_exitisng").each(function() {
                 const row = $(this);
                 const itemRowId = row.attr("data-item-row-id");
                 if (itemRowId > maxItemRowId) {
