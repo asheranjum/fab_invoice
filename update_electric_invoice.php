@@ -524,7 +524,7 @@ mysqli_close($conn);
                                                                 <?php endforeach; ?>
                                                             </select>
 
-                                                            <input type="text" name="item[<?= $itemId ?>][pup_value]" value="<?= isset($data['items'][$selectedPUP]) ? number_format((float)$data['items'][$selectedPUP]['value'], 2) : '' ?>" class="form-control mt-1">
+                                                            <input type="text" name="item[<?= $itemId ?>][pup_value]" value="<?= isset($data['items'][$selectedPUP]) ? $data['items'][$selectedPUP]['value'] : '' ?>" class="form-control mt-1">
                                                         <?php else: ?>
 
                                                             <div class="form-check">
@@ -532,7 +532,7 @@ mysqli_close($conn);
                                                                 <input type="hidden" name="item[<?= $itemRowId ?>][item_id]" value="<?= $itemRowId ?>">
                                                                 <input id="<?= $label . '-' . $itemRowId ?>" type="checkbox" class="form-check-input form-checkboxes" name="item[<?= $itemId ?>][<?= strtolower($label) ?>]" <?= isset($data['items'][$key]) ? 'checked' : '' ?>>
                                                                 <label for="<?= $label . '-' . $itemRowId ?>" class="form-check-label"><?= htmlspecialchars($label) ?></label>
-                                                                <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1 numeric-only" value="<?= isset($data['items'][$key]) ? number_format((float)$data['items'][$key]['value'], 2) : '' ?>">
+                                                                <input type="text" name="item[<?= $itemRowId ?>][<?= strtolower($label) ?>_value]" class="form-control mt-1 numeric-only" value="<?= isset($data['items'][$key]) ? $data['items'][$key]['value'] : '' ?>">
                                                             </div>
 
                                                         <?php endif; ?>
