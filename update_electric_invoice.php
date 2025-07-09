@@ -411,7 +411,7 @@ mysqli_close($conn);
 
                         <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
 
-                            <tr id="runsheet-">
+                            <tr id="runsheet-<?= $runsheetNumber ?>">
                                 <th colspan="3" id='runsheet-data'>
                                     <div style="gap: 50px; display: flex;">
 
@@ -1416,7 +1416,7 @@ function calculateRowAmount(row) {
 
                                 // Remove the runsheet and linked items from the DOM
                                 $(`tr[data-runsheet-number='${runsheetNumber}'][data-runsheet-date='${runsheetDate}']`).remove();
-                                $(`#runsheet-data`).remove();
+                                $(`#runsheet-${runsheetNumber}`).remove();
                             } else {
                                 alert("Error: " + response.message);
                             }
