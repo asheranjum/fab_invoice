@@ -36,7 +36,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $note = $item['note_text'];
         $customInvoiceNo = $item['customer_invoice_no'];
         $customInvoiceName = $item['customer_invoice_name'];
-        $createdAt = isset($item['created_at']) ? $item['created_at'] : null;
+        $createdAt = isset($item['row_position']) ? $item['row_position'] : null;
 
         // Initialize runsheet group
         if (!isset($groupedItems[$runsheetNumber])) {
@@ -57,10 +57,10 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
             ];
         }
 
-        // Add the item with value, created_at timestamp, and item_id
+        // Add the item with value, row_position timestamp, and item_id
         $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = [
             'value' => $itemValue,
-            'created_at' => $createdAt,
+            'row_position' => $createdAt,
             'item_id' => $itemId
         ];
     }
@@ -436,9 +436,9 @@ mysqli_close($conn);
                             <?php 
                 
                                                         uasort($runsheetData['items'], function ($a, $b) {
-    // Get first created_at from each
-    $aCreated = reset($a['items'])['created_at'] ?? null;
-    $bCreated = reset($b['items'])['created_at'] ?? null;
+    // Get first row_position from each
+    $aCreated = reset($a['items'])['row_position'] ?? null;
+    $bCreated = reset($b['items'])['row_position'] ?? null;
 
     return strcmp($aCreated, $bCreated); // Ascending (earliest first)
 });
@@ -1188,7 +1188,7 @@ function calculateRowAmount(row) {
             /** --------------------
              * ✅ Collect Existing Items
              * -------------------- **/
-            $(".table-container #tbody tr.table_exitisng").each(function() {
+            $(".table-container #tbody tr.table_exitisng").each(function(index) {
                 const row = $(this);
                 const itemRowId = row.attr("data-item-row-id");
                 if (itemRowId > maxItemRowId) {
@@ -1245,7 +1245,8 @@ function calculateRowAmount(row) {
                     items: updatedItems,
                     amount: amount,
                     runsheet_number: row.attr("data-runsheet-number") || currentRunsheetNumber,
-                    runsheet_date: row.attr("data-runsheet-date") || currentRunsheetDate
+                    runsheet_date: row.attr("data-runsheet-date") || currentRunsheetDate,
+                     row_position: index + 1 // <-- NEW!
                 });
             });
 
@@ -1301,7 +1302,8 @@ function calculateRowAmount(row) {
                         items: newItem,
                         amount: amount,
                         runsheet_number: row.attr("data-runsheet-number") || 0,
-                        runsheet_date: row.attr("data-runsheet-date") || 0
+                        runsheet_date: row.attr("data-runsheet-date") || 0,
+                        row_position: index + 1 // <-- NEW!
                     });
                 }
             });

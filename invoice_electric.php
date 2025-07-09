@@ -914,7 +914,8 @@ mysqli_close($conn);
                                 item_value: inputField.val() || 0,
                                 amount: amount,
                                 runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
-                                runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+                                runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text(),
+                                row_position: index + 1
                             });
                         }
                     });
@@ -930,7 +931,8 @@ mysqli_close($conn);
                             item_value: selectField.siblings("input[type='text']").val() || 0,
                             amount: amount,
                             runsheet_number: row.attr("data-runsheet-number") || $("#runsheet_no").text(),
-                            runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text()
+                            runsheet_date: row.attr("data-runsheet-date") || $("#runsheet_date").text(),
+                            row_position: index + 1
                         });
                     }
                 });

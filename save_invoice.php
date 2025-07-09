@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
        
 
             // Insert items
-            $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no,  item_row_id, item_name, item_value, note_text, runsheet_number, runsheet_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no,  item_row_id, item_name, item_value, note_text, runsheet_number, runsheet_date,row_position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmtItem = $conn->prepare($sqlItem);
             if (!$stmtItem) {
                 throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
@@ -71,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $itemValue = mysqli_real_escape_string($conn, $item['item_value'] ?? '0');
                 $runsheetNumber = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
                 $noteText = mysqli_real_escape_string($conn, $item['note_text_value'] ?? '');
+                $row_position = intval($item['row_position'] ?? 0); // <-- get row_position
                 // $runsheetDate = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
 
                 $runsheet_date_raw = $item['runsheet_date'] ?? '';
@@ -86,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
                 $runsheetDate = mysqli_real_escape_string($conn, $runsheet_date_formatted);
 
-                $stmtItem->bind_param('issssssss', $invoiceId, $customerInvoiceName, $customerInvoiceNo,  $itemRowId, $itemName, $itemValue, $noteText, $runsheetNumber, $runsheetDate);
+                $stmtItem->bind_param('issssssssi', $invoiceId, $customerInvoiceName, $customerInvoiceNo,  $itemRowId, $itemName, $itemValue, $noteText, $runsheetNumber, $runsheetDate, $row_position);
                 $stmtItem->execute();
             }
             $stmtItem->close();
