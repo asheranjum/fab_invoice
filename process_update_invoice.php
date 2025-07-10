@@ -113,10 +113,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
             $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
             $noteText = mysqli_real_escape_string($conn, $item['note_text_value'] ?? '');
-            $row_position = intval($item['row_position'] ?? 0); // <-- get row_position
             $runsheet_number = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
             $runsheet_date_raw = $item['runsheet_date'] ?? '';
             $runsheet_date_formatted = '';
+            $row_position = intval($item['row_position'] ?? 0); // <-- get row_position
+
+             // 1) Fetch the current MAX row_position for this invoice/item_row_id
+            $sqlMax = "SELECT COALESCE(MAX(row_position), 0) AS maxpos
+                    FROM invoice_items
+                    WHERE invoice_id = ?";
+            $stmtMax = $conn->prepare($sqlMax);
+            $stmtMax->bind_param("i", $invoiceId);
+            $stmtMax->execute();
+            $maxPos = $stmtMax->get_result()->fetch_assoc()['maxpos'];
+            $stmtMax->close();
 
             if (!empty($runsheet_date_raw)) {
                 // Convert only if date is in valid format
@@ -125,10 +135,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $runsheet_date_formatted = date('d-m-Y', $timestamp);
                 }
             }
-
+            $row_position = $maxPos+1; // Use the incremented max position
             $runsheet_date = mysqli_real_escape_string($conn, $runsheet_date_formatted);
 
             foreach ($item['items'] as $entry) {
+
+             
                 $itemName = mysqli_real_escape_string($conn, $entry['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $entry['item_value'] ?? '0');
 
