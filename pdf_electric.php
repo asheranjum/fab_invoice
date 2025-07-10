@@ -37,6 +37,7 @@ $groupedItems = [];
 
 while ($row = $resultItems->fetch_assoc()) {
     $runsheetNumber = $row['runsheet_number'];
+    $runsheetKey = $row['runsheet_number'].'_'.$row['runsheet_date'];
     $runsheetDate = $row['runsheet_date'];
     $itemRowId = $row['item_row_id'];
     $itemName = $row['item_name'];
@@ -46,16 +47,17 @@ while ($row = $resultItems->fetch_assoc()) {
     $customInvoiceName = $row['customer_invoice_name'];
 
     // Initialize runsheet group
-    if (!isset($groupedItems[$runsheetNumber])) {
-        $groupedItems[$runsheetNumber] = [
+    if (!isset($groupedItems[$runsheetKey])) {
+        $groupedItems[$runsheetKey] = [
             'runsheet_date' => $runsheetDate,
+            'runsheet_number' => $runsheetNumber,
             'items' => []
         ];
     }
 
     // Initialize item row
-    if (!isset($groupedItems[$runsheetNumber]['items'][$itemRowId])) {
-        $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
+    if (!isset($groupedItems[$runsheetKey]['items'][$itemRowId])) {
+        $groupedItems[$runsheetKey]['items'][$itemRowId] = [
             'custom_invoice_no' => $customInvoiceNo,
             'customInvoiceName' => $customInvoiceName,
             'note_text' => $note,
@@ -64,7 +66,7 @@ while ($row = $resultItems->fetch_assoc()) {
     }
 
     // Add the item with its price
-    $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = $itemValue;
+    $groupedItems[$runsheetKey]['items'][$itemRowId]['items'][$itemName] = $itemValue;
 }
 
 
@@ -101,7 +103,6 @@ $sub_total = $invoice['sub_total'];
 $tax_rate = $invoice['tax_rate'];
 $other_cost = $invoice['other_cost'];
 $total_cost = $invoice['total_cost'];
-
 
 $html = '
 <!DOCTYPE html>
@@ -291,11 +292,12 @@ $html = '
 // Dynamically generating rows from groupedItems
 foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     $runsheetDate = $runsheetData['runsheet_date'];
+    $runsheetNumber1 = $runsheetData['runsheet_number'];
 
     // Add Runsheet Header
     $html .= '
     <tr class="runsheet-header">
-       <td colspan="3">RUNSHEET NO: ' . $runsheetNumber . ' | RUNSHEET DATE: ' . $runsheetDate . '</td>
+       <td colspan="3">RUNSHEET NO: ' . $runsheetNumber1 . ' | RUNSHEET DATE: ' . $runsheetDate . '</td>
     </tr>';
 
     foreach ($runsheetData['items'] as $itemRowId => $data) {

@@ -29,6 +29,7 @@ $groupedItems = [];
 if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
     foreach ($invoiceData['items'] as $item) {
         $runsheetNumber = $item['runsheet_number'];
+        $runsheetKey = $item['runsheet_number'].'_'.$item['runsheet_date'];
         $runsheetDate = $item['runsheet_date'];
         $itemRowId = $item['item_row_id'];
         $itemId = $item['id'];
@@ -40,16 +41,17 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $createdAt = isset($item['row_position']) ? $item['row_position'] : null;
 
         // Initialize runsheet group
-        if (!isset($groupedItems[$runsheetNumber])) {
-            $groupedItems[$runsheetNumber] = [
+        if (!isset($groupedItems[$runsheetKey])) {
+            $groupedItems[$runsheetKey] = [
                 'runsheet_date' => $runsheetDate,
+                'runsheet_number' => $runsheetNumber,
                 'items' => []
             ];
         }
 
         // Initialize item row
-        if (!isset($groupedItems[$runsheetNumber]['items'][$itemRowId])) {
-            $groupedItems[$runsheetNumber]['items'][$itemRowId] = [
+        if (!isset($groupedItems[$runsheetKey]['items'][$itemRowId])) {
+            $groupedItems[$runsheetKey]['items'][$itemRowId] = [
                 'custom_invoice_no' => $customInvoiceNo,
                 'custom_invoice_name' => $customInvoiceName,
                 'note_text' => $note,
@@ -59,7 +61,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         }
 
         // Add the item with value, created_at timestamp, and item_id
-        $groupedItems[$runsheetNumber]['items'][$itemRowId]['items'][$itemName] = [
+        $groupedItems[$runsheetKey]['items'][$itemRowId]['items'][$itemName] = [
             'value' => $itemValue,
             'row_position' => $createdAt,
             'item_id' => $itemId
@@ -422,16 +424,16 @@ mysqli_close($conn);
                                 <th colspan="3" id='runsheet-data'>
                                     <div style="gap: 50px; display: flex;">
 
-                                        <strong>Runsheet No: <span id="runsheet_no"><?= htmlspecialchars($runsheetNumber) ?></span> </strong>
+                                        <strong>Runsheet No: <span id="runsheet_no"><?= htmlspecialchars($runsheetData['runsheet_number']) ?></span> </strong>
                                         <strong>Runsheet Date: <span id="runsheet_date"><?= htmlspecialchars($runsheetData['runsheet_date']) ?></span> </strong>
 
                                         <button type="button" class="btn btn-warning btn-sm edit-runsheet-button"
-                                            data-run-number="<?= htmlspecialchars($runsheetNumber) ?>"
+                                            data-run-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>"
                                             data-run-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                             Edit
                                         </button>
                                         <button type="button" class="btn btn-danger btn-sm delete-runsheet-items"
-                                            data-run-number="<?= htmlspecialchars($runsheetNumber) ?>"
+                                            data-run-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>"
                                             data-run-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                             Delete
                                         </button>
@@ -453,7 +455,7 @@ mysqli_close($conn);
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
                             ?>
 
-                                <tr id="table_exitisng" class="table_exitisng"  data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetNumber) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                <tr id="table_exitisng" class="table_exitisng"  data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
                                         <input type="text" name="customer_invoice_name[]" id="customer-inv-name" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
                                         <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
@@ -637,6 +639,38 @@ mysqli_close($conn);
             return dateStr; // return as-is if format is unexpected
         }
 
+            function calculateRowAmount(row) {
+                let amount = 0;
+                $(row).find(".form-checkboxes").each(function() {
+                    const inputField = $(this).closest(".form-check").find("input[type='text']");
+                    const value = parseFloat(inputField.val()) || 0;
+                    if (this.checked) amount += value;
+                });
+                const selectField = $(row).find(".form-contro");
+                const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
+                amount += selectValue;
+                $(row).find(".amount-field").val(amount.toFixed(2));
+                calculateSubTotal();
+            }
+
+
+            function calculateSubTotal() {
+                let subTotal = 0;
+
+                $(".amount-field").each(function() {
+                    subTotal += parseFloat($(this).val()) || 0;
+                });
+
+                const taxRate = parseFloat($("#tax_rate").val()) || 0;
+                const otherCost = parseFloat($("#other_cost").val()) || 0;
+                const total = subTotal + taxRate + otherCost;
+
+                $("#sub_total").val(subTotal.toFixed(2));
+                $("#tax_rate").val(taxRate.toFixed(2));
+                $("#total_cost").val(total.toFixed(2));
+            }
+
+
         $(document).ready(function() {
 
             // $('#runsheet_no').append(<?php echo $invoiceId; ?> + '1001')
@@ -799,36 +833,7 @@ mysqli_close($conn);
             }
 
 
-function calculateRowAmount(row) {
-    let amount = 0;
-    $(row).find(".form-checkboxes").each(function() {
-        const inputField = $(this).closest(".form-check").find("input[type='text']");
-        const value = parseFloat(inputField.val()) || 0;
-        if (this.checked) amount += value;
-    });
-    const selectField = $(row).find(".form-contro");
-    const selectValue = parseFloat(selectField.siblings("input[type='text']").val()) || 0;
-    amount += selectValue;
-    $(row).find(".amount-field").val(amount.toFixed(2));
-    calculateSubTotal();
-}
 
-
-            function calculateSubTotal() {
-                let subTotal = 0;
-
-                $(".amount-field").each(function() {
-                    subTotal += parseFloat($(this).val()) || 0;
-                });
-
-                const taxRate = parseFloat($("#tax_rate").val()) || 0;
-                const otherCost = parseFloat($("#other_cost").val()) || 0;
-                const total = subTotal + taxRate + otherCost;
-
-                $("#sub_total").val(subTotal.toFixed(2));
-                $("#tax_rate").val(taxRate.toFixed(2));
-                $("#total_cost").val(total.toFixed(2));
-            }
 
 
             function attachRowListeners(row) {
@@ -1411,7 +1416,8 @@ function calculateRowAmount(row) {
                         contentType: "application/json",
                         data: JSON.stringify({
                             runsheet_number: runsheetNumber,
-                            runsheet_date: runsheetDate
+                            runsheet_date: runsheetDate,
+                            invoice_id: <?php echo $invoiceId ?? ''; ?>,
                         }),
                         success: function(response) {
                             if (response.success) {
@@ -1419,7 +1425,8 @@ function calculateRowAmount(row) {
 
                                 // Remove the runsheet and linked items from the DOM
                                 $(`tr[data-runsheet-number='${runsheetNumber}'][data-runsheet-date='${runsheetDate}']`).remove();
-                                $(`#runsheet-${runsheetNumber}`).remove();
+                                $(`#runsheet-${runsheetNumber}_${runsheetDate}`).remove();
+                                calculateSubTotal();
                             } else {
                                 alert("Error: " + response.message);
                             }
