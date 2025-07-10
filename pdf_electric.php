@@ -26,7 +26,7 @@ if (!$invoice) {
 }
 
 // Fetch Invoice Items
-$sqlItems = "SELECT * FROM invoice_items WHERE invoice_id = ?  ORDER BY created_at ASC";
+$sqlItems = "SELECT * FROM invoice_items WHERE invoice_id = ?  ORDER BY row_position ASC";
 $stmt = $conn->prepare($sqlItems);
 $stmt->bind_param("i", $invoiceId);
 $stmt->execute();
@@ -101,6 +101,7 @@ $sub_total = $invoice['sub_total'];
 $tax_rate = $invoice['tax_rate'];
 $other_cost = $invoice['other_cost'];
 $total_cost = $invoice['total_cost'];
+
 
 $html = '
 <!DOCTYPE html>
