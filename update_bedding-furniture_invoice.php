@@ -31,7 +31,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $runsheetNumber = $item['runsheet_number'];
         $runsheetKey = $item['runsheet_number'].'_'.$item['runsheet_date'];
         $runsheetDate = $item['runsheet_date'];
-        $itemRowId = $item['item_row_id'];
+        $itemRowId = $item['row_position'];
         $itemId = $item['id'];
         $itemName = $item['item_name'];
         $itemValue = $item['item_value'];
@@ -443,15 +443,9 @@ mysqli_close($conn);
                             </tr>
 
                             <?php 
-                                          uasort($runsheetData['items'], function ($a, $b) {
-    // Get first created_at from each
-    $aCreated = reset($a['items'])['row_position'] ?? null;
-    $bCreated = reset($b['items'])['row_position'] ?? null;
-
-    return strcmp($aCreated, $bCreated); // Ascending (earliest first)
-});
+                                          
                             foreach ($runsheetData['items'] as $itemRowId => $data):
-
+                                
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
                             ?>
 
@@ -1353,7 +1347,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        window.location.href = "index.php"; // Redirect after success
+                        // window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }

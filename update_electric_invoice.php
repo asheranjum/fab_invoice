@@ -438,16 +438,7 @@ mysqli_close($conn);
                             </tr>
 
                             <?php 
-                
-                                                        uasort($runsheetData['items'], function ($a, $b) {
-    // Get first row_position from each
-    $aCreated = reset($a['items'])['row_position'] ?? null;
-    $bCreated = reset($b['items'])['row_position'] ?? null;
-
-    return strcmp($aCreated, $bCreated); // Ascending (earliest first)
-});
-
- foreach ($runsheetData['items'] as $itemRowId => $data):
+                    foreach ($runsheetData['items'] as $itemRowId => $data):
 
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
                             ?>
