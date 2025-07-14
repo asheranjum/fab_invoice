@@ -1248,7 +1248,7 @@ mysqli_close($conn);
                     amount: amount,
                     runsheet_number: row.attr("data-runsheet-number") || currentRunsheetNumber,
                     runsheet_date: row.attr("data-runsheet-date") || currentRunsheetDate,
-                    row_position: index + 1 // <-- NEW!
+                    row_position: itemRowId // <-- NEW!
                 });
             });
 

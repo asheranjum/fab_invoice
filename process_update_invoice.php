@@ -65,24 +65,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             foreach ($item['items'] as $entry) {
                 $itemName = mysqli_real_escape_string($conn, $entry['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $entry['item_value'] ?? 0);
+                $itemValueInt = (int) ($entry['item_value'] ?? 0);
                 $itemId = mysqli_real_escape_string($conn, $entry['item_id'] ?? 0);
                 
               
-                if ($itemValue != 0) {
+                if ($itemValueInt != 0) {
                     $itemsToKeep[] = $itemId;
 
                     // Check if item exists, update if it does, insert if not
-                    $checkItem = "SELECT COUNT(*) AS count FROM invoice_items WHERE id=? AND invoice_id=? AND item_row_id=? AND item_name=?";
+                    $checkItem = "SELECT COUNT(*) AS count FROM invoice_items WHERE id=? AND invoice_id=? AND row_position=? AND item_name=?  AND runsheet_number=? AND runsheet_date=?";
                     $stmtCheck = $conn->prepare($checkItem);
-                    $stmtCheck->bind_param("iiis", $itemId, $invoiceId, $itemRowId, $itemName);
+                    $stmtCheck->bind_param("iiisss", $itemId, $invoiceId, $row_position, $itemName, $runsheet_number, $runsheet_date);
+                    
                     $stmtCheck->execute();
                     $result = $stmtCheck->get_result()->fetch_assoc();
-                  
+                    
                     if ($result['count'] > 0) {
                         // Update existing item
-                        $sqlUpdateItem = "UPDATE invoice_items SET customer_invoice_name=?, customer_invoice_no=?, note_text=?, item_value=?, row_position=? WHERE id=? AND invoice_id=? AND item_row_id=? AND item_name=? AND runsheet_number=? AND runsheet_date=?";
+                        $sqlUpdateItem = "UPDATE invoice_items SET customer_invoice_name=?, customer_invoice_no=?, note_text=?, item_value=?, row_position=? WHERE id=? AND invoice_id=? AND row_position=? AND item_name=? AND runsheet_number=? AND runsheet_date=?";
                         $stmtUpdate = $conn->prepare($sqlUpdateItem);
-                        $stmtUpdate->bind_param("ssssiiissss", $customerInvoiceName, $customerInvoiceNo, $noteText, $itemValue, $row_position, $itemId, $invoiceId, $itemRowId, $itemName, $runsheet_number, $runsheet_date);
+                        $stmtUpdate->bind_param("ssssiiissss", $customerInvoiceName, $customerInvoiceNo, $noteText, $itemValue, $row_position, $itemId, $invoiceId, $row_position, $itemName, $runsheet_number, $runsheet_date);
                         $stmtUpdate->execute();
                     } else {
                         // Insert new item
