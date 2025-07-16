@@ -31,7 +31,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $runsheetNumber = $item['runsheet_number'];
         $runsheetKey = $item['runsheet_number'].'_'.$item['runsheet_date'];
         $runsheetDate = $item['runsheet_date'];
-        $itemRowId = $item['item_row_id'];
+        $itemRowId = $item['row_position'];
         $itemId = $item['id'];
         $itemName = $item['item_name'];
         $itemValue = $item['item_value'];
@@ -74,7 +74,6 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
 // Close the connection
 mysqli_close($conn);
 ?>
-
 
 
 <!DOCTYPE html>
@@ -1243,7 +1242,7 @@ $(document).on("click", ".remove-runsheet", function() {
                     amount: amount,
                     runsheet_number: row.attr("data-runsheet-number") || currentRunsheetNumber,
                     runsheet_date: row.attr("data-runsheet-date") || currentRunsheetDate,
-                     row_position: index + 1 // <-- NEW!
+                    row_position: itemRowId // <-- NEW!
                 });
             });
 
