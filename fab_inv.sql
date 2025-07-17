@@ -1,121 +1,274 @@
-/*
- Navicat Premium Data Transfer
+-- phpMyAdmin SQL Dump
+-- version 5.2.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Jul 17, 2025 at 05:25 AM
+-- Server version: 10.6.21-MariaDB-cll-lve
+-- PHP Version: 8.3.22
 
- Source Server         : LocalHost
- Source Server Type    : MySQL
- Source Server Version : 80300
- Source Host           : localhost:3306
- Source Schema         : fab_inv
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
- Target Server Type    : MySQL
- Target Server Version : 80300
- File Encoding         : 65001
 
- Date: 08/04/2025 04:06:27
-*/
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+--
+-- Database: `slip`
+--
 
--- ----------------------------
--- Table structure for invoice_items
--- ----------------------------
-DROP TABLE IF EXISTS `invoice_items`;
-CREATE TABLE `invoice_items`  (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `invoice_id` int NULL DEFAULT NULL,
-  `customer_invoice_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `customer_invoice_no` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `item_row_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `item_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `item_value` decimal(10, 2) NULL DEFAULT NULL,
-  `runsheet_number` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `runsheet_date` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `invoice_id`(`invoice_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 503 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+-- --------------------------------------------------------
 
--- ----------------------------
--- Records of invoice_items
--- ----------------------------
-INSERT INTO `invoice_items` VALUES (580, 25, '655', '65', '20', 'RUB+', 444.00, '876543', '2025-04-09', '2025-04-08 02:11:19', '2025-04-08 02:11:19');
-INSERT INTO `invoice_items` VALUES (578, 25, '655', '65', '20', 'DISAS+', 5.00, '876543', '2025-04-09', '2025-04-08 02:10:45', '2025-04-08 02:10:45');
-INSERT INTO `invoice_items` VALUES (577, 25, '456', '765', '19', 'DOWNST+', 5.00, '876543', '2025-04-09', '2025-04-08 02:10:45', '2025-04-08 02:10:45');
-INSERT INTO `invoice_items` VALUES (576, 25, '968', '46546', '17', 'PREM+', 33.00, '876543', '2025-04-09', '2025-04-08 02:10:13', '2025-04-08 02:10:13');
-INSERT INTO `invoice_items` VALUES (575, 25, '968', '46546', '17', 'RUB+', 33.00, '876543', '2025-04-09', '2025-04-08 02:10:13', '2025-04-08 02:10:13');
-INSERT INTO `invoice_items` VALUES (574, 25, '968', '46546', '17', 'DELIV+', 33.00, '876543', '2025-04-09', '2025-04-08 02:10:13', '2025-04-08 02:10:13');
-INSERT INTO `invoice_items` VALUES (573, 25, 'a', '4', '4', 'DOWNST+', 44.00, '001', '2025-04-05', '2025-04-08 02:01:37', '2025-04-08 02:01:37');
-INSERT INTO `invoice_items` VALUES (572, 25, '354534', '35345', '15', 'RUB+', 44.00, '001', '2025-04-05', '2025-04-08 02:01:19', '2025-04-08 02:01:19');
-INSERT INTO `invoice_items` VALUES (571, 25, '3354', '56', '14', 'RUB+', 44.00, '001', '2025-04-05', '2025-04-08 02:01:19', '2025-04-08 02:01:19');
-INSERT INTO `invoice_items` VALUES (570, 25, 'bbb', '55', '12', 'DELIV+', 55.00, '001', '2025-04-05', '2025-04-08 02:00:47', '2025-04-08 02:00:47');
-INSERT INTO `invoice_items` VALUES (564, 25, '34545', '345435', '10', 'ASSEM+', 4.00, '001', '2025-04-05', '2025-04-08 01:25:20', '2025-04-08 01:25:20');
-INSERT INTO `invoice_items` VALUES (563, 25, '34545', '345435', '10', 'DISAS+', 4.00, '001', '2025-04-05', '2025-04-08 01:25:20', '2025-04-08 01:25:20');
-INSERT INTO `invoice_items` VALUES (562, 25, '33', '033', '8', 'RUB+', 33.00, '001', '2025-04-05', '2025-04-08 01:25:20', '2025-04-08 01:25:20');
-INSERT INTO `invoice_items` VALUES (561, 25, '33', '033', '8', 'RUB+', 33.00, '001', '2025-04-05', '2025-04-08 01:25:05', '2025-04-08 01:25:05');
-INSERT INTO `invoice_items` VALUES (560, 25, '33', '033', '8', 'ASSEM+', 33.00, '001', '2025-04-05', '2025-04-08 01:24:48', '2025-04-08 01:24:48');
-INSERT INTO `invoice_items` VALUES (538, 25, '33', '033', '8', 'DISAS+', 3.00, '001', '2025-04-05', '2025-04-08 00:49:28', '2025-04-08 00:49:28');
-INSERT INTO `invoice_items` VALUES (537, 25, 'c', '3', '6', 'DELIV+', 3.00, '001', '2025-04-05', '2025-04-08 00:48:57', '2025-04-08 00:48:57');
-INSERT INTO `invoice_items` VALUES (536, 25, 'b', '8', '5', 'DELIV+', 2.00, '001', '2025-04-05', '2025-04-08 00:48:57', '2025-04-08 00:48:57');
-INSERT INTO `invoice_items` VALUES (535, 25, 'a', '4', '4', 'DELIV+', 1.00, '001', '2025-04-05', '2025-04-08 00:48:57', '2025-04-08 00:48:57');
-INSERT INTO `invoice_items` VALUES (502, 25, 'inv1', '02', '2', 'UPST+', 22.00, '001', '2025-04-05', '2025-04-05 14:57:54', '2025-04-05 14:57:54');
-INSERT INTO `invoice_items` VALUES (500, 25, 'inv1', '02', '2', 'ASSEM+', 1.00, '001', '2025-04-05', '2025-04-05 14:57:25', '2025-04-05 14:57:25');
-INSERT INTO `invoice_items` VALUES (501, 26, 'elec-inv', '0333', '2', 'DELIV+', 11.00, '333', '2025-04-05', '2025-04-05 14:57:37', '2025-04-05 14:57:37');
-INSERT INTO `invoice_items` VALUES (499, 26, 'elec-inv', '0333', '2', 'P/UP(7)', 10.00, '333', '2025-04-05', '2025-04-05 14:44:34', '2025-04-05 14:44:34');
-INSERT INTO `invoice_items` VALUES (498, 26, 'elec-inv', '0333', '2', 'WATERCON+', 20.00, '333', '2025-04-05', '2025-04-05 14:44:34', '2025-04-05 14:44:34');
-INSERT INTO `invoice_items` VALUES (497, 26, 'elec-inv', '0333', '2', 'RELO+', 30.00, '333', '2025-04-05', '2025-04-05 14:44:34', '2025-04-05 14:44:34');
-INSERT INTO `invoice_items` VALUES (496, 25, 'inv1', '02', '2', 'DISAS+', 20.00, '001', '2025-04-05', '2025-04-05 14:41:04', '2025-04-05 14:41:04');
-INSERT INTO `invoice_items` VALUES (495, 25, 'inv1', '02', '2', 'DELIV+', 10.00, '001', '2025-04-05', '2025-04-05 14:41:04', '2025-04-05 14:41:04');
+--
+-- Table structure for table `invoices`
+--
 
--- ----------------------------
--- Table structure for invoices
--- ----------------------------
-DROP TABLE IF EXISTS `invoices`;
-CREATE TABLE `invoices`  (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `invoice_number` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `invoice_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `date` date NOT NULL,
-  `company_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `phone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `abn` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `runsheet_number` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `runsheet_date` date NULL DEFAULT NULL,
-  `sub_total` decimal(10, 2) NULL DEFAULT NULL,
-  `tax_rate` decimal(5, 2) NULL DEFAULT NULL,
-  `other_cost` decimal(10, 2) NULL DEFAULT NULL,
-  `total_cost` decimal(10, 2) NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `postal_code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+CREATE TABLE `invoices` (
+  `id` int(11) NOT NULL,
+  `invoice_number` varchar(255) NOT NULL,
+  `invoice_type` varchar(50) DEFAULT NULL,
+  `date` varchar(50) NOT NULL,
+  `company_name` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `abn` varchar(50) DEFAULT NULL,
+  `employer_company` varchar(255) DEFAULT NULL,
+  `employer_abn` varchar(50) DEFAULT NULL,
+  `employer_address` text DEFAULT NULL,
+  `employer_phone` varchar(20) DEFAULT NULL,
+  `runsheet_number` varchar(255) DEFAULT NULL,
+  `runsheet_date` date DEFAULT NULL,
+  `sub_total` decimal(10,2) DEFAULT NULL,
+  `tax_rate` decimal(5,2) DEFAULT NULL,
+  `other_cost` decimal(10,2) DEFAULT NULL,
+  `total_cost` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `postal_code` varchar(20) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Records of invoices
--- ----------------------------
-INSERT INTO `invoices` VALUES (25, '10001', '', '2025-04-05', 'Bedding INv', '11122', '111', '11', '', NULL, 30.00, 0.00, 0.00, 30.00, '2025-04-05 14:41:04', '2025-04-08 01:24:48', '');
-INSERT INTO `invoices` VALUES (26, '10002', 'Electric', '2025-04-05', 'electric inv', 'electric inv', '222', '222', '', NULL, 60.00, 0.00, 0.00, 60.00, '2025-04-05 14:44:34', '2025-04-05 14:51:00', '');
+--
+-- Dumping data for table `invoices`
+--
 
--- ----------------------------
--- Table structure for users
--- ----------------------------
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users`  (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+INSERT INTO `invoices` (`id`, `invoice_number`, `invoice_type`, `date`, `company_name`, `address`, `phone`, `abn`, `employer_company`, `employer_abn`, `employer_address`, `employer_phone`, `runsheet_number`, `runsheet_date`, `sub_total`, `tax_rate`, `other_cost`, `total_cost`, `created_at`, `updated_at`, `postal_code`) VALUES
+(87, 'FAB 232482301', 'Bedding', '26-07-2025', 'KHAN GROUP', 'Louis Street', '02423421333', '121213', '', '', '', '', '', NULL, 1500.00, 0.00, 0.00, 1500.00, '2025-07-17 12:10:43', '2025-07-17 12:10:43', ''),
+(86, 'FAB 13210001', 'Furniture', '2025-07-17', 'Testing', '223423', '02423421333', '16 413 727 274', '', '', '', '', '', NULL, 8000.00, 0.00, 0.00, 8000.00, '2025-07-17 11:18:51', '2025-07-17 12:07:35', '');
 
--- ----------------------------
--- Records of users
--- ----------------------------
-INSERT INTO `users` VALUES (1, 'Invoice.FabTransport.aU', '$2y$10$ClzlshwDF7htWBdIXxHTeOzBIXrT15Wy/jpG/9ZVwP8NM6Fl9tPNO', '2024-12-06 21:19:22');
-INSERT INTO `users` VALUES (2, 'Invoice.FabTransport.aU4444', '$2y$10$j35N4R6VKr8XcXkkJjlWQ.rhiG73M.k8n0tI47nGZxUl4GFG10O2C', '2025-04-07 01:29:10');
-INSERT INTO `users` VALUES (3, 'Invoice.FabTransport.aU4444', '$2y$10$P2dXGxbyM6nA6xUyX22fLunnnkgGNhwl4VZqQTh3Ikum7KWafwYHm', '2025-04-07 01:29:14');
+-- --------------------------------------------------------
 
-SET FOREIGN_KEY_CHECKS = 1;
+--
+-- Table structure for table `invoice_items`
+--
+
+CREATE TABLE `invoice_items` (
+  `id` int(11) NOT NULL,
+  `invoice_id` int(11) DEFAULT NULL,
+  `customer_invoice_name` varchar(255) DEFAULT NULL,
+  `customer_invoice_no` varchar(255) DEFAULT NULL,
+  `item_row_id` varchar(255) DEFAULT NULL,
+  `item_name` varchar(255) DEFAULT NULL,
+  `item_value` decimal(10,2) DEFAULT NULL,
+  `note_text` text DEFAULT NULL,
+  `runsheet_number` varchar(25) DEFAULT NULL,
+  `runsheet_date` varchar(25) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `row_position` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `invoice_items`
+--
+
+INSERT INTO `invoice_items` (`id`, `invoice_id`, `customer_invoice_name`, `customer_invoice_no`, `item_row_id`, `item_name`, `item_value`, `note_text`, `runsheet_number`, `runsheet_date`, `created_at`, `updated_at`, `row_position`) VALUES
+(1294, 87, 'Saleh', '423422', '4', 'H/DLIV+', 100.00, 'Free', '10121', '20-07-2025', '2025-07-17 12:10:43', '2025-07-17 12:10:43', 4),
+(1293, 87, 'Saleh', '423422', '4', 'UPST+', 100.00, 'Free', '10121', '20-07-2025', '2025-07-17 12:10:43', '2025-07-17 12:10:43', 4),
+(1292, 87, 'Ali', '42345230', '3', 'BRTRANS+', 100.00, '', '10121', '20-07-2025', '2025-07-17 12:10:43', '2025-07-17 12:10:43', 3),
+(1291, 87, 'Ali', '42345230', '3', 'RUB+', 100.00, '', '10121', '20-07-2025', '2025-07-17 12:10:43', '2025-07-17 12:10:43', 3),
+(1290, 87, 'Zain', '23324231', '2', 'H/DLIV+', 1000.00, 'hello', '10121', '20-07-2025', '2025-07-17 12:10:43', '2025-07-17 12:10:43', 2),
+(1289, 87, 'Zain', '23324231', '2', 'DOWNST+', 100.00, 'hello', '10121', '20-07-2025', '2025-07-17 12:10:43', '2025-07-17 12:10:43', 2),
+(1288, 86, 'Imad', '231123', '8', 'PREM+', 1000.00, 'Available', '68960008', '18-07-2025', '2025-07-17 11:20:35', '2025-07-17 12:20:52', 7),
+(1287, 86, 'Muaz', '3290923', '7', 'DISAS+', 1000.00, '', '68960008', '18-07-2025', '2025-07-17 11:20:35', '2025-07-17 11:20:35', 6),
+(1286, 86, 'Ubaid', '0882232', '6', 'PREM+', 2000.00, '', '68960008', '18-07-2025', '2025-07-17 11:20:35', '2025-07-17 11:20:35', 5),
+(1285, 86, 'Haseeb', '898001', '5', 'ASSEM+', 2000.00, '', '68960008', '18-07-2025', '2025-07-17 11:20:35', '2025-07-17 11:20:35', 4),
+(1284, 86, 'Hussain', '2312411', '3', 'UPST+', 1000.00, '', '0982321', '17-07-2025', '2025-07-17 11:18:51', '2025-07-17 11:18:51', 3),
+(1283, 86, 'Hassan', '23349009', '2', 'BRTRANS+', 1000.00, 'Free Delivery', '0982321', '17-07-2025', '2025-07-17 11:18:51', '2025-07-17 12:20:52', 2),
+(1282, 85, 'TERRA', '1689912', '15', 'DELIV+', 120.00, 'RTS. WRONG PHONE NUMBER NOT CLEARE WHERE TO DELIVER. JOB CANCELLED AS PER CHRIS', '0004', '04-07-2025', '2025-07-17 11:11:31', '2025-07-17 11:11:31', 14),
+(1281, 85, 'LEI', '1692852', '13', 'P/UP(1)', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 13),
+(1280, 85, 'LEI', '1692852', '13', 'RUB+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 13),
+(1279, 85, 'LEI', '1692852', '13', 'INST+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 13),
+(1278, 85, 'LEI', '1692852', '13', 'DELIV+', 85.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 13),
+(1277, 85, 'TR', '1693095', '12', 'DELIV+', 135.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 12),
+(1276, 85, 'KATICA', '1692904', '11', 'DELIV+', 55.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 11),
+(1275, 85, 'ILES', '1692540', '10', 'P/UP(1)', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 10),
+(1274, 85, 'ILES', '1692540', '10', 'RUB+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 10),
+(1273, 85, 'ILES', '1692540', '10', 'INST+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 10),
+(1272, 85, 'ILES', '1692540', '10', 'DELIV+', 85.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 10),
+(1271, 85, 'SAI HOME', '1687666', '9', 'RUB+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 9),
+(1270, 85, 'SAI HOME', '1687666', '9', 'INST+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 9),
+(1269, 85, 'SAI HOME', '1687666', '9', 'DELIV+', 70.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 9),
+(1268, 85, 'HAMMOND', '1687878', '8', 'RUB+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 8),
+(1267, 85, 'HAMMOND', '1687878', '8', 'INST+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 8),
+(1266, 85, 'HAMMOND', '1687878', '8', 'DELIV+', 70.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 8),
+(1265, 85, 'PITULAR', '1691075', '7', 'RUB+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 7),
+(1264, 85, 'PITULAR', '1691075', '7', 'INST+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 7),
+(1263, 85, 'PITULAR', '1691075', '7', 'DELIV+', 90.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 7),
+(1262, 85, 'GOUGH', '1691594', '6', 'DELIV+', 55.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 6),
+(1261, 85, 'TROTTER', '169 19 09', '5', 'DELIV+', 55.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 5),
+(1260, 85, 'FIELDING', '1692252', '4', 'RUB+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 4),
+(1259, 85, 'FIELDING', '1692252', '4', 'INST+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 4),
+(1258, 85, 'FIELDING', '1692252', '4', 'DELIV+', 100.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 4),
+(1257, 85, 'DUNGEY', '1692455', '3', 'RUB+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 3),
+(1256, 85, 'DUNGEY', '1692455', '3', 'INST+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 3),
+(1255, 85, 'DUNGEY', '1692455', '3', 'DELIV+', 70.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 3),
+(1254, 85, 'DAVIES', '1692469', '2', 'RUB+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 2),
+(1253, 85, 'DAVIES', '1692469', '2', 'INST+', 0.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 2),
+(1252, 85, 'DAVIES', '1692469', '2', 'DELIV+', 70.00, '', '4186901', '05-07-2025', '2025-07-17 11:08:34', '2025-07-17 11:08:34', 2),
+(1251, 84, 'Pillows', '32120090', '12', 'ASSEM+', 10000.00, '12', '10', '18-07-2025', '2025-07-17 10:55:06', '2025-07-17 10:55:36', 13),
+(1250, 84, 'Ishy', '31200122', '11', 'PREM+', 10000.00, '11', '10', '18-07-2025', '2025-07-17 10:55:06', '2025-07-17 10:55:06', 12),
+(1249, 84, 'Billle', '0000012231', '11', 'H/DLIV+', 1000.00, '10', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:55:36', 11),
+(1248, 84, 'Billle', '0000012231', '11', 'DELIV+', 1000.00, '10', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:55:36', 11),
+(1247, 84, 'Kane', '423000913', '10', 'RUB+', 10000.00, '9', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 10),
+(1246, 84, 'Shift', '322211232', '9', 'P/UP(2)', 10000.00, '8', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 9),
+(1245, 84, 'Shift', '322211232', '9', 'DISAS+', 10000.00, '8', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 9),
+(1244, 84, 'Sofa', '41211121', '8', 'VOL+', 1000.00, '7', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 8),
+(1243, 84, 'Sofa', '41211121', '8', 'DOWNST+', 1000.00, '7', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 8),
+(1242, 84, 'Charger', '80811211', '7', 'P/UP(10)', 1000.00, '6', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 7),
+(1241, 84, 'Charger', '80811211', '7', 'ASSEM+', 1000.00, '6', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 7),
+(1240, 84, 'Jack', '42389011', '6', 'P/UP(2)', 100.00, '5', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 6),
+(1239, 84, 'Jack', '42389011', '6', 'DOWNST+', 1000.00, '5', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 6),
+(1238, 84, 'Jack', '42389011', '6', 'DELIV+', 100.00, '5', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 6),
+(1237, 84, 'HandsFree', '23800092', '5', 'VOL+', 1000.00, '4', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 5),
+(1236, 84, 'HandsFree', '23800092', '5', 'UPST+', 1000.00, '4', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 5),
+(1235, 84, 'Watch', '8980011', '4', 'P/UP(1)', 0.00, '3', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 4),
+(1234, 84, 'Watch', '8980011', '4', 'RUB+', 1000.00, '3', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 4),
+(1233, 84, 'Mouse', '4243111', '3', 'PREM+', 1000.00, '2', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 3),
+(1232, 84, 'Mouse', '4243111', '3', 'DISAS+', 1000.00, '2', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 3),
+(1231, 84, 'laptop', '2234202', '2', 'VOL+', 1000.00, '1', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 2),
+(1230, 84, 'laptop', '2234202', '2', 'RUB+', 1000.00, '1', '10', '18-07-2025', '2025-07-17 10:53:30', '2025-07-17 10:53:30', 2),
+(1229, 83, 'Australia', '909232', '11', 'P/UP(2)', 0.00, '11', '909121212', '18-07-2025', '2025-07-16 15:50:19', '2025-07-16 15:50:19', 12),
+(1228, 83, 'Australia', '909232', '11', 'ASSEM+', 1000.00, '11', '909121212', '18-07-2025', '2025-07-16 15:50:19', '2025-07-16 15:50:19', 12),
+(1227, 83, 'Pakistan', '99008', '12', 'RUB+', 1000.00, '10', '909121212', '18-07-2025', '2025-07-16 15:49:13', '2025-07-16 15:50:19', 11),
+(1226, 83, 'China', '4238008', '11', 'BRTRANS+', 100.00, '9', '909121212', '18-07-2025', '2025-07-16 15:49:13', '2025-07-16 15:49:13', 10),
+(1225, 83, 'China', '4238008', '11', 'DISAS+', 100.00, '9', '909121212', '18-07-2025', '2025-07-16 15:49:13', '2025-07-16 15:49:13', 10),
+(1224, 83, 'Iraq', '343452', '10', 'UPST+', 100.00, '8', '909121212', '18-07-2025', '2025-07-16 15:49:13', '2025-07-16 15:49:13', 9),
+(1223, 83, 'iran', '9090032', '9', 'P/UP(2)', 0.00, '7', '909121212', '18-07-2025', '2025-07-16 15:49:13', '2025-07-16 15:49:13', 8),
+(1222, 83, 'iran', '9090032', '9', 'DISAS+', 100.00, '7', '909121212', '18-07-2025', '2025-07-16 15:49:13', '2025-07-16 15:49:13', 8),
+(1221, 83, 'Jehlum', '32422132', '7', 'UPST+', 1000.00, '6', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:46:07', 7),
+(1220, 83, 'Pindi', '232409001', '6', 'BRTRANS+', 1000.00, '5', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:46:07', 6),
+(1219, 83, 'Pindi', '232409001', '6', 'DISAS+', 1000.00, '5', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:46:07', 6),
+(1218, 83, 'Hyderabad', '23234000', '5', 'H/DLIV+', 1000.00, '4', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:43:09', 5),
+(1217, 83, 'Hyderabad', '23234000', '5', 'DELIV+', 1000.00, '4', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:43:09', 5),
+(1216, 83, 'Karachi', '235312', '4', 'P/UP(1)', 0.00, '3', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:43:09', 4),
+(1215, 83, 'Karachi', '235312', '4', 'PREM+', 1000.00, '3', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:43:09', 4),
+(1214, 83, 'Karachi', '235312', '4', 'RUB+', 1000.00, '3', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:43:09', 4),
+(1213, 83, 'Lahore', '2342322', '3', 'H/DLIV+', 1000.00, '2', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:43:09', 3),
+(1212, 83, 'Lahore', '2342322', '3', 'ASSEM+', 1000.00, '2', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:43:09', 3),
+(1211, 83, 'zamato', '423421', '2', 'VOL+', 100.00, '1', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:43:09', 2),
+(1210, 83, 'zamato', '423421', '2', 'RUB+', 100.00, '1', '9877728', '17-07-2025', '2025-07-16 15:43:09', '2025-07-16 15:43:09', 2),
+(1209, 82, 'Van', '3232411', '11', 'DOWNST+', 100.00, '', '80013', '19-07-2025', '2025-07-16 15:31:00', '2025-07-16 15:31:00', 16),
+(1208, 82, 'john', '661176', '16', 'VOL+', 2.00, '14', '80013', '19-07-2025', '2025-07-16 15:27:48', '2025-07-16 15:28:58', 15),
+(1207, 82, 'john', '661176', '16', 'BRTRANS+', 2.00, '14', '80013', '19-07-2025', '2025-07-16 15:27:48', '2025-07-16 15:28:58', 15),
+(1206, 82, 'deo', '66112', '15', 'DOWNST+', 2.00, '13', '80013', '19-07-2025', '2025-07-16 15:27:48', '2025-07-16 15:28:58', 14),
+(1205, 82, 'daveid', '66110', '14', 'UPST+', 2.00, '12', '80013', '19-07-2025', '2025-07-16 15:27:48', '2025-07-16 15:28:58', 13),
+(1204, 82, 'Danial', '7781', '13', 'RUB+', 2.00, '11', '80013', '19-07-2025', '2025-07-16 15:27:48', '2025-07-16 15:28:58', 12),
+(1203, 82, 'Sam', '7782', '12', 'ASSEM+', 2.00, '10', '80013', '19-07-2025', '2025-07-16 15:27:48', '2025-07-16 15:28:58', 11),
+(1202, 82, 'Devli', '7783', '11', 'DISAS+', 2.00, '9', '80013', '19-07-2025', '2025-07-16 15:27:48', '2025-07-16 15:27:48', 10),
+(1201, 82, 'Devli', '7783', '11', 'DELIV+', 2.00, '9', '80013', '19-07-2025', '2025-07-16 15:27:48', '2025-07-16 15:27:48', 10),
+(1200, 82, 'mool', '353454', '9', 'VOL+', 2.00, '8', '80012', '02-07-2025', '2025-07-16 15:25:00', '2025-07-16 15:25:00', 9),
+(1199, 82, 'kool', '3534543', '8', 'H/DLIV+', 1.00, '7', '80012', '02-07-2025', '2025-07-16 15:25:00', '2025-07-16 15:25:00', 8),
+(1198, 82, 'mool', '353454', '10', 'DOWNST+', 4.00, '8', '80012', '02-07-2025', '2025-07-16 15:24:42', '2025-07-16 15:25:00', 9),
+(1197, 82, 'kool', '3534543', '9', 'RUB+', 4.00, '7', '80012', '02-07-2025', '2025-07-16 15:24:42', '2025-07-16 15:25:00', 8),
+(1196, 82, 'jool', '2345235', '8', 'ASSEM+', 4.00, '6', '80012', '02-07-2025', '2025-07-16 15:24:42', '2025-07-16 15:24:42', 7),
+(1195, 82, 'pc', '802323', '7', 'VOL+', 4.00, '5', '80012', '02-07-2025', '2025-07-16 15:24:42', '2025-07-16 15:24:42', 6),
+(1194, 82, 'pc', '802323', '7', 'DISAS+', 4.00, '5', '80012', '02-07-2025', '2025-07-16 15:24:42', '2025-07-16 15:24:42', 6),
+(1193, 82, 'hassan', '345345', '4', 'BRTRANS+', 4.00, '3', '80012', '02-07-2025', '2025-07-16 15:23:51', '2025-07-16 15:23:51', 4),
+(1192, 82, 'copuer', '3434', '5', 'DISAS+', 3.00, '4', '80012', '02-07-2025', '2025-07-16 15:23:34', '2025-07-16 15:24:42', 5),
+(1191, 82, 'hassan', '345345', '4', 'DISAS+', 3.00, '3', '80012', '02-07-2025', '2025-07-16 15:23:34', '2025-07-16 15:23:43', 4),
+(1190, 82, 'kahn', '6032424', '3', 'UPST+', 3.00, '2', '80012', '02-07-2025', '2025-07-16 15:23:34', '2025-07-16 15:23:34', 3),
+(1189, 82, 'kahn', '6032424', '3', 'ASSEM+', 3.00, '2', '80012', '02-07-2025', '2025-07-16 15:23:34', '2025-07-16 15:23:34', 3),
+(1188, 82, 'Tufual', '90001', '2', 'BRTRANS+', 3.00, '1', '80012', '02-07-2025', '2025-07-16 15:23:34', '2025-07-16 15:23:34', 2),
+(1187, 82, 'Tufual', '90001', '2', 'DELIV+', 3.00, '1', '80012', '02-07-2025', '2025-07-16 15:23:34', '2025-07-16 15:23:34', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `created_at`) VALUES
+(1, 'Invoice.FabTransport.aU', '$2y$10$ClzlshwDF7htWBdIXxHTeOzBIXrT15Wy/jpG/9ZVwP8NM6Fl9tPNO', '2024-12-06 16:19:22'),
+(3, 'Invoice.FabTransport.aU', '$2y$10$CxD/cQymf38CotVY8.N6S.kDKnqyjNbeo0TiR51u9qxcCLCXI95Vq', '2025-06-03 10:42:30'),
+(4, 'asher', '$2y$10$JQPXvbyGdVk4A7oRlxvWweSAZBm4F84A/a4z4hbqsE.5mD6X838UW', '2025-06-03 11:06:13'),
+(5, 'asher', '$2y$10$7K39Yj6uhKDka9eaSAMGQuW1hWXzvo2fP7e1.wrcz6Pc/XzEFdrpm', '2025-06-03 11:06:18'),
+(6, 'asher', '$2y$10$rBKDw9PX3ZU619lzJC/O7OXmLhdKuADr3tXTyVB2PP2apF4mOPSqK', '2025-06-03 11:06:28'),
+(7, 'Invoice.FabTransport.aU', '$2y$10$4/7ogaLNujqFtvJr.LJm8.bU4QekH/ST6mAKpm4vZ5l2XVP05hzUC', '2025-06-20 11:12:14'),
+(8, 'Invoice.FabTransport.aU', '$2y$10$.kCn0pkv4bSPkNQFMrf2FeM42lkxx/RxxvXppb25CEvHFVWpqDDIS', '2025-06-20 11:12:16'),
+(9, 'FABINVOICES', '$2y$10$bMce4JiQ23g6xoxf6mgNCe87TFSOcDtHCNtsosSHTZ7EmyXNnWA4u', '2025-06-20 11:14:01'),
+(10, 'Invoice.FabTransport.aU', '$2y$10$2qX4kbLK2O1aAZ.YvZZAD.o7Q1E0JWGSPngh3oL9rZm8Ra8BQUA2S', '2025-06-20 11:17:29');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `invoices`
+--
+ALTER TABLE `invoices`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `invoice_items`
+--
+ALTER TABLE `invoice_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `invoice_id` (`invoice_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`) USING BTREE;
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `invoices`
+--
+ALTER TABLE `invoices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+
+--
+-- AUTO_INCREMENT for table `invoice_items`
+--
+ALTER TABLE `invoice_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1295;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

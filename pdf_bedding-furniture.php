@@ -146,7 +146,7 @@ $html = '
             border-collapse: collapse;
         }
         .details th, .details td {
-            border: 1px solid #ddd;
+            border: 1px solid #011f7f;
             padding: 10px;
             text-align: center;
             color:#263278;
@@ -157,7 +157,7 @@ $html = '
             color:#263278;
         }
         .checkbox-table {
-        width: 100%;
+            width: 100%;
             text-align: center;
             border-collapse: collapse;
         }
@@ -212,18 +212,26 @@ $html = '
         .summary td {
             text-align: right;
         }
-            .summary th, .summary td {
-            
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
+        
+        .summary th, .summary td {
+         border: 1px solid #011f7f;
+         padding: 10px;
+         text-align: left;
         }
+        
         .service-items {
           position: relative;
            top: 60%;
            left: 65%;
        }
-           .runsheet-header { background: #f89c1c; color: #011f7f; font-weight: bold; padding: 10px; }
+         
+         .runsheet-header { 
+            background: #f89c1c; 
+            color: #011f7f;
+            font-weight: bold; 
+            padding: 10px; 
+         }
+         
     </style>
 </head>
 <body>
@@ -233,7 +241,7 @@ $html = '
         <img src="assets/images/head.png"  style="width:100%" />
        
            <h2 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h2>
-           <div style=" margin-top:0px; margin-left:30px; color:white"> <span class="label">Invoice No:</span> ' . $invoiceNo . '</div>
+           <div style=" margin-top:0px; margin-left:30px; color:white"> <span class="label">Invoice Number:</span> ' . $invoiceNo . '</div>
            <div style=" margin-top:20px; "> </div>
            <h4 style=" margin-left:5px; color:#001f80" ><span class="label">INVOICE DATE:</span> ' . $date . '</h4>
            <h2 style=" margin-left:5px; color:#001f80">Bill To </h2>
@@ -308,7 +316,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
        
         $html .= '
         <tr >
-            <td style="text-align: left; width: 20.5%; padding:0px;"><table style="width:100%; border-collapse: collapse; border: 0px solid black; " >  <tr style="border: 0px solid black;  "> <td style="text-align:left;"> Name: ' . htmlspecialchars($customInvoiceName2). '  </td> </tr>  <tr style=""> <td style="text-align:left; border:0px solid black;  border-top:1px solid #ddd;;">  No: '.$customInvoiceNo .' </td> </tr> </table></td>
+            <td style="text-align: left; width: 20.5%; padding:0px;"><table style="width:100%; border-collapse: collapse; border: 0px solid black; " >  <tr style="border: 0px solid black;  "> <td style="text-align:left;"> Customer Name: ' . htmlspecialchars($customInvoiceName2). '  </td> </tr>  <tr style=""> <td style="text-align:left; border:0px solid black;  border-top:1px solid #6868c0;">  Invoice Number: '.$customInvoiceNo .' </td> </tr> </table></td>
             <td style="padding:0px; width: 73%;">
                 <table class="checkbox-table">
                     <tr>';
@@ -348,7 +356,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         if (!empty(trim($note_text))) {
         $html .= '
-        <td style="text-align:left; font-size:12px; border-left:1px solid #ddd; padding: 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
+        <td style="text-align:left; font-size:12px; border-left:1px solid #6868c0; padding: 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
         }
 
         $html .= '
@@ -363,7 +371,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
         }
         
        if (!empty(trim($note_text))) {
-    $html .= '<td style="text-align:left; font-size:12px; border-left:1px solid #ddd; padding: 0px;"></td>';
+    $html .= '<td style="text-align:left; font-size:12px; border-left:1px solid #6868c0; padding: 0px;"></td>';
 }
 
         $html .= '
@@ -408,18 +416,19 @@ $html .= '
      $html .= '
             <div class="footer">
                 <div class="footer-text">
-                    <p>Make all checks payable to "FAB TRANSPORT SERVICES PTY LTD"
-                            If you have any questions concerning about this invoice,
-                            use the following contact information</p>
+                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD"
+                            If You Have Any Question Concerning About This Invoice,
+                            Use The Following Contact Information.</p>
                         <ul>
                             <li>Contact Name: SAM</li>
                             <li>Phone: 0403 729 966</li>
                             <li>Email: info@fabtransport.com.au</li>
                         </ul>
-                        <h4>Thank You For Your Business!</h4>
+                        <h4 style="margin-left:50px">Thank You For Your Business!</h4>
                 </div>
             </div>
         </div>
+        
     </body>
     </html>
     ';
