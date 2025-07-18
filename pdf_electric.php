@@ -39,7 +39,7 @@ while ($row = $resultItems->fetch_assoc()) {
     $runsheetNumber = $row['runsheet_number'];
     $runsheetKey = $row['runsheet_number'].'_'.$row['runsheet_date'];
     $runsheetDate = $row['runsheet_date'];
-    $itemRowId = $row['item_row_id'];
+    $itemRowId = $row['row_position'];
     $itemName = $row['item_name'];
     $itemValue = $row['item_value'];
     $note = $row['note_text'];
@@ -157,7 +157,7 @@ $html = '
             color:#263278;
         }
         .checkbox-table {
-        width: 100%;
+            width: 100%;
             text-align: center;
             border-collapse: collapse;
         }
@@ -224,13 +224,14 @@ $html = '
            top: 60%;
            left: 65%;
        }
-           .runsheet-header {
-             background: #f89c1c; 
-             color: #011f7f; 
-             font-weight: bold; 
-             padding: 10px; 
-           }
-           
+         
+         .runsheet-header { 
+            background: #f89c1c; 
+            color: #011f7f;
+            font-weight: bold; 
+            padding: 10px; 
+         }
+         
     </style>
 </head>
 <body>
@@ -266,20 +267,20 @@ $html = '
                 <td style="text-align:right"><span class="label">ADDRESS: '.$employer_address.'</span></td>
             </tr>
             <tr>
-                <td><span class="label">Invoice Type:</span>' . $invoice_type . '</td>
+                <td><span class="label">INVOICE TYPE:</span>' . $invoice_type . '</td>
             </tr>
 
              <tr>
-              <td><span class="label"></span> </td>
-                 <td style="text-align:right">
-                  <div class="service-items">
-                  <h3>For:</h3>
-                 <ol>
-                 <li>ASSEMBLY</li>
-                 <li>DELIVERY</li>
-                 <li>REPAIRS</li>
-                </ol>
-             </div>
+              <td> </td>
+                 <td style="text-align:right;">
+                  <div style="">
+                    <h4 style="font-size:16px; " >For:</h4>
+                    <ol>
+                    <li>ASSEMBLY</li>
+                    <li>DELIVERY</li>
+                    <li>REPAIRS</li>
+                    </ol>
+                </div>
           </td>
         </tr>
         </table>
@@ -315,8 +316,8 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
        
         $html .= '
         <tr >
-            <td style="text-align: left; width: 20.5%; padding:0px;"><table style="width:100%; border-collapse: collapse; border: 0px solid black; " >  <tr style="border: 0px solid black;  "> <td style="text-align:left;"> Customer Name: ' . htmlspecialchars($customInvoiceName2). '  </td> </tr>  <tr style=""> <td style="text-align:left; border:0px solid black;  border-top:1px solid #6868c0;"> Invoice Number: '.$customInvoiceNo .' </td> </tr> </table></td>
-            <td style="padding:0px; width: 73%;">
+            <td style="  text-align: left; width: 20.5%; padding:0px;"><table style=" width:100%; border-collapse: collapse; border: 0px solid black; " >  <tr style="border: 0px solid black;  "> <td style="text-align:left; padding:5px; "> Customer Name: ' . htmlspecialchars($customInvoiceName2). '  </td> </tr>  <tr style=""> <td style="text-align:left; border:0px solid black;  border-top:1px solid #011f7f;  padding:5px; ">  Invoice Number: '.$customInvoiceNo .' </td> </tr> </table></td>
+            <td style="padding:0px; width: 73%; ">
                 <table class="checkbox-table">
                     <tr>';
 
@@ -355,7 +356,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         if (!empty(trim($note_text))) {
         $html .= '
-        <td style="text-align:left; font-size:12px; border-left:1px solid #6868c0; padding: 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
+        <td style=" text-align:left; font-size:12px; border-left:1px solid #011f7f; padding: 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
         }
 
         $html .= '
@@ -370,7 +371,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
         }
         
        if (!empty(trim($note_text))) {
-    $html .= '<td style="text-align:left; font-size:12px; border-left:1px solid #6868c0; padding: 0px;"></td>';
+    $html .= '<td style=" text-align:left; font-size:12px; border-left:1px solid #011f7f; padding: 0px;"></td>';
 }
 
         $html .= '
@@ -415,7 +416,7 @@ $html .= '
      $html .= '
             <div class="footer">
                 <div class="footer-text">
-                      <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD"
+                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD"
                             If You Have Any Question Concerning About This Invoice,
                             Use The Following Contact Information.</p>
                         <ul>
@@ -431,6 +432,8 @@ $html .= '
     </body>
     </html>
     ';
+
+    //   echo $html;
 
 try {
     // Estimate content height based on item count
