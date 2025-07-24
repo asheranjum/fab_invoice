@@ -399,7 +399,7 @@ $html .= '
                     </tr>
 
                     <tr>
-                        <th style="background:#f89c1c;  color:#011f7f;"> Total Cost </td>
+                        <th style="background:#f89c1c;  color:#011f7f;"> Total Including GST </td>
                         <td style="color:#011f7f; font-weight:bold;">$' . $total_cost . '</td>
                     </tr>
                 </table>
