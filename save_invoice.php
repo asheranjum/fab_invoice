@@ -44,27 +44,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $items = $input['items'] ?? [];
 
         // 1. Get the current max customer_invoice_id in the table
-$sql = "SELECT MAX(customer_invoice_id) AS max_id FROM invoice_items";
-$result = $conn->query($sql);
-$row = $result->fetch_assoc();
-$lastCustomerInvoiceId = intval($row['max_id']);
-$startingCustomerInvoiceId = 1001;
+        $sql = "SELECT MAX(customer_invoice_id) AS max_id FROM invoice_items";
+        $result = $conn->query($sql);
+        $row = $result->fetch_assoc();
+        $lastCustomerInvoiceId = intval($row['max_id']);
+        $startingCustomerInvoiceId = 1001;
 
-// 2. Prepare a mapping
-$customerInvNoToId = [];
-$currentCustomerInvoiceId = ($lastCustomerInvoiceId >= $startingCustomerInvoiceId)
-    ? $lastCustomerInvoiceId + 1
-    : $startingCustomerInvoiceId;
+        // 2. Prepare a mapping
+        $customerInvNoToId = [];
+        $currentCustomerInvoiceId = ($lastCustomerInvoiceId >= $startingCustomerInvoiceId)
+            ? $lastCustomerInvoiceId + 1
+            : $startingCustomerInvoiceId;
 
-// 3. Inject customer_invoice_id into $items
-foreach ($items as $index => $item) {
-    $row_position = $item['row_position'];
-    if (!isset($customerInvNoToId[$row_position])) {
-        // Assign new id for each new customer_inv_no
-        $customerInvNoToId[$row_position] = $currentCustomerInvoiceId++;
-    }
-    $items[$index]['customer_inv_id'] = $customerInvNoToId[$row_position];
-}
+        // 3. Inject customer_invoice_id into $items
+        foreach ($items as $index => $item) {
+            $row_position = $item['row_position'];
+            if (!isset($customerInvNoToId[$row_position])) {
+                // Assign new id for each new customer_inv_no
+                $customerInvNoToId[$row_position] = $currentCustomerInvoiceId++;
+            }
+            $items[$index]['customer_inv_id'] = $customerInvNoToId[$row_position];
+        }
+
+        
         $conn->begin_transaction();
 
         try {

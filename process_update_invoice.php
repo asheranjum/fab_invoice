@@ -32,6 +32,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $unchecked_items = $input['unchecked_items'] ?? []; // Unchecked items to delete
 
     }
+
+    
+        // --- 1. Get the current max customer_invoice_id in the table ---
+        $sql = "SELECT MAX(customer_invoice_id) AS max_id FROM invoice_items";
+        $result = $conn->query($sql);
+        $row = $result->fetch_assoc();
+        $lastCustomerInvoiceId = intval($row['max_id']);
+        $startingCustomerInvoiceId = 1001;
+        $currentCustomerInvoiceId = ($lastCustomerInvoiceId >= $startingCustomerInvoiceId)
+            ? $lastCustomerInvoiceId + 1
+            : $startingCustomerInvoiceId;
+
+        // --- 2. Prepare a mapping for row_position for NEW items ---
+        $rowToCustomerId = [];
+
+        // Existing items: fetch customer_invoice_id from DB per item (ensure correct grouping)
+        // New items: assign customer_invoice_id per row_position (grouped)
    
 
     // Update invoice details
@@ -60,6 +77,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $runsheet_date = mysqli_real_escape_string($conn, $runsheet_date_formatted);
 
+            // Get customer_invoice_id for this row (from DB)
+            $sqlGetCustId = "SELECT customer_invoice_id FROM invoice_items WHERE invoice_id=? AND row_position=? LIMIT 1";
+            $stmtCustId = $conn->prepare($sqlGetCustId);
+            $stmtCustId->bind_param("ii", $invoiceId, $row_position);
+            $stmtCustId->execute();
+            $custIdRow = $stmtCustId->get_result()->fetch_assoc();
+            $stmtCustId->close();
+
+            $customer_invoice_id = $custIdRow ? intval($custIdRow['customer_invoice_id']) : null;
+
             // Track items to keep
             $itemsToKeep = [];
             foreach ($item['items'] as $entry) {
@@ -87,10 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmtUpdate->bind_param("ssssiiissss", $customerInvoiceName, $customerInvoiceNo, $noteText, $itemValue, $row_position, $itemId, $invoiceId, $row_position, $itemName, $runsheet_number, $runsheet_date);
                         $stmtUpdate->execute();
                     } else {
+
+                        // Insert new item (use fetched customer_invoice_id or assign new if missing)
+                            if (!$customer_invoice_id) {
+                                $customer_invoice_id = $currentCustomerInvoiceId++;
+                            }
                         // Insert new item
-                        $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, note_text, item_row_id, item_name, item_value, runsheet_number, runsheet_date,row_position) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?)";
+                        $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_id, customer_invoice_name, customer_invoice_no, note_text, item_row_id, item_name, item_value, runsheet_number, runsheet_date,row_position) VALUES (?, ? ,?, ?, ?,?, ?, ?, ?, ?, ?)";
                         $stmtInsert = $conn->prepare($sqlInsertItem);
-                        $stmtInsert->bind_param("issssssssi", $invoiceId, $customerInvoiceName, $customerInvoiceNo, $noteText, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date, $row_position);
+                        $stmtInsert->bind_param("iissssssssi", $invoiceId, $customer_invoice_id, $customerInvoiceName, $customerInvoiceNo, $noteText, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date, $row_position);
                         $stmtInsert->execute();
 
                         // Get the last inserted ID and add to itemsToKeep
@@ -120,6 +152,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $runsheet_date_formatted = '';
             $row_position = intval($item['row_position'] ?? 0); // <-- get row_position
 
+            if (!isset($rowToCustomerId[$row_position])) {
+                $rowToCustomerId[$row_position] = $currentCustomerInvoiceId++;
+            }
+            $customer_invoice_id = $rowToCustomerId[$row_position];
+
              // 1) Fetch the current MAX row_position for this invoice/item_row_id
             $sqlMax = "SELECT COALESCE(MAX(row_position), 0) AS maxpos
                     FROM invoice_items
@@ -146,9 +183,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $itemName = mysqli_real_escape_string($conn, $entry['item_name'] ?? '');
                 $itemValue = mysqli_real_escape_string($conn, $entry['item_value'] ?? '0');
 
-                $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no, note_text, item_row_id, item_name, item_value, runsheet_number, runsheet_date, row_position) VALUES (?, ?, ?, ?, ?,?,?,?,?,?)";
+                $sqlInsertItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_id, customer_invoice_name, customer_invoice_no, note_text, item_row_id, item_name, item_value, runsheet_number, runsheet_date, row_position) VALUES (?,?, ?, ?, ?, ?,?,?,?,?,?)";
                 $stmtInsert = $conn->prepare($sqlInsertItem);
-                $stmtInsert->bind_param("issssssssi", $invoiceId, $customerInvoiceName, $customerInvoiceNo, $noteText, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date, $row_position);
+                $stmtInsert->bind_param("iissssssssi", $invoiceId, $customer_invoice_id , $customerInvoiceName, $customerInvoiceNo, $noteText, $itemRowId, $itemName, $itemValue, $runsheet_number, $runsheet_date, $row_position);
                 $stmtInsert->execute();
             }
         }
