@@ -873,10 +873,10 @@ mysqli_close($conn);
                     }
                 });
 
-                if (duplicateInvoiceNoFound) {
-                    alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
-                    isValid = false;
-                }
+                // if (duplicateInvoiceNoFound) {
+                //     alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
+                //     isValid = false;
+                // }
 
                 if (!isValid) return;
 
@@ -958,7 +958,7 @@ mysqli_close($conn);
                     .then((data) => {
                         if (data.success) {
                             alert(data.message);
-                            window.location.href = "index.php"; // Redirect after success
+                            // window.location.href = "index.php"; // Redirect after success
                         } else {
                             alert("Error: " + data.message);
                         }

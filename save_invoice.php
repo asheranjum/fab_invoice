@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        
         $inv_date = mysqli_real_escape_string($conn, $inv_date_formatted);
 
         $inv_invoice = mysqli_real_escape_string($conn, $input['invoice'] ?? '');
@@ -42,6 +43,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $total_cost = mysqli_real_escape_string($conn, $input['total_cost'] ?? '0');
         $items = $input['items'] ?? [];
 
+        // 1. Get the current max customer_invoice_id in the table
+$sql = "SELECT MAX(customer_invoice_id) AS max_id FROM invoice_items";
+$result = $conn->query($sql);
+$row = $result->fetch_assoc();
+$lastCustomerInvoiceId = intval($row['max_id']);
+$startingCustomerInvoiceId = 1001;
+
+// 2. Prepare a mapping
+$customerInvNoToId = [];
+$currentCustomerInvoiceId = ($lastCustomerInvoiceId >= $startingCustomerInvoiceId)
+    ? $lastCustomerInvoiceId + 1
+    : $startingCustomerInvoiceId;
+
+// 3. Inject customer_invoice_id into $items
+foreach ($items as $index => $item) {
+    $row_position = $item['row_position'];
+    if (!isset($customerInvNoToId[$row_position])) {
+        // Assign new id for each new customer_inv_no
+        $customerInvNoToId[$row_position] = $currentCustomerInvoiceId++;
+    }
+    $items[$index]['customer_inv_id'] = $customerInvNoToId[$row_position];
+}
         $conn->begin_transaction();
 
         try {
@@ -56,14 +79,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $invoiceId = $stmt->insert_id;
             $stmt->close();
        
-
+           
             // Insert items
-            $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_name, customer_invoice_no,  item_row_id, item_name, item_value, note_text, runsheet_number, runsheet_date,row_position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sqlItem = "INSERT INTO invoice_items (invoice_id, customer_invoice_id ,customer_invoice_name, customer_invoice_no,  item_row_id, item_name, item_value, note_text, runsheet_number, runsheet_date,row_position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmtItem = $conn->prepare($sqlItem);
             if (!$stmtItem) {
                 throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
             }
             foreach ($items as $item) {
+
+                   // Get the current max customer_invoice_id
+
+
+                $newCustomerInvoiceId = mysqli_real_escape_string($conn, $item['customer_inv_id'] ?? '');
                 $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
                 $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
                 $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
@@ -87,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
                 $runsheetDate = mysqli_real_escape_string($conn, $runsheet_date_formatted);
 
-                $stmtItem->bind_param('issssssssi', $invoiceId, $customerInvoiceName, $customerInvoiceNo,  $itemRowId, $itemName, $itemValue, $noteText, $runsheetNumber, $runsheetDate, $row_position);
+                $stmtItem->bind_param('isssssssssi', $invoiceId, $newCustomerInvoiceId , $customerInvoiceName, $customerInvoiceNo,  $itemRowId, $itemName, $itemValue, $noteText, $runsheetNumber, $runsheetDate, $row_position);
                 $stmtItem->execute();
             }
             $stmtItem->close();

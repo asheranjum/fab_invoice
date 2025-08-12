@@ -36,6 +36,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $itemName = $item['item_name'];
         $itemValue = $item['item_value'];
         $note = $item['note_text'];
+        $customInvoiceId = $item['customer_invoice_id'];
         $customInvoiceNo = $item['customer_invoice_no'];
         $customInvoiceName = $item['customer_invoice_name'];
         $createdAt = isset($item['row_position']) ? $item['row_position'] : null;
@@ -52,6 +53,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         // Initialize item row
         if (!isset($groupedItems[$runsheetKey]['items'][$itemRowId])) {
             $groupedItems[$runsheetKey]['items'][$itemRowId] = [
+                'custom_invoice_id' => $customInvoiceId,
                 'custom_invoice_no' => $customInvoiceNo,
                 'custom_invoice_name' => $customInvoiceName,
                 'note_text' => $note,
@@ -449,7 +451,7 @@ mysqli_close($conn);
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
                             ?>
 
-                                <tr id="table_exitisng" class="table_exitisng"  data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                <tr id="table_exitisng" class="table_exitisng"  data-item-customer-id="<?= $data['custom_invoice_id'] ?>"  data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
                                         <input type="text" name="customer_invoice_name[]" id="customer-inv-name" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
                                         <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
@@ -552,6 +554,11 @@ mysqli_close($conn);
 
                                     <td>
                                         <input type="text" class="form-control amount-field" name="amount[]" value="<?= number_format($totalValue, 2) ?>" readonly>
+                                   <button type="button" class="btn btn-danger btn-sm delete-row-items"
+                                            data-customer-id="<?= htmlspecialchars($data['custom_invoice_id'] ?? '') ?>"
+                                            >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -1156,10 +1163,10 @@ mysqli_close($conn);
                 }
             });
 
-            if (duplicateInvoiceNoFound) {
-                alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
-                isValid = false;
-            }
+            // if (duplicateInvoiceNoFound) {
+            //     alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
+            //     isValid = false;
+            // }
 
             if (!isValid) return;
             // $('select[name="invoice_type"]').val("<?= $invoiceData['invoice_type'] ?? '' ?>");
@@ -1347,7 +1354,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        window.location.href = "index.php"; // Redirect after success
+                        // window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }
@@ -1420,6 +1427,36 @@ mysqli_close($conn);
                                 // Remove the runsheet and linked items from the DOM
                                 $(`tr[data-runsheet-number='${runsheetNumber}'][data-runsheet-date='${runsheetDate}']`).remove();
                                 $(`#runsheet-${runsheetNumber}_${runsheetDate}`).remove();
+                                calculateSubTotal();
+                            } else {
+                                alert("Error: " + response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error:", error);
+                            alert("An error occurred while deleting the runsheet. Please try again.");
+                        }
+                    });
+                }
+            });
+            $(document).on("click", ".delete-row-items", function() {
+                const button = $(this);
+                const customerId = button.data("customer-id");
+                if (confirm('Are you sure you want to delete this row of items?')) {
+                    $.ajax({
+                        url: "delete_row_items.php",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            customer_invoice_id: customerId,
+                            invoice_id: <?php echo $invoiceId ?? ''; ?>,
+                        }),
+                        success: function(response) {
+                            if (response.success) {
+                                alert("Row items deleted successfully!");
+
+                                // Remove the runsheet and linked items from the DOM
+                              $(`tr[data-item-customer-id='${customerId}']`).remove();
                                 calculateSubTotal();
                             } else {
                                 alert("Error: " + response.message);
