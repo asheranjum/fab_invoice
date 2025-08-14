@@ -1466,7 +1466,7 @@ mysqli_close($conn);
                             console.error("Error:", error);
                             alert("An error occurred while deleting the runsheet. Please try again.");
                         }
-                    });
+                    }); 
                 }
             });
 
