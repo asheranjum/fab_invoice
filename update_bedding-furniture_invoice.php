@@ -326,7 +326,7 @@ mysqli_close($conn);
                             </th>
                         </tr>
 
-                        <tr id="tabletr" class="tabletr" style="display: none;">
+                        <tr id="tabletr" class="tabletr" style="display:none;">
 
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
@@ -438,6 +438,11 @@ mysqli_close($conn);
                                             data-run-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>"
                                             data-run-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                             Delete
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-sm add-row-under-runsheet"
+                                                data-runsheet-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>"
+                                                data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                            Add Row
                                         </button>
                                     </div>
                                 </th>
@@ -905,93 +910,111 @@ mysqli_close($conn);
             }
 
 
+            
 
 
-            function addRows(count) {
-                const rows = $(".table-container #tbody tr#tabletr");
-                let currentRows = rows.length;
-                let newRows = Math.min(count, maxRows - currentRows);
+function addRows(count, runsheetNumber = null, runsheetDate = null) {
+    const rows = $(".table-container #tbody tr#tabletr");
+    let currentRows = rows.length;
+    let newRows = Math.min(count, maxRows - currentRows);
 
-                if (newRows <= 0) {
-                    alert("You cannot add more than " + maxRows + " rows.");
-                    return;
-                }
-                let maxItemRowId = getMaxItemRowId();
-                for (let i = 0; i < newRows; i++) {
-                    const lastRow = $(".table-container #tbody tr#tabletr").last();
-                    console.log('lastRow', lastRow);
-                    if (lastRow.length === 0) {
-                        alert("No existing rows found to clone.");
-                        return;
-                    }
+    if (newRows <= 0) {
+        alert("You cannot add more than " + maxRows + " rows.");
+        return;
+    }
+    let maxItemRowId = getMaxItemRowId();
 
-                    var lastRunsheetNumber = lastRow.attr("data-runsheet-number") || "";
-                    var lastRunsheetDate = lastRow.attr("data-runsheet-date") || "";
+    // Find insertion point if specific runsheet is selected
+    let $insertionPoint = null;
+    if (runsheetNumber && runsheetDate) {
+        $insertionPoint = $(
+            `tr[data-runsheet-number='${runsheetNumber}'][data-runsheet-date='${runsheetDate}']`
+        ).last();
+        if ($insertionPoint.length === 0) {
+            $insertionPoint = $(
+                `tr[id^='runsheet-']`
+            ).filter(function() {
+                return (
+                    $(this).find("#runsheet_no").text() === runsheetNumber &&
+                    $(this).find("#runsheet_date").text() === runsheetDate
+                );
+            }).first();
+        }
+    }
 
-                    if (lastRunsheetNumber == '' && lastRunsheetDate == '') {
-                        const table_exitisng = $(".table-container #tbody tr.table_exitisng").last();
+    // If not specified, try to use the last runsheet header in DOM
+    if (!runsheetNumber || !runsheetDate) {
+        const $lastRunsheet = $(".table-container tbody tr[id^='runsheet-']").last();
+        if ($lastRunsheet.length) {
+            runsheetNumber = $lastRunsheet.find("#runsheet_no").text().trim();
+            runsheetDate = $lastRunsheet.find("#runsheet_date").text().trim();
+        }
+    }
 
-                        lastRunsheetNumber = table_exitisng.attr("data-runsheet-number") || "";
-                        lastRunsheetDate = table_exitisng.attr("data-runsheet-date") || "";
-                    }
+    // If still not found, warn user
+    if (!runsheetNumber || !runsheetDate) {
+        alert("Please add at least one Runsheet before adding rows.");
+        return;
+    }
 
+    for (let i = 0; i < newRows; i++) {
+        const $newRow = $("#tabletr").clone().removeAttr("id").removeAttr("style").addClass("tabletr");
+        const rowIndex = $(".table-container #tbody tr.tabletr").length;
 
-                    const newRow = lastRow.clone();
-                    newRow.removeAttr("style");
-                    // maxItemRowId++;  
-                    const rowIndex = $(".table-container #tbody tr#tabletr").length;
-                    // newRow.attr("data-item-row-id", maxItemRowId);
-                    newRow.find("input, select").each(function() {
-                        if (this.type === "checkbox") {
-                            this.checked = false;
-                        } else if (this.type === "text" || this.type === "number") {
-                            $(this).val(""); // Clear text or number inputs
-                            $(this).prop("disabled", false); // Enable text inputs
-                        }
-                    });
-
-                    newRow.find(".form-contro").prop("disabled", false);
-
-                    newRow.find(".form-check").each(function() {
-                        const labelText = $(this).find("label").text().trim();
-                        const baseName = labelText.toLowerCase();
-                        const uniqueId = `${baseName}-${rowIndex}`;
-
-                        const checkbox = $(this).find("input[type='checkbox']");
-                        checkbox.attr({
-                            id: uniqueId,
-                            name: `item[${rowIndex}][${baseName}]`
-                        });
-
-                        $(this).find("label").attr("for", uniqueId);
-
-                        const inputField = $(this).find("input[type='text']");
-                        inputField.attr("name", `item[${rowIndex}][${baseName}_value]`);
-                    });
-
-                    newRow.find(".form-contro").attr("name", `item[${rowIndex}][pup]`);
-                    newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
-                    newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
-
-                    // // ✅ Set Runsheet Data for the New Row
-                    // newRow.attr("data-runsheet-number", lastRunsheetNumber);
-                    // newRow.attr("data-runsheet-date", lastRunsheetDate);
-
-                    // ✅ Use latest runsheet data if available
-                    if (currentRunsheet) {
-                        newRow.attr("data-runsheet-number", currentRunsheet.number);
-                        newRow.attr("data-runsheet-date", currentRunsheet.date);
-                    } else {
-                        // Default to empty if no runsheet has been added
-                        newRow.attr("data-runsheet-number", lastRunsheetNumber);
-                        newRow.attr("data-runsheet-date", lastRunsheetDate);
-                    }
-
-
-                    $(".table-container #tbody").append(newRow);
-                    attachRowListeners(newRow);
-                }
+        // Clear and reset inputs
+        $newRow.find("input, select").each(function() {
+            if (this.type === "checkbox") {
+                this.checked = false;
+            } else if (this.type === "text" || this.type === "number") {
+                $(this).val("");
+                $(this).prop("disabled", false);
             }
+        });
+        $newRow.find(".form-contro").prop("disabled", false);
+
+        $newRow.find(".form-check").each(function() {
+            const labelText = $(this).find("label").text().trim();
+            const baseName = labelText.toLowerCase();
+            const uniqueId = `${baseName}-${rowIndex}`;
+
+            const checkbox = $(this).find("input[type='checkbox']");
+            checkbox.attr({
+                id: uniqueId,
+                name: `item[${rowIndex}][${baseName}]`
+            });
+
+            $(this).find("label").attr("for", uniqueId);
+
+            const inputField = $(this).find("input[type='text']");
+            inputField.attr("name", `item[${rowIndex}][${baseName}_value]`);
+        });
+
+        $newRow.find(".form-contro").attr("name", `item[${rowIndex}][pup]`);
+        $newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
+        $newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
+
+        // Set runsheet data for the new row
+        $newRow.attr("data-runsheet-number", runsheetNumber);
+        $newRow.attr("data-runsheet-date", runsheetDate);
+
+        // Insert in the correct place
+        if ($insertionPoint && $insertionPoint.length > 0) {
+            $insertionPoint.after($newRow);
+        } else {
+            // Find last row of this runsheet, otherwise append to end
+            let $lastRowOfRun = $(
+                `tr[data-runsheet-number='${runsheetNumber}'][data-runsheet-date='${runsheetDate}']`
+            ).last();
+            if ($lastRowOfRun.length > 0) {
+                $lastRowOfRun.after($newRow);
+            } else {
+                $(".table-container #tbody").append($newRow);
+            }
+        }
+
+        attachRowListeners($newRow);
+    }
+}
 
             function removeRows(count) {
                 const rows = $(".table-container #tbody tr#tabletr");
@@ -1015,6 +1038,12 @@ mysqli_close($conn);
 
             $(".add-button").click(function() {
                 addRows(1);
+            });
+
+            $(document).on('click', '.add-row-under-runsheet', function() {
+                const runsheetNumber = $(this).data("runsheet-number");
+                const runsheetDate = $(this).data("runsheet-date");
+                addRows(1, runsheetNumber, runsheetDate);
             });
 
             $(".add-bulk-button").click(function() {
@@ -1112,7 +1141,7 @@ mysqli_close($conn);
             // Check if at least one valid item row is added
             let hasValidItem = false;
 
-            $(".table-container tbody tr#tabletr, .table-container tbody tr.table_exitisng").each(function() {
+            $(".table-container tbody tr.tabletr, .table-container tbody tr.table_exitisng").each(function() {
                 const row = $(this);
                 const invNo = row.find(".customer-inv-no").val().trim();
                 const invName = row.find(".customer-inv-name").val().trim();
@@ -1262,7 +1291,7 @@ mysqli_close($conn);
             /** --------------------
              * ✅ Collect New Items
              * -------------------- **/
-            $(".table-container #tbody tr#tabletr").each(function(index) {
+            $(".table-container #tbody tr.tabletr").each(function(index) {
 
                 console.log(index);
 
