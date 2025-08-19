@@ -240,20 +240,18 @@ $html = '
         
         <img src="assets/images/head.png"  style="width:100%" />
        
-           <h2 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h2>
-           <div style=" margin-top:0px; margin-left:30px; color:white"> <span class="label">Invoice Number:</span> ' . $invoiceNo . '</div>
-           <div style=" margin-top:20px; "> </div>
-           <h4 style=" margin-left:5px; color:#001f80" ><span class="label">INVOICE DATE:</span> ' . $date . '</h4>
-           <h2 style=" margin-left:5px; color:#001f80">Bill To </h2>
-        <table class="bill-to">
+           <h1 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h1>
+           <h4 style=" margin-top:60px; margin-left:5px; color:#001f80" ><span class="label">INVOICE DATE:</span> ' . $date . '</h4>
+           <h2 style=" margin-left:5px; color:#001f80">Bill To</h2>
+         
+          <table class="bill-to">
             <tr>
-                <td><span class="label">COMPANY NAME:</span> ' . $company . '</td>
+                <td><span class="label" style="font-weight:bold">COMPANY NAME:</span> ' . $company . '</td>
                 <td style="text-align:right"><span class="label">'.$employer_company .'</span></td>
             </tr>
             
-
             <tr>
-                <td><span class="label">ADDRESS:</span> ' . $address . '</td>
+                <td><span class="label">TRADING AS:</span>' . $invoice_type . '</td>
                 <td style="text-align:right"><span class="label">PHONE:'.$employer_phone.'</span></td>
             </tr>
             
@@ -264,24 +262,17 @@ $html = '
 
             <tr>
                 <td><span class="label">PHONE:</span>' . $phone . '</td>
-                <td style="text-align:right"><span class="label">ADDRESS: '.$employer_address.'</span></td>
-            </tr>
-            <tr>
-                <td><span class="label">INVOICE TYPE:</span>' . $invoice_type . '</td>
+                <td style="text-align:right"><span class="label">Invoice Number:</span> ' . $invoiceNo . '</td>
+                
             </tr>
 
              <tr>
-              <td> </td>
-                 <td style="text-align:right;">
-                  <div style="">
-                    <h4 style="font-size:16px; " >For:</h4>
-                    <ol>
-                    <li>ASSEMBLY</li>
-                    <li>DELIVERY</li>
-                    <li>REPAIRS</li>
-                    </ol>
-                </div>
-          </td>
+                <td><span class="label">ADDRESS:</span> ' . $address . '</td>
+                <td style="text-align:right"><span class="label">ADDRESS: '.$employer_address.'</span></td>
+            </tr>
+           <tr>
+         <td> </td>
+                 
         </tr>
         </table>
 
@@ -292,7 +283,6 @@ $html = '
                 <tr>
                     <th>CUSTOMERS INFO </th>
                     <th>DESCRIPTION & CHARGES</th>
-                 
                     <th>AMOUNT</th>
                 </tr>
             </thead>
@@ -384,29 +374,26 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     }
 }
 
-$html .= '
-            </tbody>
-        </table>
+$html .='
+             </tbody>
+           </table>
             <table class="summary">
                     <tr>
-                        <th style="background:#f89c1c;  color:#011f7f;">Total</td>
-                        <td style="color:#011f7f; font-weight:bold;">$' . $sub_total . '</td>
+                      <th style="background:#f89c1c;  color:#011f7f;">Total</td>
+                      <td style="color:#011f7f; font-weight:bold;">$' . $sub_total . '</td>
                     </tr>
                 
                     <tr>
-                     <th style="color:#011f7f;"> Tax Rate </td>
-                        <td style="color:#011f7f; font-weight:bold;">$' . $tax_rate . '</td>
+                      <th style="color:#011f7f;"> Tax Rate </td>
+                      <td style="color:#011f7f; font-weight:bold;">$' . $tax_rate . '</td>
                     </tr>
 
                     <tr>
-                        <th style="background:#f89c1c;  color:#011f7f;"> Total Including GST </td>
-                        <td style="color:#011f7f; font-weight:bold;">$' . $total_cost . '</td>
+                      <th style="background:#f89c1c;  color:#011f7f;"> Total Including GST </td>
+                      <td style="color:#011f7f; font-weight:bold;">$' . $total_cost . '</td>
                     </tr>
                 </table>
     ';
-
-
-  
  
     if($totalItems == 3 || $totalItems == 4 || $totalItems ==  16)
     {
