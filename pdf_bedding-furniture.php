@@ -251,23 +251,23 @@ $html = '
             </tr>
             
             <tr>
-                <td><span class="label">TRADING AS:</span>' . $invoice_type . '</td>
+                <td><span class="label" style="font-weight:bold">TRADING AS:</span>' . $invoice_type . '</td>
                 <td style="text-align:right"><span class="label">PHONE:'.$employer_phone.'</span></td>
             </tr>
             
             <tr>
-                <td><span class="label">ABN:</span>' . $abn . '</td>
+                <td><span class="label" style="font-weight:bold">ABN:</span>' . $abn . '</td>
                 <td style="text-align:right"><span class="label">ABN:'.$employer_abn.'</span></td>
             </tr>
 
             <tr>
-                <td><span class="label">PHONE:</span>' . $phone . '</td>
+                <td><span class="label" style="font-weight:bold">PHONE:</span>' . $phone . '</td>
                 <td style="text-align:right"><span class="label">Invoice Number:</span> ' . $invoiceNo . '</td>
                 
             </tr>
 
              <tr>
-                <td><span class="label">ADDRESS:</span> ' . $address . '</td>
+                <td><span class="label" style="font-weight:bold">ADDRESS:</span> ' . $address . '</td>
                 <td style="text-align:right"><span class="label">ADDRESS: '.$employer_address.'</span></td>
             </tr>
            <tr>
