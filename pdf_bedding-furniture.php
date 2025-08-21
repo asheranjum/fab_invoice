@@ -278,7 +278,7 @@ $html = '
 
         <!-- Description Table -->
 
-        <table class="details">
+        <table class="details" >
             <thead>
                 <tr>
                     <th>CUSTOMERS INFO </th>
@@ -286,7 +286,7 @@ $html = '
                     <th>AMOUNT</th>
                 </tr>
             </thead>
-            <tbody> ';
+            <tbody > ';
 
 // Dynamically generating rows from groupedItems
 foreach ($groupedItems as $runsheetNumber => $runsheetData) {
@@ -307,7 +307,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
        
         $html .= '
         <tr >
-            <td style="  text-align: left; width: 20.5%; padding:0px;"><table style=" width:100%; border-collapse: collapse; border: 0px solid black; " >  <tr style="border: 0px solid black;  "> <td style="text-align:left; padding:5px;"> Account: ' . htmlspecialchars($customInvoiceName2). '  </td> </tr>  <tr style=""> <td style="text-align:left; border:0px solid black;  border-top:1px solid #011f7f;  padding:5px; ">Invoice# '.$customInvoiceNo .' </td> </tr> </table></td>
+            <td style="  text-align: left; width: 20.5%; padding:0px; px;">Invoice# '.$customInvoiceNo .' <br> Account: ' . htmlspecialchars($customInvoiceName2). '</td>
             <td style="padding:0px; width: 73%; ">
                 <table class="checkbox-table">
                     <tr>';
@@ -334,10 +334,10 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                 }
             }
             $html .= '
-            <td>
-                <div style="display:flex; align-items:center;">
-                    <img src="' . $image . '" width="20" height="20" style="padding-top:5px; padding-bottom:5px;" />
-                    <div style="font-size:12px; margin-left:5px;">' . htmlspecialchars($key) . '</div>
+            <td style="padding:2px 0px;">
+                <div style="display:flex; align-items:center;  ">
+                    <img src="' . $image . '" width="15" height="15" style="padding-top:0px; padding-bottom:0px; " />
+                    <div style="font-size:12px; margin-left:5px; padding: 0px 0px 0px 0px; line-height: 1.1; ">' . htmlspecialchars($key) . '</div>
                 </div>
                
             </td> '
@@ -346,18 +346,18 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         if (!empty(trim($note_text))) {
         $html .= '
-        <td style=" text-align:left; font-size:12px; border-left:1px solid #011f7f; padding: 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
+        <td style=" text-align:left; font-size:12px; border-left:1px solid #011f7f; padding: 0px 0px 0px 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
         }
 
         $html .= '
         </tr>
-        <tr>';
+        <tr ><span style="font-size:12px; ">';
 
         // Add a second row to display the values for each option
         foreach ($allOptions as $key => $label) {
             $value = isset($items[$key]) ? $items[$key] : '0.00';
             $displayValue = is_numeric($value) ? '$' . number_format((float)$value, 2) : htmlspecialchars($value);
-            $html .= '<td><span style="font-size:12px;">' . $displayValue . '</span></td>';
+            $html .= '<td style="padding: 0px 0px 2px 0px; line-height: 1.1; "><span style="font-size:12px; ">' . $displayValue . '</span></td>';
         }
         
        if (!empty(trim($note_text))) {
