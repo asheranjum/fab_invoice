@@ -864,10 +864,10 @@ mysqli_close($conn);
                     }
                 });
 
-                if (duplicateInvoiceNoFound) {
-                    alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
-                    isValid = false;
-                }
+                // if (duplicateInvoiceNoFound) {
+                //     alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
+                //     isValid = false;
+                // }
 
                 if (!isValid) return;
 

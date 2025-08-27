@@ -36,6 +36,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         $itemName = $item['item_name'];
         $itemValue = $item['item_value'];
         $note = $item['note_text'];
+        $customInvoiceId = $item['customer_invoice_id'];
         $customInvoiceNo = $item['customer_invoice_no'];
         $customInvoiceName = $item['customer_invoice_name'];
         $createdAt = isset($item['row_position']) ? $item['row_position'] : null;
@@ -52,6 +53,7 @@ if (isset($invoiceData['items']) && is_array($invoiceData['items'])) {
         // Initialize item row
         if (!isset($groupedItems[$runsheetKey]['items'][$itemRowId])) {
             $groupedItems[$runsheetKey]['items'][$itemRowId] = [
+                'custom_invoice_id' => $customInvoiceId,
                 'custom_invoice_no' => $customInvoiceNo,
                 'custom_invoice_name' => $customInvoiceName,
                 'note_text' => $note,
@@ -322,7 +324,8 @@ mysqli_close($conn);
                             </th>
                         </tr>
 
-                        <tr id="tabletr" class="tabletr" style="display: none;">
+                       <tr id="tabletr" class="tabletr" style="display:none;">
+                            
 
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
@@ -431,6 +434,11 @@ mysqli_close($conn);
                                             data-run-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                             Delete
                                         </button>
+                                         <button type="button" class="btn btn-success btn-sm add-row-under-runsheet"
+                                                data-runsheet-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>"
+                                                data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                            Add Row
+                                        </button>
                                     </div>
                                 </th>
                                 <th></th>
@@ -442,7 +450,7 @@ mysqli_close($conn);
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
                             ?>
 
-                                <tr id="table_exitisng" class="table_exitisng"  data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
+                                 <tr id="table_exitisng" class="table_exitisng"  data-item-customer-id="<?= $data['custom_invoice_id'] ?>"  data-item-row-id="<?= $data['item_row_id'] ?>" data-runsheet-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>" data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
                                     <td>
                                         <input type="text" name="customer_invoice_name[]" id="customer-inv-name" placeholder="Enter Invoice Name" class="form-control customer-inv-name" value="<?= htmlspecialchars($data['custom_invoice_name'] ?? '') ?>">
                                         <input type="text" name="customer_invoice_no[]" placeholder="Enter Invoice No" class="form-control customer-inv-no" value="<?= htmlspecialchars($data['custom_invoice_no'] ?? '') ?>">
@@ -546,6 +554,11 @@ mysqli_close($conn);
 
                                     <td>
                                         <input type="text" class="form-control amount-field" name="amount[]" value="<?= number_format($totalValue, 2) ?>" readonly>
+                                        <button type="button" class="btn btn-danger btn-sm delete-row-items"
+                                            data-customer-id="<?= htmlspecialchars($data['custom_invoice_id'] ?? '') ?>"
+                                            >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -893,91 +906,111 @@ $(document).on("click", ".remove-runsheet", function() {
 
 
 
-            function addRows(count) {
-                const rows = $(".table-container #tbody tr#tabletr");
-                let currentRows = rows.length;
-                let newRows = Math.min(count, maxRows - currentRows);
+            
+            function addRows(count, runsheetNumber = null, runsheetDate = null) {
+                
+                    const rows = $(".table-container #tbody tr#tabletr");
+                    let currentRows = rows.length;
+                    let newRows = Math.min(count, maxRows - currentRows);
 
-                if (newRows <= 0) {
-                    alert("You cannot add more than " + maxRows + " rows.");
-                    return;
-                }
-                let maxItemRowId = getMaxItemRowId();
-                for (let i = 0; i < newRows; i++) {
-                    const lastRow = $(".table-container #tbody tr#tabletr").last();
-                    
-                    if (lastRow.length === 0) {
-                        alert("No existing rows found to clone.");
+                    if (newRows <= 0) {
+                        alert("You cannot add more than " + maxRows + " rows.");
+                        return;
+                    }
+                    let maxItemRowId = getMaxItemRowId();
+
+                    // Find insertion point if specific runsheet is selected
+                    let $insertionPoint = null;
+                    if (runsheetNumber && runsheetDate) {
+                        $insertionPoint = $(
+                            `tr[data-runsheet-number='${runsheetNumber}'][data-runsheet-date='${runsheetDate}']`
+                        ).last();
+                        if ($insertionPoint.length === 0) {
+                            $insertionPoint = $(
+                                `tr[id^='runsheet-']`
+                            ).filter(function() {
+                                return (
+                                    $(this).find("#runsheet_no").text() === runsheetNumber &&
+                                    $(this).find("#runsheet_date").text() === runsheetDate
+                                );
+                            }).first();
+                        }
+                    }
+
+                    // If not specified, try to use the last runsheet header in DOM
+                    if (!runsheetNumber || !runsheetDate) {
+                        const $lastRunsheet = $(".table-container tbody tr[id^='runsheet-']").last();
+                        if ($lastRunsheet.length) {
+                            runsheetNumber = $lastRunsheet.find("#runsheet_no").text().trim();
+                            runsheetDate = $lastRunsheet.find("#runsheet_date").text().trim();
+                        }
+                    }
+
+                    // If still not found, warn user
+                    if (!runsheetNumber || !runsheetDate) {
+                        alert("Please add at least one Runsheet before adding rows.");
                         return;
                     }
 
-                    var lastRunsheetNumber = lastRow.attr("data-runsheet-number") || "";
-                    var lastRunsheetDate = lastRow.attr("data-runsheet-date") || "";
+                    for (let i = 0; i < newRows; i++) {
+                        const $newRow = $("#tabletr").clone().removeAttr("id").removeAttr("style").addClass("tabletr");
+                        const rowIndex = $(".table-container #tbody tr.tabletr").length;
 
-                    if (lastRunsheetNumber == '' && lastRunsheetDate == '') {
-                        const table_exitisng = $(".table-container #tbody tr.table_exitisng").last();
+                        // Clear and reset inputs
+                        $newRow.find("input, select").each(function() {
+                            if (this.type === "checkbox") {
+                                this.checked = false;
+                            } else if (this.type === "text" || this.type === "number") {
+                                $(this).val("");
+                                $(this).prop("disabled", false);
+                            }
+                        });
+                        $newRow.find(".form-contro").prop("disabled", false);
 
-                        lastRunsheetNumber = table_exitisng.attr("data-runsheet-number") || "";
-                        lastRunsheetDate = table_exitisng.attr("data-runsheet-date") || "";
-                    }
+                        $newRow.find(".form-check").each(function() {
+                            const labelText = $(this).find("label").text().trim();
+                            const baseName = labelText.toLowerCase();
+                            const uniqueId = `${baseName}-${rowIndex}`;
 
+                            const checkbox = $(this).find("input[type='checkbox']");
+                            checkbox.attr({
+                                id: uniqueId,
+                                name: `item[${rowIndex}][${baseName}]`
+                            });
 
-                    const newRow = lastRow.clone();
-                    newRow.removeAttr("style");
-                    // maxItemRowId++;  
-                    const rowIndex = $(".table-container #tbody tr#tabletr").length;
-                    // newRow.attr("data-item-row-id", maxItemRowId);
-                    newRow.find("input, select").each(function() {
-                        if (this.type === "checkbox") {
-                            this.checked = false;
-                        } else if (this.type === "text" || this.type === "number") {
-                            $(this).val(""); // Clear text or number inputs
-                            $(this).prop("disabled", false); // Enable text inputs
-                        }
-                    });
+                            $(this).find("label").attr("for", uniqueId);
 
-                    newRow.find(".form-contro").prop("disabled", false);
-
-                    newRow.find(".form-check").each(function() {
-                        const labelText = $(this).find("label").text().trim();
-                        const baseName = labelText.toLowerCase();
-                        const uniqueId = `${baseName}-${rowIndex}`;
-
-                        const checkbox = $(this).find("input[type='checkbox']");
-                        checkbox.attr({
-                            id: uniqueId,
-                            name: `item[${rowIndex}][${baseName}]`
+                            const inputField = $(this).find("input[type='text']");
+                            inputField.attr("name", `item[${rowIndex}][${baseName}_value]`);
                         });
 
-                        $(this).find("label").attr("for", uniqueId);
+                        $newRow.find(".form-contro").attr("name", `item[${rowIndex}][pup]`);
+                        $newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
+                        $newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
 
-                        const inputField = $(this).find("input[type='text']");
-                        inputField.attr("name", `item[${rowIndex}][${baseName}_value]`);
-                    });
+                        // Set runsheet data for the new row
+                        $newRow.attr("data-runsheet-number", runsheetNumber);
+                        $newRow.attr("data-runsheet-date", runsheetDate);
 
-                    newRow.find(".form-contro").attr("name", `item[${rowIndex}][pup]`);
-                    newRow.find(".form-contro").siblings("input[type='text']").attr("name", `item[${rowIndex}][pup_value]`).prop("disabled", true);
-                    newRow.find(".amount-field").attr("name", `amount[${rowIndex}]`).val("");
+                        // Insert in the correct place
+                        if ($insertionPoint && $insertionPoint.length > 0) {
+                            $insertionPoint.after($newRow);
+                        } else {
+                            // Find last row of this runsheet, otherwise append to end
+                            let $lastRowOfRun = $(
+                                `tr[data-runsheet-number='${runsheetNumber}'][data-runsheet-date='${runsheetDate}']`
+                            ).last();
+                            if ($lastRowOfRun.length > 0) {
+                                $lastRowOfRun.after($newRow);
+                            } else {
+                                $(".table-container #tbody").append($newRow);
+                            }
+                        }
 
-                    // // ✅ Set Runsheet Data for the New Row
-                    // newRow.attr("data-runsheet-number", lastRunsheetNumber);
-                    // newRow.attr("data-runsheet-date", lastRunsheetDate);
-
-                    // ✅ Use latest runsheet data if available
-                    if (currentRunsheet) {
-                        newRow.attr("data-runsheet-number", currentRunsheet.number);
-                        newRow.attr("data-runsheet-date", currentRunsheet.date);
-                    } else {
-                        // Default to empty if no runsheet has been added
-                        newRow.attr("data-runsheet-number", lastRunsheetNumber);
-                        newRow.attr("data-runsheet-date", lastRunsheetDate);
+                        attachRowListeners($newRow);
                     }
-
-
-                    $(".table-container #tbody").append(newRow);
-                    attachRowListeners(newRow);
+           
                 }
-            }
 
             function removeRows(count) {
                 const rows = $(".table-container #tbody tr#tabletr");
@@ -1001,6 +1034,12 @@ $(document).on("click", ".remove-runsheet", function() {
 
             $(".add-button").click(function() {
                 addRows(1);
+            });
+
+            $(document).on('click', '.add-row-under-runsheet', function() {
+                const runsheetNumber = $(this).data("runsheet-number");
+                const runsheetDate = $(this).data("runsheet-date");
+                addRows(1, runsheetNumber, runsheetDate);
             });
 
             $(".add-bulk-button").click(function() {
@@ -1099,7 +1138,7 @@ $(document).on("click", ".remove-runsheet", function() {
             // Check if at least one valid item row is added
             let hasValidItem = false;
 
-            $(".table-container tbody tr#tabletr, .table-container tbody tr.table_exitisng").each(function() {
+            $(".table-container tbody tr.tabletr, .table-container tbody tr.table_exitisng").each(function() {
                 const row = $(this);
                 const invNo = row.find(".customer-inv-no").val().trim();
                 const invName = row.find(".customer-inv-name").val().trim();
@@ -1150,10 +1189,10 @@ $(document).on("click", ".remove-runsheet", function() {
                 }
             });
 
-            if (duplicateInvoiceNoFound) {
-                alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
-                isValid = false;
-            }
+            // if (duplicateInvoiceNoFound) {
+            //     alert("Duplicate Customer Invoice Numbers found. Each row must have a unique Invoice No.");
+            //     isValid = false;
+            // }
 
             if (!isValid) return;
             // $('select[name="invoice_type"]').val("<?= $invoiceData['invoice_type'] ?? '' ?>");
@@ -1249,7 +1288,7 @@ $(document).on("click", ".remove-runsheet", function() {
             /** --------------------
              * ✅ Collect New Items
              * -------------------- **/
-            $(".table-container #tbody tr#tabletr").each(function(index) {
+            $(".table-container #tbody tr.tabletr").each(function(index) {
 
                 const row = $(this);
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
@@ -1339,7 +1378,7 @@ $(document).on("click", ".remove-runsheet", function() {
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        window.location.href = "index.php"; // Redirect after success
+                        // window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }
@@ -1426,6 +1465,38 @@ $(document).on("click", ".remove-runsheet", function() {
                     });
                 }
             });
+
+                        $(document).on("click", ".delete-row-items", function() {
+                const button = $(this);
+                const customerId = button.data("customer-id");
+                if (confirm('Are you sure you want to delete this row of items?')) {
+                    $.ajax({
+                        url: "delete_row_items.php",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            customer_invoice_id: customerId,
+                            invoice_id: <?php echo $invoiceId ?? ''; ?>,
+                        }),
+                        success: function(response) {
+                            if (response.success) {
+                                alert("Row items deleted successfully!");
+
+                                // Remove the runsheet and linked items from the DOM
+                              $(`tr[data-item-customer-id='${customerId}']`).remove();
+                                calculateSubTotal();
+                            } else {
+                                alert("Error: " + response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error:", error);
+                            alert("An error occurred while deleting the runsheet. Please try again.");
+                        }
+                    }); 
+                }
+            });
+
 
             // Save Runsheet Changes
             $("#saveRunsheet").click(function() {
