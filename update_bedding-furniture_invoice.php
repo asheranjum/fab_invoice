@@ -1383,7 +1383,7 @@ function addRows(count, runsheetNumber = null, runsheetDate = null) {
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        // window.location.href = "index.php"; // Redirect after success
+                        window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }

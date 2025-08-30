@@ -240,63 +240,54 @@ $html = '
         
         <img src="assets/images/head.png"  style="width:100%" />
        
-           <h2 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h2>
-           <div style=" margin-top:0px; margin-left:30px; color:white"> <span class="label">Invoice Number:</span> ' . $invoiceNo . '</div>
-           <div style=" margin-top:20px; "> </div>
-           <h4 style=" margin-left:5px; color:#001f80" ><span class="label">INVOICE DATE:</span> ' . $date . '</h4>
-           <h2 style=" margin-left:5px; color:#001f80">Bill To </h2>
-        <table class="bill-to">
+           <h1 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h1>
+           <h4 style=" margin-top:60px; margin-left:5px; color:#001f80" ><span class="label">INVOICE DATE:</span> ' . $date . '</h4>
+           <h2 style=" margin-left:5px; color:#001f80">Bill To</h2>
+         
+          <table class="bill-to">
             <tr>
-                <td><span class="label">COMPANY NAME:</span> ' . $company . '</td>
-                <td style="text-align:right"><span class="label">'.$employer_company .'</span></td>
+                <td><span class="label" style="font-weight:bold">COMPANY NAME:</span> ' . $company . '</td>
+                <td style="text-align:right"><span class="label">COMPANY NAME:'.$employer_company .'</span></td>
             </tr>
             
-
             <tr>
-                <td><span class="label">ADDRESS:</span> ' . $address . '</td>
+                <td><span class="label" style="font-weight:bold">TRADING AS:</span>' . $invoice_type . '</td>
                 <td style="text-align:right"><span class="label">PHONE:'.$employer_phone.'</span></td>
             </tr>
             
             <tr>
-                <td><span class="label">ABN:</span>' . $abn . '</td>
+                <td><span class="label" style="font-weight:bold">ABN:</span>' . $abn . '</td>
                 <td style="text-align:right"><span class="label">ABN:'.$employer_abn.'</span></td>
             </tr>
 
             <tr>
-                <td><span class="label">PHONE:</span>' . $phone . '</td>
-                <td style="text-align:right"><span class="label">ADDRESS: '.$employer_address.'</span></td>
-            </tr>
-            <tr>
-                <td><span class="label">INVOICE TYPE:</span>' . $invoice_type . '</td>
+                <td><span class="label" style="font-weight:bold">PHONE:</span>' . $phone . '</td>
+                <td style="text-align:right"><span class="label">Invoice Number:</span> ' . $invoiceNo . '</td>
+                
             </tr>
 
              <tr>
-              <td> </td>
-                 <td style="text-align:right;">
-                  <div style="">
-                    <h4 style="font-size:16px; " >For:</h4>
-                    <ol>
-                    <li>ASSEMBLY</li>
-                    <li>DELIVERY</li>
-                    <li>REPAIRS</li>
-                    </ol>
-                </div>
-          </td>
+                <td><span class="label" style="font-weight:bold">ADDRESS:</span> ' . $address . '</td>
+                <td style="text-align:right"><span class="label">ADDRESS: '.$employer_address.'</span></td>
+            </tr>
+           <tr>
+         <td> </td>
+                 
         </tr>
         </table>
 
         <!-- Description Table -->
 
-        <table class="details">
+        <table class="details" >
             <thead>
                 <tr>
                     <th>CUSTOMERS INFO </th>
                     <th>DESCRIPTION & CHARGES</th>
-                 
                     <th>AMOUNT</th>
                 </tr>
             </thead>
-            <tbody> ';
+            <tbody > ';
+
 // Dynamically generating rows from groupedItems
 foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     $runsheetDate = $runsheetData['runsheet_date'];
@@ -316,12 +307,12 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
        
         $html .= '
         <tr >
-            <td style="  text-align: left; width: 20.5%; padding:0px;"><table style=" width:100%; border-collapse: collapse; border: 0px solid black; " >  <tr style="border: 0px solid black;  "> <td style="text-align:left; padding:5px; "> Customer Name: ' . htmlspecialchars($customInvoiceName2). '  </td> </tr>  <tr style=""> <td style="text-align:left; border:0px solid black;  border-top:1px solid #011f7f;  padding:5px; ">  Invoice Number: '.$customInvoiceNo .' </td> </tr> </table></td>
+            <td style="  text-align: left; width: 20.5%; padding:0px 4px;">Account: '.htmlspecialchars($customInvoiceName2) .' <br> Invoice# ' .$customInvoiceNo. '</td>
             <td style="padding:0px; width: 73%; ">
                 <table class="checkbox-table">
                     <tr>';
 
-        $allOptions = $items; // Only use items fetched from DB
+                    $allOptions = $items; // Only use items fetched from DB
         // Check for any key matching P/UP(x)
         $selectedPUP = null; // To store the matched P/UP key
         foreach ($items as $key => $value) {
@@ -330,7 +321,6 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                 break;
             }
         }
-
     
         foreach ($allOptions as $key => $label) {
             $checked = isset($items[$key]);
@@ -344,10 +334,10 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                 }
             }
             $html .= '
-            <td>
-                <div style="display:flex; align-items:center;">
-                    <img src="' . $image . '" width="20" height="20" style="padding-top:5px; padding-bottom:5px;" />
-                    <div style="font-size:12px; margin-left:5px;">' . htmlspecialchars($key) . '</div>
+            <td style="padding:2px 0px;">
+                <div style="display:flex; align-items:center;  ">
+                    <img src="' . $image . '" width="15" height="15" style="padding-top:0px; padding-bottom:0px; " />
+                    <div style="font-size:12px; margin-left:5px; padding: 0px 0px 0px 0px; line-height: 1.1; ">' . htmlspecialchars($key) . '</div>
                 </div>
                
             </td> '
@@ -356,18 +346,18 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
 
         if (!empty(trim($note_text))) {
         $html .= '
-        <td style=" text-align:left; font-size:12px; border-left:1px solid #011f7f; padding: 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
+        <td style=" text-align:left; font-size:12px; border-left:1px solid #011f7f; padding: 0px 0px 0px 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
         }
 
         $html .= '
         </tr>
-        <tr>';
+        <tr ><span style="font-size:12px; ">';
 
         // Add a second row to display the values for each option
         foreach ($allOptions as $key => $label) {
             $value = isset($items[$key]) ? $items[$key] : '0.00';
             $displayValue = is_numeric($value) ? '$' . number_format((float)$value, 2) : htmlspecialchars($value);
-            $html .= '<td><span style="font-size:12px;">' . $displayValue . '</span></td>';
+            $html .= '<td style="padding: 0px 0px 2px 0px; line-height: 1.1; "><span style="font-size:12px; ">' . $displayValue . '</span></td>';
         }
         
        if (!empty(trim($note_text))) {
@@ -384,29 +374,26 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     }
 }
 
-$html .= '
-            </tbody>
-        </table>
+$html .='
+             </tbody>
+           </table>
             <table class="summary">
                     <tr>
-                        <th style="background:#f89c1c;  color:#011f7f;">Total</td>
-                        <td style="color:#011f7f; font-weight:bold;">$' . $sub_total . '</td>
+                      <th style="background:#f89c1c;  color:#011f7f;">Total</td>
+                      <td style="color:#011f7f; font-weight:bold;">$' . $sub_total . '</td>
                     </tr>
                 
                     <tr>
-                     <th style="color:#011f7f;"> Tax Rate </td>
-                        <td style="color:#011f7f; font-weight:bold;">$' . $tax_rate . '</td>
+                      <th style="color:#011f7f;"> Tax Rate </td>
+                      <td style="color:#011f7f; font-weight:bold;">$' . $tax_rate . '</td>
                     </tr>
 
                     <tr>
-                        <th style="background:#f89c1c;  color:#011f7f;"> Total Including GST </td>
-                        <td style="color:#011f7f; font-weight:bold;">$' . $total_cost . '</td>
+                      <th style="background:#f89c1c;  color:#011f7f;"> Total Including GST </td>
+                      <td style="color:#011f7f; font-weight:bold;">$' . $total_cost . '</td>
                     </tr>
                 </table>
     ';
-
-
-  
  
     if($totalItems == 3 || $totalItems == 4 || $totalItems ==  16)
     {
