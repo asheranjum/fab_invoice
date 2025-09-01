@@ -130,7 +130,7 @@ mysqli_close($conn);
 
                     </div>
 
-                    
+
                     <div class="mb-2 d-flex align-items-center">
                         <label for="date" class="form-label mb-0 me-3 w-25">DATE:</label>
                         <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3">
@@ -138,13 +138,14 @@ mysqli_close($conn);
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                         <label class="form-label mb-0 me-3 w-25">BILL TO:</label>
-                    <select id="invoice_type" name="invoice_type" class="form-control w-50 me-3" >
-                        <option value="" disabled selected>Select Option</option>
-                        <option value="Bedding">Bedding</option>
-                        <option value="Furniture">Furniture</option>
-                    </select>
-
+                    <label class="form-label mb-0 me-3 w-25">BILL TO:</label>
+                        <select id="invoice_type" name="invoice_type" class="form-control w-50 me-3">
+                            <option value="" disabled selected>Select Option</option>
+                            <option value="Bedding">Bedding</option>
+                            <option value="Furniture">Furniture</option>
+                        </select>
+                        <!-- <input type="text" name="invoice_type" id="invoice_type" class="form-control w-50 me-3" placeholder="Type Bill To Name" value="">
+                        <div class="invalid-feedback">Bill To name is required.</div> -->
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -174,35 +175,35 @@ mysqli_close($conn);
                         <!-- <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
                         <input type="text" name="postal_code" class="form-control custom-width-3" placeholder="Postal Code" value=""> -->
                     </div>
-                    
+
 
                 </form>
             </div>
 
 
-            <div class="col-md-5 position-relative" >
-                    <div class="">
-                        <div class="mb-2 d-flex align-items-center">
-                            <label for="employer_company" class="form-label mb-0 me-3 w-50">EMPLOYER COMPANY</label>
-                            <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="">
-                            <!-- <div class="invalid-feedback">Employer company name is required.</div> -->
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <label for="employer_phone" class="form-label mb-0 me-3 w-50">EMPLOYER PHONE</label>
-                            <input type="text" name="employer_phone" id="employer_phone" class="form-control w-50" placeholder="Employer Phone" value="">
-                            <!-- <div class="invalid-feedback">Employer company phone is required.</div> -->
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <label for="employer_abn" class="form-label mb-0 me-3 w-50">EMPLOYER ABN</label>
-                            <input type="text" name="employer_abn" id="employer_abn" class="form-control w-50" placeholder="Employer ABN" value="">
-                            <!-- <div class="invalid-feedback">Employer company abn is required.</div> -->
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <label for="employer_address" class="form-label mb-0 me-3 w-50">EMPLOYER ADDRESS</label>
-                            <input type="text" name="employer_address" id="employer_address" class="form-control w-50" placeholder="Employer Address" value="">
-                            <!-- <div class="invalid-feedback">Employer company address is required.</div> -->
-                        </div>
+            <div class="col-md-5 position-relative">
+                <div class="">
+                    <div class="mb-2 d-flex align-items-center">
+                        <label for="employer_company" class="form-label mb-0 me-3 w-50">EMPLOYER COMPANY</label>
+                        <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="">
+                        <!-- <div class="invalid-feedback">Employer company name is required.</div> -->
                     </div>
+                    <div class="mb-2 d-flex align-items-center">
+                        <label for="employer_phone" class="form-label mb-0 me-3 w-50">EMPLOYER PHONE</label>
+                        <input type="text" name="employer_phone" id="employer_phone" class="form-control w-50" placeholder="Employer Phone" value="">
+                        <!-- <div class="invalid-feedback">Employer company phone is required.</div> -->
+                    </div>
+                    <div class="mb-2 d-flex align-items-center">
+                        <label for="employer_abn" class="form-label mb-0 me-3 w-50">EMPLOYER ABN</label>
+                        <input type="text" name="employer_abn" id="employer_abn" class="form-control w-50" placeholder="Employer ABN" value="">
+                        <!-- <div class="invalid-feedback">Employer company abn is required.</div> -->
+                    </div>
+                    <div class="mb-2 d-flex align-items-center">
+                        <label for="employer_address" class="form-label mb-0 me-3 w-50">EMPLOYER ADDRESS</label>
+                        <input type="text" name="employer_address" id="employer_address" class="form-control w-50" placeholder="Employer Address" value="">
+                        <!-- <div class="invalid-feedback">Employer company address is required.</div> -->
+                    </div>
+                </div>
 
                 <!-- <div class="info">
                     <h6>FAB TRANSPORT SERVICES PTY LTD</h6>
@@ -242,7 +243,7 @@ mysqli_close($conn);
                             </th>
                         </tr>
 
-                        <tr id="tabletr"  style="display: none;">
+                        <tr id="tabletr" style="display: none;">
 
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
@@ -320,16 +321,16 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
 
-                                    
+
                                 </div>
 
 
                             </td>
                             <td>
-                            <div class="note-text">        
-                                <label for="note-text" class="form-check-label">Add Note</label>
-                                <input type="text" id="note-text"  name="note-text-value[]" class="form-control note-text-value mt-1"  placeholder="">
-                            </div>
+                                <div class="note-text">
+                                    <label for="note-text" class="form-check-label">Add Note</label>
+                                    <input type="text" id="note-text" name="note-text-value[]" class="form-control note-text-value mt-1" placeholder="">
+                                </div>
                             </td>
                             <td style="width: 180px;">
                                 <input type="text" class="form-control amount-field" name="amount[]" readonly placeholder="$0.00">
@@ -338,13 +339,13 @@ mysqli_close($conn);
                     </tbody>
                 </table>
             </div>
-       
+
         </div>
         <div class="topbtngr btn-group" role="group">
-                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
-                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
-                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
-                        </div>
+            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+        </div>
 
 
 
@@ -389,10 +390,10 @@ mysqli_close($conn);
                     </div>
                 </table>
             </div>
-            
+
         </div>
     </div>
-    
+
 
     <script>
         $(document).ready(function() {
@@ -509,18 +510,18 @@ mysqli_close($conn);
 
 
             $(document).on("click", ".remove-runsheet", function() {
-                  
+
                 const runsheetId = $(this).data("id");
 
                 if (confirm(`Would you like to remove runsheet?`)) {
-                      
+
                     $(`#${runsheetId}`).remove();
                     $(`#tabletr-${runsheetId.split('-')[1]}`).remove();
-                    }
+                }
             });
 
 
-            $(document).on("click", ".edit-onpage-runsheet-button", function () {
+            $(document).on("click", ".edit-onpage-runsheet-button", function() {
                 const button = $(this);
                 const runsheetId = button.attr("data-id");
                 const runsheetNumber = button.attr("data-run-number");
@@ -541,8 +542,8 @@ mysqli_close($conn);
                 const runsheetNumber = $("#editRunsheetNumber").val();
                 const runsheetDate = $("#editRunsheetDate").val();
                 const runsheetId = $("#editRunsheetId").val();
-                
-              
+
+
                 // Validate inputs
                 if (!runsheetNumber || !runsheetDate) {
                     alert("Please fill in both Runsheet Number and Runsheet Date.");
@@ -564,8 +565,8 @@ mysqli_close($conn);
 
                 // Update the button's attributes directly
                 runsheetRow.find(".edit-onpage-runsheet-button")
-                .attr("data-run-number", runsheetNumber)
-                .attr("data-run-date", runsheetDate);
+                    .attr("data-run-number", runsheetNumber)
+                    .attr("data-run-date", runsheetDate);
 
                 $("#editRunsheetModal").modal("hide");
             });
@@ -906,7 +907,7 @@ mysqli_close($conn);
                     const customerInvoiceNo = $(this).find(".customer-inv-no").val() || '';
                     const customer_inv_name = $(this).find(".customer-inv-name").val() || '';
                     const note_text_value = $(this).find(".note-text-value").val() || '';
-                    
+
                     const amount = $(this).find(".amount-field").val() || 0;
                     let row = $(this);
                     $(this).find(".item_names_check > .form-check").each(function() {
@@ -967,9 +968,6 @@ mysqli_close($conn);
                         console.error("Error:", error);
                         alert("An error occurred. Please try again.");
                     });
-
-
-
 
             }
 

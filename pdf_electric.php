@@ -245,30 +245,29 @@ $html = '
            <h2 style=" margin-left:5px; color:#001f80">Bill To</h2>
          
           <table class="bill-to">
-            <tr>
+             <tr>
                 <td><span class="label" style="font-weight:bold">COMPANY NAME:</span> ' . $company . '</td>
-                <td style="text-align:right"><span class="label">COMPANY NAME:'.$employer_company .'</span></td>
+                <td style="text-align:right; font-weight:bold; font-size:15px"><span class="label">Invoice Number:</span> ' . $invoiceNo . '</td>
             </tr>
             
             <tr>
                 <td><span class="label" style="font-weight:bold">TRADING AS:</span>' . $invoice_type . '</td>
-                <td style="text-align:right"><span class="label">PHONE:'.$employer_phone.'</span></td>
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">COMPANY NAME:</span>'.$employer_company .'</td>
             </tr>
             
             <tr>
                 <td><span class="label" style="font-weight:bold">ABN:</span>' . $abn . '</td>
-                <td style="text-align:right"><span class="label">ABN:'.$employer_abn.'</span></td>
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">PHONE:</span>'.$employer_phone.'</td>
             </tr>
 
             <tr>
                 <td><span class="label" style="font-weight:bold">PHONE:</span>' . $phone . '</td>
-                <td style="text-align:right"><span class="label">Invoice Number:</span> ' . $invoiceNo . '</td>
-                
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">ABN:</span>'.$employer_abn.'  </td>
             </tr>
 
              <tr>
                 <td><span class="label" style="font-weight:bold">ADDRESS:</span> ' . $address . '</td>
-                <td style="text-align:right"><span class="label">ADDRESS: '.$employer_address.'</span></td>
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">ADDRESS:</span>'.$employer_address.'</td>
             </tr>
            <tr>
          <td> </td>
