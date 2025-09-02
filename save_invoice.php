@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $employer_company = mysqli_real_escape_string($conn, $input['employer_company'] ?? '');
         $employer_phone = mysqli_real_escape_string($conn, $input['employer_phone'] ?? '');
         $inv_company = mysqli_real_escape_string($conn, $input['company'] ?? '');
+        $inv_trading = mysqli_real_escape_string($conn, $input['trading'] ?? '');
         $inv_address = mysqli_real_escape_string($conn, $input['address'] ?? '');
         $inv_phone = mysqli_real_escape_string($conn, $input['phone'] ?? '');
         $inv_postal_code = mysqli_real_escape_string($conn, $input['postal_code'] ?? '');
@@ -71,12 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             // Insert new invoice
-            $sqlInvoice = "INSERT INTO invoices (date, invoice_number, invoice_type, employer_company, employer_abn , employer_address, employer_phone , company_name, address, phone, postal_code, abn, runsheet_number, sub_total, tax_rate, other_cost, total_cost) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sqlInvoice = "INSERT INTO invoices (date, invoice_number, invoice_type, employer_company, employer_abn , employer_address, employer_phone , company_name, trading_as, address, phone, postal_code, abn, runsheet_number, sub_total, tax_rate, other_cost, total_cost) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sqlInvoice);
             if (!$stmt) {
                 throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
             }
-            $stmt->bind_param('sssssssssssssdddd', $inv_date, $inv_invoice, $invoice_type, $employer_company, $employer_abn, $employer_address, $employer_phone, $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $inv_runsheet, $sub_total, $tax_rate, $other_cost, $total_cost);
+            $stmt->bind_param('ssssssssssssssdddd', $inv_date, $inv_invoice, $invoice_type, $employer_company, $employer_abn, $employer_address, $employer_phone, $inv_company, $inv_trading, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $inv_runsheet, $sub_total, $tax_rate, $other_cost, $total_cost);
             $stmt->execute();
             $invoiceId = $stmt->insert_id;
             $stmt->close();

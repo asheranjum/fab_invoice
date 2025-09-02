@@ -86,6 +86,7 @@ foreach ($groupedItems as $runsheet) {
 $date =  date("d-m-Y", strtotime($invoice['date']));
 $invoiceNo = $invoice['invoice_number'];
 $company = $invoice['company_name'];
+$trading = $invoice['trading_as'];
 $invoice_type = $invoice['invoice_type'];
 $address = $invoice['address'];
 $phone = $invoice['phone'];
@@ -251,26 +252,27 @@ $html = '
             </tr>
             
             <tr>
-                <td><span class="label" style="font-weight:bold">TRADING AS:</span>' . $invoice_type . '</td>
+                <td><span class="label" style="font-weight:bold">TRADING AS:</span>' . $trading . '</td>
                 <td style="text-align:right"><span class="label" style="font-weight:bold;">COMPANY NAME:</span>' . $employer_company . '</td>
             </tr>
             
             <tr>
                 <td><span class="label" style="font-weight:bold">ABN:</span>' . $abn . '</td>
-                <td style="text-align:right"><span class="label" style="font-weight:bold;">PHONE:</span>' . $employer_phone . '</td>
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">ABN:</span>' . $employer_abn . '  </td>
             </tr>
 
             <tr>
                 <td><span class="label" style="font-weight:bold">PHONE:</span>' . $phone . '</td>
-                <td style="text-align:right"><span class="label" style="font-weight:bold;">ABN:</span>' . $employer_abn . '  </td>
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">PHONE:</span>' . $employer_phone . '</td>
             </tr>
 
              <tr>
                 <td><span class="label" style="font-weight:bold">ADDRESS:</span> ' . $address . '</td>
                 <td style="text-align:right"><span class="label" style="font-weight:bold;">ADDRESS:</span>' . $employer_address . '</td>
             </tr>
+
            <tr>
-         <td> </td>
+         <td></td>
                  
         </tr>
         </table>
@@ -399,20 +401,19 @@ if ($totalItems == 3 || $totalItems == 4 || $totalItems ==  16) {
 $html .= '
             <div class="footer">
                 <div class="footer-text">
-                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD"</p>
-                            <ul>
+                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD" For Online Payments</p>
+                          <ul>
                             <li>Accout Name: FAB TRANSPORT.</li>
-                            <li>Account: 10844802</li>
-                            <li>BSB: 063 608.</li>
-                            </ul>
-                           <p class="text-center">If You Have Any Question Concerning About This Invoice,
+                            <li>Account: 10844802. BSB: 063 608.</li>
+                          </ul>
+
+                          <p style="text-align:center">If You Have Any Question Concerning About This Invoice,
                             Use The Following Contact Information.</p>
-                        <ul>
-                            <li>Contact Name: SAM</li>
-                            <li>Phone: 0403 729 966</li>
-                            <li>Email: info@fabtransport.com.au</li>
+                           
+                         <ul>
+                            <li>Email: admin@fabtransport.com.au.</li>
                         </ul>
-                        <h4 style="margin-left:50px">Thank You For Your Business!</h4>
+                        <h3 style="margin-left:50px">Thank You For Your Business!</h3>
                 </div>
             </div>
         </div>

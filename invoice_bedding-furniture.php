@@ -134,50 +134,50 @@ mysqli_close($conn);
                     <div class="mb-2 d-flex align-items-center">
                         <label for="date" class="form-label mb-0 me-3 w-25">DATE:</label>
                         <input type="date" name="date" id="invoice_date" class="form-control form-control-sm custom-width me-3">
-                        <div class="invalid-feedback">Invoice date is required.</div>
+                        <!-- <div class="invalid-feedback">Invoice date is required.</div> -->
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                    <label class="form-label mb-0 me-3 w-25">BILL TO:</label>
+                        <label class="form-label mb-0 me-3 w-25">BILL TO:</label>
                         <select id="invoice_type" name="invoice_type" class="form-control w-50 me-3">
                             <option value="" disabled selected>Select Option</option>
                             <option value="Bedding">Bedding</option>
                             <option value="Furniture">Furniture</option>
                         </select>
-                        <!-- <input type="text" name="invoice_type" id="invoice_type" class="form-control w-50 me-3" placeholder="Type Bill To Name" value="">
-                        <div class="invalid-feedback">Bill To name is required.</div> -->
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="Company" class="form-label mb-0 me-3 w-25">COMPANY NAME:</label>
                         <input type="text" name="company" id="company_name" class="form-control w-50" placeholder="Type Company Name" value="">
-                        <div class="invalid-feedback">Company name is required.</div>
-
+                        <!-- <div class="invalid-feedback">Company name is required.</div> -->
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
-                        <label for="address" class="form-label mb-0 me-3 w-25">ADDREESS:</label>
-                        <input type="text" name="address" id="company_address" class="form-control w-50" placeholder="Enter Address Here" value="">
-                        <div class="invalid-feedback">Address is required.</div>
-
+                        <label for="Trading" class="form-label mb-0 me-3 w-25">TRADING AS:</label>
+                        <input type="text" name="trading" id="trading_as" class="form-control w-50" placeholder="Type Trading As" value="">
+                        <!-- <div class="invalid-feedback">Trading As is required.</div> -->
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="abn" class="form-label mb-0 me-3 w-25">ABN:</label>
                         <input type="text" name="abn" id="company_abn" class="form-control w-50" placeholder="Insert ABN Number" value="">
-                        <div class="invalid-feedback">ABN is required.</div>
+                        <!-- <div class="invalid-feedback">ABN is required.</div> -->
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
                         <label for="phone" class="form-label mb-0 me-3 w-25">PHONE:</label>
                         <input type="text" name="phone" id="phone" class="form-control w-50 me-3" placeholder="Insert Phone Number" value="">
-                        <div class="invalid-feedback">Phone is required.</div>
-                        <!-- <label for="postal-code" class="form-label mb-0 me-2">Postal Code:</label>
-                        <input type="text" name="postal_code" class="form-control custom-width-3" placeholder="Postal Code" value=""> -->
+                        <!-- <div class="invalid-feedback">Phone is required.</div> -->
                     </div>
 
+                    <div class="mb-2 d-flex align-items-center">
+                        <label for="address" class="form-label mb-0 me-3 w-25">ADDREESS:</label>
+                        <input type="text" name="address" id="company_address" class="form-control w-50" placeholder="Enter Address Here" value="">
+                        <!-- <div class="invalid-feedback">Address is required.</div> -->
+                    </div>
 
                 </form>
+
             </div>
 
 
@@ -188,16 +188,20 @@ mysqli_close($conn);
                         <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="">
                         <!-- <div class="invalid-feedback">Employer company name is required.</div> -->
                     </div>
-                    <div class="mb-2 d-flex align-items-center">
-                        <label for="employer_phone" class="form-label mb-0 me-3 w-50">EMPLOYER PHONE</label>
-                        <input type="text" name="employer_phone" id="employer_phone" class="form-control w-50" placeholder="Employer Phone" value="">
-                        <!-- <div class="invalid-feedback">Employer company phone is required.</div> -->
-                    </div>
+
                     <div class="mb-2 d-flex align-items-center">
                         <label for="employer_abn" class="form-label mb-0 me-3 w-50">EMPLOYER ABN</label>
                         <input type="text" name="employer_abn" id="employer_abn" class="form-control w-50" placeholder="Employer ABN" value="">
                         <!-- <div class="invalid-feedback">Employer company abn is required.</div> -->
                     </div>
+
+
+                    <div class="mb-2 d-flex align-items-center">
+                        <label for="employer_phone" class="form-label mb-0 me-3 w-50">EMPLOYER PHONE</label>
+                        <input type="text" name="employer_phone" id="employer_phone" class="form-control w-50" placeholder="Employer Phone" value="">
+                        <!-- <div class="invalid-feedback">Employer company phone is required.</div> -->
+                    </div>
+
                     <div class="mb-2 d-flex align-items-center">
                         <label for="employer_address" class="form-label mb-0 me-3 w-50">EMPLOYER ADDRESS</label>
                         <input type="text" name="employer_address" id="employer_address" class="form-control w-50" placeholder="Employer Address" value="">
@@ -778,26 +782,31 @@ mysqli_close($conn);
 
                 let isValid = true;
 
-                const requiredFields = [{
-                        id: "#invoice_date",
-                        message: "Invoice date is required."
-                    },
-                    {
-                        id: "#company_name",
-                        message: "Company name is required."
-                    },
-                    {
-                        id: "#company_address",
-                        message: "Address is required."
-                    },
-                    {
-                        id: "#company_abn",
-                        message: "ABN is required."
-                    },
-                    {
-                        id: "#phone",
-                        message: "Phone is required."
-                    }
+                const requiredFields = [
+                    // {
+                    //     id: "#invoice_date",
+                    //     message: "Invoice date is required."
+                    // },
+                    // {
+                    //     id: "#company_name",
+                    //     message: "Company name is required."
+                    // },
+                    // {
+                    //     id: "#trading_as",
+                    //     message: "Trading As is required."
+                    // },
+                    // {
+                    //     id: "#company_address",
+                    //     message: "Address is required."
+                    // },
+                    // {
+                    //     id: "#company_abn",
+                    //     message: "ABN is required."
+                    // },
+                    // {
+                    //     id: "#phone",
+                    //     message: "Phone is required."
+                    // }
                 ];
 
                 // Validate each required field
@@ -885,13 +894,14 @@ mysqli_close($conn);
                     invoice_type: $("select[name='invoice_type']").val(),
                     date: $("input[name='date']").val(),
                     invoice: $("input[name='invoice']").val(),
+                    company: $("input[name='company']").val(),
+                    trading: $("input[name='trading']").val(),
+                    address: $("input[name='address']").val(),
+                    phone: $("input[name='phone']").val(),
                     employer_company: $("input[name='employer_company']").val(),
                     employer_phone: $("input[name='employer_phone']").val(),
                     employer_abn: $("input[name='employer_abn']").val(),
                     employer_address: $("input[name='employer_address']").val(),
-                    company: $("input[name='company']").val(),
-                    address: $("input[name='address']").val(),
-                    phone: $("input[name='phone']").val(),
                     postal_code: $("input[name='postal_code']").val(),
                     abn: $("input[name='abn']").val(),
                     runsheet: $("input[name='runsheet']").val(),

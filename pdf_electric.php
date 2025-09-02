@@ -37,7 +37,7 @@ $groupedItems = [];
 
 while ($row = $resultItems->fetch_assoc()) {
     $runsheetNumber = $row['runsheet_number'];
-    $runsheetKey = $row['runsheet_number'].'_'.$row['runsheet_date'];
+    $runsheetKey = $row['runsheet_number'] . '_' . $row['runsheet_date'];
     $runsheetDate = $row['runsheet_date'];
     $itemRowId = $row['row_position'];
     $itemName = $row['item_name'];
@@ -86,6 +86,7 @@ foreach ($groupedItems as $runsheet) {
 $date =  date("d-m-Y", strtotime($invoice['date']));
 $invoiceNo = $invoice['invoice_number'];
 $company = $invoice['company_name'];
+$trading = $invoice['trading_as'];
 $invoice_type = $invoice['invoice_type'];
 $address = $invoice['address'];
 $phone = $invoice['phone'];
@@ -244,31 +245,32 @@ $html = '
            <h4 style=" margin-top:60px; margin-left:5px; color:#001f80" ><span class="label">INVOICE DATE:</span> ' . $date . '</h4>
            <h2 style=" margin-left:5px; color:#001f80">Bill To</h2>
          
-          <table class="bill-to">
-             <tr>
+                   <table class="bill-to">
+            <tr>
                 <td><span class="label" style="font-weight:bold">COMPANY NAME:</span> ' . $company . '</td>
                 <td style="text-align:right; font-weight:bold; font-size:15px"><span class="label">Invoice Number:</span> ' . $invoiceNo . '</td>
             </tr>
             
             <tr>
-                <td><span class="label" style="font-weight:bold">TRADING AS:</span>' . $invoice_type . '</td>
-                <td style="text-align:right"><span class="label" style="font-weight:bold;">COMPANY NAME:</span>'.$employer_company .'</td>
+                <td><span class="label" style="font-weight:bold">TRADING AS:</span>' . $trading . '</td>
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">COMPANY NAME:</span>' . $employer_company . '</td>
             </tr>
             
             <tr>
                 <td><span class="label" style="font-weight:bold">ABN:</span>' . $abn . '</td>
-                <td style="text-align:right"><span class="label" style="font-weight:bold;">PHONE:</span>'.$employer_phone.'</td>
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">ABN:</span>' . $employer_abn . '  </td>
             </tr>
 
             <tr>
                 <td><span class="label" style="font-weight:bold">PHONE:</span>' . $phone . '</td>
-                <td style="text-align:right"><span class="label" style="font-weight:bold;">ABN:</span>'.$employer_abn.'  </td>
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">PHONE:</span>' . $employer_phone . '</td>
             </tr>
 
              <tr>
                 <td><span class="label" style="font-weight:bold">ADDRESS:</span> ' . $address . '</td>
-                <td style="text-align:right"><span class="label" style="font-weight:bold;">ADDRESS:</span>'.$employer_address.'</td>
+                <td style="text-align:right"><span class="label" style="font-weight:bold;">ADDRESS:</span>' . $employer_address . '</td>
             </tr>
+
            <tr>
          <td> </td>
                  
@@ -303,15 +305,15 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
         $customInvoiceNo = $data['custom_invoice_no'];
         $note_text = $data['note_text'];
         $items = $data['items'];
-       
+
         $html .= '
         <tr >
-            <td style="  text-align: left; width: 20.5%; padding:0px 4px;">Account: '.htmlspecialchars($customInvoiceName2) .' <br> Invoice# ' .$customInvoiceNo. '</td>
+            <td style="  text-align: left; width: 20.5%; padding:0px 4px;">Account: ' . htmlspecialchars($customInvoiceName2) . ' <br> Invoice# ' . $customInvoiceNo . '</td>
             <td style="padding:0px; width: 73%; ">
                 <table class="checkbox-table">
                     <tr>';
 
-                    $allOptions = $items; // Only use items fetched from DB
+        $allOptions = $items; // Only use items fetched from DB
         // Check for any key matching P/UP(x)
         $selectedPUP = null; // To store the matched P/UP key
         foreach ($items as $key => $value) {
@@ -320,7 +322,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                 break;
             }
         }
-    
+
         foreach ($allOptions as $key => $label) {
             $checked = isset($items[$key]);
             $image = $checked ? 'assets/images/check.png' : 'assets/images/uncheck.png';
@@ -339,12 +341,11 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                     <div style="font-size:12px; margin-left:5px; padding: 0px 0px 0px 0px; line-height: 1.1; ">' . htmlspecialchars($key) . '</div>
                 </div>
                
-            </td> '
-            ;
+            </td> ';
         }
 
         if (!empty(trim($note_text))) {
-        $html .= '
+            $html .= '
         <td style=" text-align:left; font-size:12px; border-left:1px solid #011f7f; padding: 0px 0px 0px 5px;"><b>Note:</b> ' . nl2br(htmlspecialchars($note_text)) . '</td>';
         }
 
@@ -358,10 +359,10 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
             $displayValue = is_numeric($value) ? '$' . number_format((float)$value, 2) : htmlspecialchars($value);
             $html .= '<td style="padding: 0px 0px 2px 0px; line-height: 1.1; "><span style="font-size:12px; ">' . $displayValue . '</span></td>';
         }
-        
-       if (!empty(trim($note_text))) {
-    $html .= '<td style=" text-align:left; font-size:12px; border-left:1px solid #011f7f; padding: 0px;"></td>';
-}
+
+        if (!empty(trim($note_text))) {
+            $html .= '<td style=" text-align:left; font-size:12px; border-left:1px solid #011f7f; padding: 0px;"></td>';
+        }
 
         $html .= '
                 </tr>
@@ -369,11 +370,10 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
         </td>
         <td style="width: 6%;">$' . number_format(array_sum($items), 2) . '</td>
         </tr>';
-
     }
 }
 
-$html .='
+$html .= '
              </tbody>
            </table>
             <table class="summary">
@@ -393,24 +393,27 @@ $html .='
                     </tr>
                 </table>
     ';
- 
-    if($totalItems == 3 || $totalItems == 4 || $totalItems ==  16)
-    {
-            $html .= '<pagebreak />';
-    }
-    
-     $html .= '
+
+if ($totalItems == 3 || $totalItems == 4 || $totalItems ==  16) {
+    $html .= '<pagebreak />';
+}
+
+$html .= '
             <div class="footer">
                 <div class="footer-text">
-                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD"
-                            If You Have Any Question Concerning About This Invoice,
+                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD" For Online Payments</p>
+                          <ul>
+                            <li>Accout Name: FAB TRANSPORT.</li>
+                            <li>Account: 10844802. BSB: 063 608.</li>
+                          </ul>
+
+                          <p style="text-align:center">If You Have Any Question Concerning About This Invoice,
                             Use The Following Contact Information.</p>
-                        <ul>
-                            <li>Contact Name: SAM</li>
-                            <li>Phone: 0403 729 966</li>
-                            <li>Email: info@fabtransport.com.au</li>
+                           
+                         <ul>
+                            <li>Email: admin@fabtransport.com.au.</li>
                         </ul>
-                        <h4 style="margin-left:50px">Thank You For Your Business!</h4>
+                        <h3 style="margin-left:50px">Thank You For Your Business!</h3>
                 </div>
             </div>
         </div>
@@ -419,7 +422,7 @@ $html .='
     </html>
     ';
 
-    //   echo $html;
+//   echo $html;
 
 try {
     // Estimate content height based on item count
@@ -433,7 +436,7 @@ try {
         'format' => 'A4', // 210mm width, dynamic height
         'margin_top' => 5,
         'margin_bottom' => 5,
-        'margin_left' =>5,
+        'margin_left' => 5,
         'margin_right' => 5,
     ]);
 

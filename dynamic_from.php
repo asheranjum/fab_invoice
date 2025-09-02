@@ -3,7 +3,7 @@
 require 'config/database.php';
 
 // Initialize variables
-$inv_invoice_id = $inv_date = $inv_invoice = $inv_company = $inv_address = $inv_phone = $inv_postal_code = $inv_abn = '';
+$inv_invoice_id = $inv_date = $inv_invoice = $inv_company = $inv_trading = $inv_address = $inv_phone = $inv_postal_code = $inv_abn = '';
 $inv_runsheet = $inv_customer_invoice_no = $inv_amount = $inv_sub_total = $inv_tax_rate = $inv_other_cost = $inv_total_cost = '';
 
 // Handle the form submission for creating or updating the invoice
@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $inv_date = mysqli_real_escape_string($conn, $_POST['date'] ?? '');
     $inv_invoice = mysqli_real_escape_string($conn, $_POST['invoice'] ?? '');
     $inv_company = mysqli_real_escape_string($conn, $_POST['company'] ?? '');
+    $inv_trading = mysqli_real_escape_string($conn, $_POST['trading'] ?? '');
     $inv_address = mysqli_real_escape_string($conn, $_POST['address'] ?? '');
     $inv_phone = mysqli_real_escape_string($conn, $_POST['phone'] ?? '');
     $inv_postal_code = mysqli_real_escape_string($conn, $_POST['postal_code'] ?? '');
@@ -27,16 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // If we are updating an existing invoice
     if (isset($_GET['invoice_id']) && is_numeric($_GET['invoice_id'])) {
         $inv_invoice_id = $_GET['invoice_id'];
-        $sql = "UPDATE invoice SET date = '$inv_date', invoice = '$inv_invoice', company = '$inv_company', 
+        $sql = "UPDATE invoice SET date = '$inv_date', invoice = '$inv_invoice', company = '$inv_company', trading = '$inv_trading',, 
                 address = '$inv_address', phone = '$inv_phone', postal_code = '$inv_postal_code', abn = '$inv_abn',
                 runsheet = '$inv_runsheet', customer_invoice_no = '$inv_customer_invoice_no', 
                 amount = '$inv_amount', sub_total = '$inv_sub_total', tax_rate = '$inv_tax_rate', 
                 other_cost = '$inv_other_cost', total_cost = '$inv_total_cost' WHERE invoice_id = $inv_invoice_id";
     } else {
         // If we are creating a new invoice
-        $sql = "INSERT INTO invoice (date, invoice, company, address, phone, postal_code, abn, runsheet, customer_invoice_no, 
+        $sql = "INSERT INTO invoice (date, invoice, company, trading, address, phone, postal_code, abn, runsheet, customer_invoice_no, 
                 amount, sub_total, tax_rate, other_cost, total_cost)
-                VALUES ('$inv_date', '$inv_invoice', '$inv_company', '$inv_address', '$inv_phone', '$inv_postal_code', 
+                VALUES ('$inv_date', '$inv_invoice', '$inv_company','$inv_trading', '$inv_address', '$inv_phone', '$inv_postal_code', 
                 '$inv_abn', '$inv_runsheet', '$inv_customer_invoice_no','$inv_amount', '$inv_sub_total', 
                 '$inv_tax_rate', '$inv_other_cost', '$inv_total_cost')";
     }
@@ -60,6 +61,7 @@ if (isset($_GET['invoice_id']) && is_numeric($_GET['invoice_id'])) {
         $inv_date = $invoice['date'] ?? '';
         $inv_invoice = $invoice['invoice'] ?? '';
         $inv_company = $invoice['company'] ?? '';
+        $inv_trading = $invoice['trading'] ?? '';
         $inv_address = $invoice['address'] ?? '';
         $inv_phone = $invoice['phone'] ?? '';
         $inv_postal_code = $invoice['postal_code'] ?? '';
@@ -140,6 +142,10 @@ mysqli_close($conn); // Close the connection
         <div class="form-group">
             <label for="company">Company:</label>
             <input type="text" name="company" class="form-control" value="<?php echo htmlspecialchars($inv_company); ?>" required>
+        </div>
+         <div class="form-group">
+            <label for="trading">Trading As:</label>
+            <input type="text" name="trading" class="form-control" value="<?php echo htmlspecialchars($inv_trading); ?>" required>
         </div>
         <div class="form-group">
             <label for="address">Address:</label>
