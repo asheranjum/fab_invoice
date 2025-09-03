@@ -403,8 +403,7 @@ $html .= '
                 <div class="footer-text">
                          <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD" For Online Payments</p>
                           <ul>
-                            <li>Accout Name: FAB TRANSPORT.</li>
-                            <li>Account: 10844802. BSB: 063 608.</li>
+                            <li>Accout Name:FAB TRANSPORT, BSB:063 608, Account No:10844802.</li>
                           </ul>
 
                           <p style="text-align:center">If You Have Any Question Concerning About This Invoice,
