@@ -401,7 +401,7 @@ if ($totalItems == 3 || $totalItems == 4 || $totalItems ==  16) {
 $html .= '
             <div class="footer">
                 <div class="footer-text">
-                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD" For Online Payments</p>
+                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD" For Online Payments.</p>
                           <ul>
                             <li>Accout Name:FAB TRANSPORT, BSB:063 608, Account No:10844802.</li>
                           </ul>
