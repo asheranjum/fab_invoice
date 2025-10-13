@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inv_date = mysqli_real_escape_string($conn, $input['date'] ?? '');
         $inv_invoice = mysqli_real_escape_string($conn, $input['invoice'] ?? '');
         $inv_company = mysqli_real_escape_string($conn, $input['company'] ?? '');
+        $inv_trading = mysqli_real_escape_string($conn, $input['trading'] ?? '');
         $employer_abn = mysqli_real_escape_string($conn, $input['employer_abn'] ?? '');
         $employer_address = mysqli_real_escape_string($conn, $input['employer_address'] ?? '');
         $employer_company = mysqli_real_escape_string($conn, $input['employer_company'] ?? '');
@@ -52,9 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
 
     // Update invoice details
-    $sqlUpdate = "UPDATE invoices SET date=?, invoice_number=? , invoice_type=?, employer_company = ?, employer_abn = ? , employer_address = ?, employer_phone = ? ,  company_name=?, address=?, phone=?, postal_code =?, abn=?, tax_rate=?, sub_total=? ,total_cost=? WHERE id=?";
+    $sqlUpdate = "UPDATE invoices SET date=?, invoice_number=? , invoice_type=?, employer_company = ?, employer_abn = ? , employer_address = ?, employer_phone = ? ,  company_name=?, trading_as=?, address=?, phone=?, postal_code =?, abn=?, tax_rate=?, sub_total=? ,total_cost=? WHERE id=?";
     $stmt = $conn->prepare($sqlUpdate);
-    $stmt->bind_param("sssssssssssssssi", $inv_date,$invoice_number, $invoice_type, $employer_company, $employer_abn, $employer_address, $employer_phone ,  $inv_company, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $tax_rate, $sub_total ,$total_cost , $invoiceId);
+    $stmt->bind_param("ssssssssssssssssi", $inv_date,$invoice_number, $invoice_type, $employer_company, $employer_abn, $employer_address, $employer_phone ,  $inv_company, $inv_trading, $inv_address, $inv_phone, $inv_postal_code, $inv_abn, $tax_rate, $sub_total ,$total_cost , $invoiceId);
 
     if ($stmt->execute()) {
         foreach ($items as $item) {

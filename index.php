@@ -38,6 +38,7 @@ require 'session.php';
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a class="dropdown-item" href="invoice_bedding-furniture.php" target="_blank">Bedding/Furniture</a></li>
             <li><a class="dropdown-item" href="invoice_electric.php" target="_blank">Electric</a></li>
+            <li><a class="dropdown-item" href="invoice_blank.php" target="_blank">Blank</a></li>
           </ul>
         </div>
       </div>
@@ -105,9 +106,12 @@ require 'session.php';
                     <?php if ($row['invoice_type'] == 'Bedding' || $row['invoice_type'] == 'Furniture') { ?>
                       <button type="button" class="btn action-btn" onclick="window.open('pdf_bedding-furniture.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
                       <button type="button" class="btn action-btn" onclick="window.open('update_bedding-furniture_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
-                    <?php } else { ?>
+                    <?php } elseif ($row['invoice_type'] == 'Electric') { ?>
                       <button type="button" class="btn action-btn" onclick="window.open('pdf_electric.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
                       <button type="button" class="btn action-btn" onclick="window.open('update_electric_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
+                    <?php } else { ?>
+                      <button type="button" class="btn action-btn" onclick="window.open('pdf_blank.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Download PDF</button>
+                      <button type="button" class="btn action-btn" onclick="window.open('update_blank_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>', '_blank')">Edit</button>
                     <?php } ?>
                     <button type="button" class="btn action-btn" onclick="location.href='duplicate_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>'">Duplicate</button>
                     <button type="button" class="btn action-btn" onclick="if(confirm('Are you sure you want to delete this invoice?')) location.href='delete_invoice.php?invoice_id=<?php echo urlencode($row['id']); ?>'">Delete</button>

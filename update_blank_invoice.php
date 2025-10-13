@@ -215,14 +215,17 @@ mysqli_close($conn);
                     <div class="mb-2 d-flex align-items-center">
                         <label for="date" class="form-label w-25">DATE:</label>
                         <input type="date" name="date" id="invoice_date" class="form-control w-50" style="font-size: 18px;" value="<?php echo  date("Y-m-d", strtotime($invoiceData['date'])) ?? ''; ?>">
-                        <!-- <div class="invalid-feedback">Invoice date is required.</div> -->
+                        <div class="invalid-feedback">Invoice date is required.</div>
                     </div>
+
+
+
 
                     <div class="mb-2 d-flex align-items-center">
                         <label class="form-label w-25">BILL TO:</label>
                         <?php $selectedType = $invoiceData['invoice_type'] ?? '';    ?>
                         <select id="invoice_type" name="invoice_type" class="form-control w-50 ">
-                            <option value="Blank" <?= $selectedType == 'Blank' ? 'selected' : '' ?>>Blank</option>
+                            <option value="Electric" <?= $selectedType == 'Electric' ? 'selected' : '' ?>>Electric</option>
                         </select>
                     </div>
 
@@ -235,7 +238,7 @@ mysqli_close($conn);
                     <div class="mb-2 d-flex align-items-center">
                         <label for="Trading" class="form-label w-25">TRADING AS:</label>
                         <input type="text" name="trading" id="trading_as" class="form-control w-50" placeholder="Type Trading AS" value="<?php echo $invoiceData['trading_as'] ?? ''; ?>">
-                        <!-- <div class="invalid-feedback">Trading As is required.</div> -->
+                        <!-- <div class="invalid-feedback">Trading AS is required.</div> -->
                     </div>
 
                     <div class="mb-2 d-flex align-items-center">
@@ -250,12 +253,14 @@ mysqli_close($conn);
                         <!-- <div class="invalid-feedback">Phone is required.</div> -->
                     </div>
 
-                     <div class="mb-2 d-flex align-items-center">
+                    <div class="mb-2 d-flex align-items-center">
                         <label for="address" class="form-label  w-25">ADDRESS:</label>
                         <input type="text" name="address" id="company_address" class="form-control w-50" placeholder="Enter Address Here" value="<?php echo $invoiceData['address'] ?? ''; ?>">
                         <!-- <div class="invalid-feedback">Address is required.</div> -->
                     </div>
+
                 </form>
+
             </div>
 
 
@@ -266,7 +271,7 @@ mysqli_close($conn);
                         <label for="employer_company" class="form-label mb-0 me-3 w-50">EMPLOYER COMPANY</label>
                         <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="<?php echo $invoiceData['employer_company'] ?? ''; ?>">
                     </div>
-                    
+
                     <div class="mb-2 d-flex align-items-center">
                         <label for="employer_abn" class="form-label mb-0 me-3 w-50">EMPLOYER ABN</label>
                         <input type="text" name="employer_abn" id="employer_abn" class="form-control w-50" placeholder="Employer ABN" value="<?php echo $invoiceData['employer_abn'] ?? ''; ?>">
@@ -280,8 +285,8 @@ mysqli_close($conn);
                     <div class="mb-2 d-flex align-items-center">
                         <label for="employer_address" class="form-label mb-0 me-3 w-50">EMPLOYER ADDRESS</label>
                         <input type="text" name="employer_address" id="employer_address" class="form-control w-50" placeholder="Employer Address" value="<?php echo $invoiceData['employer_address'] ?? ''; ?>">
-
                     </div>
+
                 </div>
 
                 <!-- <div class="info">
@@ -324,7 +329,6 @@ mysqli_close($conn);
 
                         <tr id="tabletr" class="tabletr" style="display:none;">
 
-
                             <td style="width: 180px;">
                                 <input type="text" name="customer_inv_name[]" id="customer-inv-name" class="form-control customer-inv-name mt-2" placeholder="Enter Inv Name">
                                 <input type="text" name="customer_inv_no[]" class="form-control customer-inv-no" placeholder="Enter Inv No">
@@ -338,9 +342,14 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][deliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="ins-0" name="item[0][ins]">
-                                        <label for="ins-0" class="form-check-label">INST+</label>
-                                        <input type="text" name="item[0][ins_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="disas-0" name="item[0][disas]">
+                                        <label for="disas-0" class="form-check-label">DISAS+</label>
+                                        <input type="text" name="item[0][disas_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="assem-0" name="item[0][assem]">
+                                        <label for="assem-0" class="form-check-label">ASSEM+</label>
+                                        <input type="text" name="item[0][assem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="rub-0" name="item[0][rub]">
@@ -358,24 +367,24 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][downst_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_chnage]">
-                                        <label for="door_chnage-0" class="form-check-label">DOOR/CH+</label>
-                                        <input type="text" name="item[0][door_chnage_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="prem-0" name="item[0][prem]">
+                                        <label for="prem-0" class="form-check-label">PREM+</label>
+                                        <input type="text" name="item[0][prem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="door_remove-0" name="item[0][door_remove]">
-                                        <label for="door_remove-0" class="form-check-label">DOOR/RE+</label>
-                                        <input type="text" name="item[0][door_remove_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="brtrans-0" name="item[0][brtrans]">
+                                        <label for="brtrans-0" class="form-check-label">BRTRANS+</label>
+                                        <input type="text" name="item[0][brtrans_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="h_dliv-0" name="item[0][relo]">
-                                        <label for="relo-0" class="form-check-label">RELO+</label>
-                                        <input type="text" name="item[0][relo_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="h_dliv-0" name="item[0][h_dliv]">
+                                        <label for="h_dliv-0" class="form-check-label">H/DLIV+</label>
+                                        <input type="text" name="item[0][h_dliv_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input form-checkboxes" id="water_con-0" name="item[0][water_con]">
-                                        <label for="water_con-0" class="form-check-label">WATERCON+</label>
-                                        <input type="text" name="item[0][water_con_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="vol-0" name="item[0][vol]">
+                                        <label for="vol-0" class="form-check-label">VOL+</label>
+                                        <input type="text" name="item[0][vol_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
 
                                     <div class="form-check ">
@@ -396,7 +405,6 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
                                 </div>
-
 
                             </td>
 
@@ -443,6 +451,7 @@ mysqli_close($conn);
                             </tr>
 
                             <?php
+
                             foreach ($runsheetData['items'] as $itemRowId => $data):
 
                                 $itemId = $data['items'][$itemName]['item_id'] ?? null;
@@ -458,17 +467,17 @@ mysqli_close($conn);
                                             <tr>
                                                 <?php
                                                 // Define all options
-
                                                 $allOptions = [
                                                     'DELIV+' => 'DELIV+',
-                                                    'INST+' => 'INST+',
+                                                    'DISAS+' => 'DISAS+',
+                                                    'ASSEM+' => 'ASSEM+',
                                                     'RUB+' => 'RUB+',
                                                     'UPST+' => 'UPST+',
                                                     'DOWNST+' => 'DOWNST+',
-                                                    'DOOR/CH+' => 'DOOR/CH+',
-                                                    'DOOR/RE+' => 'DOOR/RE+',
-                                                    'RELO+' => 'RELO+',
-                                                    'WATERCON+' => 'WATERCON+',
+                                                    'PREM+' => 'PREM+',
+                                                    'BRTRANS+' => 'BRTRANS+',
+                                                    'H/DLIV+' => 'H/DLIV+',
+                                                    'VOL+' => 'VOL+',
                                                 ];
                                                 $pupOptions = [
                                                     '1' => 'P/UP(1)',
@@ -482,7 +491,6 @@ mysqli_close($conn);
                                                     '9' => 'P/UP(9)',
                                                     '10' => 'P/UP(10)'
                                                 ];
-
                                                 // Check for any key matching P/UP(x)
                                                 $selectedPUP = null; // To store the matched P/UP key
 
@@ -619,7 +627,7 @@ mysqli_close($conn);
     <script>
         function getMaxItemRowId() {
             let maxId = 0;
-            $(".table-container tbody tr#tabletr, .table-container tbody tr.table_exitisng").each(function() {
+            $(".table-container tbody tr#tabletr, .table-container tbody trztable_exitisng").each(function() {
                 const itemRowId = parseInt($(this).attr("data-item-row-id"));
                 if (itemRowId > maxId) {
                     maxId = itemRowId;
@@ -667,6 +675,7 @@ mysqli_close($conn);
             $("#tax_rate").val(taxRate.toFixed(2));
             $("#total_cost").val(total.toFixed(2));
         }
+
 
         $(document).ready(function() {
 
@@ -740,7 +749,6 @@ mysqli_close($conn);
                     alert("Invalid date format. Please use YYYY-MM-DD.");
                     return;
                 }
-
                 currentRunsheet = {
                     number: runsheetNumber,
                     date: formatDateToDDMMYYYY(runsheetDate)
@@ -778,7 +786,6 @@ mysqli_close($conn);
                     $(`#tabletr-${runsheetId.split('-')[1]}`).remove();
                 }
             });
-
 
             $(document).on("click", ".edit-onpage-runsheet-button", function() {
                 const button = $(this);
@@ -830,8 +837,6 @@ mysqli_close($conn);
                 $("#addRunsheetDate").val("");
                 $("#addRunsheetModal").modal("show");
             }
-
-
 
             function attachRowListeners(row) {
                 $(row).find(".form-checkboxes").off("change").on("change", function() {
@@ -905,7 +910,6 @@ mysqli_close($conn);
 
 
             function addRows(count, runsheetNumber = null, runsheetDate = null) {
-
                 const rows = $(".table-container #tbody tr#tabletr");
                 let currentRows = rows.length;
                 let newRows = Math.min(count, maxRows - currentRows);
@@ -1006,7 +1010,6 @@ mysqli_close($conn);
 
                     attachRowListeners($newRow);
                 }
-
             }
 
             function removeRows(count) {
@@ -1080,7 +1083,6 @@ mysqli_close($conn);
                 calculateRowAmount(this);
                 attachRowListeners(this);
             });
-
         });
 
 
@@ -1099,6 +1101,7 @@ mysqli_close($conn);
                 //     id: "#company_name",
                 //     message: "Company name is required."
                 // },
+                // {
                 //     id: "#trading_as",
                 //     message: "Trading As is required."
                 // },
@@ -1203,14 +1206,14 @@ mysqli_close($conn);
                 date: $("input[name='date']").val().trim(),
                 invoice: $("input[name='invoice']").val().trim(),
                 company: $("input[name='company']").val().trim(),
-                trading:$("input[name='trading']").val().trim(),
-                address: $("input[name='address']").val().trim(),
-                phone: $("input[name='phone']").val().trim(),
-                abn: $("input[name='abn']").val().trim(),
+                trading: $("input[name='trading']").val().trim(),
                 employer_company: $("input[name='employer_company']").val(),
                 employer_phone: $("input[name='employer_phone']").val(),
                 employer_abn: $("input[name='employer_abn']").val(),
                 employer_address: $("input[name='employer_address']").val(),
+                address: $("input[name='address']").val().trim(),
+                phone: $("input[name='phone']").val().trim(),
+                abn: $("input[name='abn']").val().trim(),
                 sub_total: $("#sub_total").val().trim(),
                 tax_rate: $("#tax_rate").val().trim(),
                 total_cost: $("#total_cost").val().trim(),
@@ -1291,6 +1294,8 @@ mysqli_close($conn);
              * ✅ Collect New Items
              * -------------------- **/
             $(".table-container #tbody tr.tabletr").each(function(index) {
+
+                console.log(index);
 
                 const row = $(this);
                 const customerInvoiceNo = row.find(".customer-inv-no").val().trim() || "";
@@ -1414,20 +1419,18 @@ mysqli_close($conn);
                 $("#runsheetModal").modal("show");
             });
 
-
             $(document).on("click", ".edit-onpage-runsheet-button", function() {
+                const button = $(this);
+                const runsheetId = button.attr("data-id");
+                const runsheetNumber = button.attr("data-run-number");
+                const runsheetDate = button.attr("data-run-date");
 
-                let runsheetId = $(this).attr("data-id"); // Get the ID of the runsheet row
 
+                $("#editRunsheetNumber").val(runsheetNumber);
+                $("#editRunsheetDate").val(runsheetDate);
+                $("#editRunsheetId").val(runsheetId);
 
-                currentRunsheetNumber = $(this).data("run-number");
-                currentRunsheetDate = $(this).data("run-date");
-
-                $("#runsheetNumber").val(currentRunsheetNumber);
-                $("#runsheetDate").val(formatDateToDDMMYYYY(currentRunsheetDate));
-
-                $("#updateOnpageRunsheet").modal("show");
-                // updateRunsheetForm
+                $("#editRunsheetModal").modal("show");
             });
             // Show Modal with existing runsheet data
 
@@ -1467,7 +1470,6 @@ mysqli_close($conn);
                     });
                 }
             });
-
             $(document).on("click", ".delete-row-items", function() {
                 const button = $(this);
                 const customerId = button.data("customer-id");
@@ -1498,7 +1500,6 @@ mysqli_close($conn);
                     });
                 }
             });
-
 
             // Save Runsheet Changes
             $("#saveRunsheet").click(function() {

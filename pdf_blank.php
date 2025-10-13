@@ -335,7 +335,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
                 }
             }
             $html .= '
-            <td style="padding:2px 6px;">
+            <td style="padding:2px 0px;">
                 <div style="display:flex; align-items:center;  ">
                     <img src="' . $image . '" width="15" height="15" style="padding-top:0px; padding-bottom:0px; " />
                     <div style="font-size:12px; margin-left:5px; padding: 0px 0px 0px 0px; line-height: 1.1; ">' . htmlspecialchars($key) . '</div>
@@ -393,15 +393,28 @@ $html .= '
                     </tr>
                 </table>
     ';
- 
-    if($totalItems == 3 || $totalItems == 4 || $totalItems ==  16)
-    {
-            $html .= '<pagebreak />';
-    }
-    
-     $html .= '
-        <img src="assets/images/footer.PNG" />
-            
+
+if ($totalItems == 3 || $totalItems == 4 || $totalItems ==  16) {
+    $html .= '<pagebreak />';
+}
+
+$html .= '
+            <div class="footer">
+                <div class="footer-text">
+                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD" For Online Payments.</p>
+                          <ul>
+                            <li>Accout Name:FAB TRANSPORT, BSB:063 608, Account No:10844802.</li>
+                          </ul>
+
+                          <p style="text-align:center">If You Have Any Question Concerning About This Invoice,
+                            Use The Following Contact Information.</p>
+                           
+                         <ul>
+                            <li>Email: admin@fabtransport.com.au.</li>
+                        </ul>
+                        <h3 style="margin-left:50px">Thank You For Your Business!</h3>
+                </div>
+            </div>
         </div>
         
     </body>
@@ -410,19 +423,6 @@ $html .= '
 
 //   echo $html;
 
-    // <div class="footer">
-    //             <div class="footer-text">
-    //                      <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD"
-    //                         If You Have Any Question Concerning About This Invoice,
-    //                         Use The Following Contact Information.</p>
-    //                     <ul>
-    //                         <li>Contact Name: SAM</li>
-    //                         <li>Phone: 0403 729 966</li>
-    //                         <li>Email: info@fabtransport.com.au</li>
-    //                     </ul>
-    //                     <h4 style="margin-left:50px">Thank You For Your Business!</h4>
-    //             </div>
-    //         </div>
 try {
     // Estimate content height based on item count
     $itemCount = $totalItems * 20; // Approximate row height
