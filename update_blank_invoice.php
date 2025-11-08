@@ -225,7 +225,7 @@ mysqli_close($conn);
                         <label class="form-label w-25">BILL TO:</label>
                         <?php $selectedType = $invoiceData['invoice_type'] ?? '';    ?>
                         <select id="invoice_type" name="invoice_type" class="form-control w-50 ">
-                            <option value="Electric" <?= $selectedType == 'Electric' ? 'selected' : '' ?>>Electric</option>
+                              <option value="Blank" <?= $selectedType == 'Blank' ? 'selected' : '' ?>>Blank</option>
                         </select>
                     </div>
 
