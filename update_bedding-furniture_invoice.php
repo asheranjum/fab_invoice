@@ -483,6 +483,7 @@ mysqli_close($conn);
                                                     'VOL+' => 'VOL+',
                                                 ];
                                                 $pupOptions = [
+                                                    '0' => 'P/UP',
                                                     '1' => 'P/UP(1)',
                                                     '2' => 'P/UP(2)',
                                                     '3' => 'P/UP(3)',
