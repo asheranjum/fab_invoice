@@ -398,30 +398,30 @@ if ($totalItems == 3 || $totalItems == 4 || $totalItems ==  16) {
     $html .= '<pagebreak />';
 }
 
-$html .= '
-            <div class="footer">
-                <div class="footer-text">
-                         <p>Make All Checks Payable to "FAB TRANSPORT SERVICES PTY LTD" For Online Payments.</p>
-                          <ul>
-                            <li>Accout Name:FAB TRANSPORT, BSB:063 608, Account No:10844802.</li>
-                          </ul>
+    $html .= '
+ 
+      <img src="assets/images/footer.png" />
 
-                          <p style="text-align:center">If You Have Any Question Concerning About This Invoice,
-                            Use The Following Contact Information.</p>
-                           
-                         <ul>
-                            <li>Email: admin@fabtransport.com.au.</li>
-                        </ul>
-                        <h3 style="margin-left:50px">Thank You For Your Business!</h3>
-                </div>
-            </div>
-        </div>
-        
-    </body>
-    </html>
-    ';
+       </div>
+     </body>
+   </html>
 
-//   echo $html;
+  ';
+
+// echo $html;
+
+// <div class="footer">
+//     <div class="footer-text">
+//         <p>Make All Cheques Payable to "FAB TRANSPORT SERVICES PTY LTD"
+//             For Online Payments.</p>
+//         <p>Account Name:FAB TRANSPORT, BSB:063 608, Account No:10844802.</p>
+//         <p>If You Hav Any Concerning About This Invoice, Use The Following Contact Information.</p>
+//         <ul>
+//             <li>Email: info@fabtransport.com.au</li>
+//         </ul>
+//         <h3 style="margin-left:50px">Thank You For Your Business!</h3>
+//     </div>
+// </div>
 
 try {
     // Estimate content height based on item count
