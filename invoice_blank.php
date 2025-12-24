@@ -113,7 +113,6 @@ mysqli_close($conn);
                     <div class="top-nav">
 
                         <div class="topbtngr btn-group" role="group">
-                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
                             <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
                             <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
                         </div>
@@ -343,11 +342,15 @@ mysqli_close($conn);
             </div>
 
         </div>
-        <div class="topbtngr btn-group" role="group">
-            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
-            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
-            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
-        </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="topbtngr btn-group" role="group">
+                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" form="invoiceForm" class="btn mergebtn export-button-external">Save Invoice</button>
+                        </div>
+                    </div>
 
 
 
@@ -419,11 +422,7 @@ mysqli_close($conn);
             $("#addRunsheet").click(addRunsheet);
             $(".add-bulk-button").click(() => {
 
-                // Check if at least one runsheet row exists
-                if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
-                    alert("Please add at least one Runsheet before adding rows.");
-                    return;
-                }
+               
 
                 addRows(promptForRowCount("add"))
             });
@@ -821,10 +820,10 @@ mysqli_close($conn);
                 });
 
                 // Check if runsheet exists
-                if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
-                    alert("Please add at least one Runsheet before submitting.");
-                    isValid = false;
-                }
+               // if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
+               //     alert("Please add at least one Runsheet before submitting.");
+               //     isValid = false;
+              //  }
 
 
                 // Check if at least one valid item row is added
@@ -980,6 +979,12 @@ mysqli_close($conn);
             }
 
         });
+
+        $("#externalButtonId").on("click", function() {
+            // This triggers the "submit" event on the form
+            $("#invoiceForm")[0].requestSubmit(); 
+        });
+        
     </script>
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>

@@ -196,7 +196,6 @@ mysqli_close($conn);
 
                     <div class="top-nav">
                         <div class="topbtngr btn-group" role="group">
-                            <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
                             <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
                             <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
                         </div>
@@ -318,14 +317,7 @@ mysqli_close($conn);
                     </thead>
                     <tbody id="tbody">
 
-                        <tr style="display: none;">
-                            <th colspan="3">
-                                <div style=" gap: 50px; display: flex;">
-                                    <strong>Runsheet No: <span id="runsheet_no"></span> </strong>
-                                    <strong>Runsheet Date: <span id="runsheet_date"></span> </strong>
-                                </div>
-                            </th>
-                        </tr>
+                       
 
                         <tr id="tabletr" class="tabletr" style="display:none;">
 
@@ -423,32 +415,7 @@ mysqli_close($conn);
 
                         <?php foreach ($groupedItems as $runsheetNumber => $runsheetData): ?>
 
-                            <tr id="runsheet-<?= $runsheetNumber ?>">
-                                <th colspan="3" id='runsheet-data'>
-                                    <div style="gap: 50px; display: flex;">
-
-                                        <strong>Runsheet No: <span id="runsheet_no"><?= htmlspecialchars($runsheetData['runsheet_number']) ?></span> </strong>
-                                        <strong>Runsheet Date: <span id="runsheet_date"><?= htmlspecialchars($runsheetData['runsheet_date']) ?></span> </strong>
-
-                                        <button type="button" class="btn btn-warning btn-sm edit-runsheet-button"
-                                            data-run-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>"
-                                            data-run-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
-                                            Edit
-                                        </button>
-                                        <button type="button" class="btn btn-danger btn-sm delete-runsheet-items"
-                                            data-run-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>"
-                                            data-run-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
-                                            Delete
-                                        </button>
-                                        <button type="button" class="btn btn-success btn-sm add-row-under-runsheet"
-                                            data-runsheet-number="<?= htmlspecialchars($runsheetData['runsheet_number']) ?>"
-                                            data-runsheet-date="<?= htmlspecialchars($runsheetData['runsheet_date']) ?>">
-                                            Add Row
-                                        </button>
-                                    </div>
-                                </th>
-                                <th></th>
-                            </tr>
+                   
 
                             <?php
 
@@ -571,11 +538,17 @@ mysqli_close($conn);
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <div class="topbtngr btn-group" role="group">
-                    <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
-                    <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
-                    <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
-                </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="topbtngr btn-group" role="group"> <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                            <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                            <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" form="invoiceForm" class="btn mergebtn export-button-external">Update Invoice</button>
+                        </div>
+                    </div>
+                
+                
             </div>
         </div>
 
@@ -626,6 +599,7 @@ mysqli_close($conn);
     </div>
 
     <script>
+        
         function getMaxItemRowId() {
             let maxId = 0;
             $(".table-container tbody tr#tabletr, .table-container tbody trztable_exitisng").each(function() {
@@ -949,10 +923,10 @@ mysqli_close($conn);
                 }
 
                 // If still not found, warn user
-                if (!runsheetNumber || !runsheetDate) {
-                    alert("Please add at least one Runsheet before adding rows.");
-                    return;
-                }
+                // if (!runsheetNumber || !runsheetDate) {
+                //     alert("Please add at least one Runsheet before adding rows.");
+                //     return;
+                // }
 
                 for (let i = 0; i < newRows; i++) {
                     const $newRow = $("#tabletr").clone().removeAttr("id").removeAttr("style").addClass("tabletr");
@@ -1046,10 +1020,10 @@ mysqli_close($conn);
             $(".add-bulk-button").click(function() {
 
                 // Check if at least one runsheet row exists
-                if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
-                    alert("Please add at least one Runsheet before adding rows.");
-                    return;
-                }
+                // if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
+                //     alert("Please add at least one Runsheet before adding rows.");
+                //     return;
+                // }
 
                 let count = prompt("How many rows do you want to add? (1-200)", "1");
                 count = parseInt(count, 10);
@@ -1134,10 +1108,10 @@ mysqli_close($conn);
             });
 
             // Check if runsheet exists
-            if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
-                alert("Please add at least one Runsheet before submitting.");
-                isValid = false;
-            }
+          //  if ($(".table-container tbody tr[id^='runsheet-']").length === 0) {
+           //     alert("Please add at least one Runsheet before submitting.");
+           //     isValid = false;
+           // }
 
 
             // Check if at least one valid item row is added
@@ -1386,7 +1360,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        window.location.href = "index.php"; // Redirect after success
+                        // window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }
@@ -1548,6 +1522,12 @@ mysqli_close($conn);
             // });
 
         });
+
+        $("#externalButtonId").on("click", function() {
+            // This triggers the "submit" event on the form
+            $("#invoiceForm")[0].requestSubmit(); 
+        });
+        
     </script>
 
 

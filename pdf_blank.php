@@ -295,10 +295,7 @@ foreach ($groupedItems as $runsheetNumber => $runsheetData) {
     $runsheetNumber1 = $runsheetData['runsheet_number'];
 
     // Add Runsheet Header
-    $html .= '
-    <tr class="runsheet-header">
-       <td colspan="3">RUNSHEET NO: ' . $runsheetNumber1 . ' | RUNSHEET DATE: ' . $runsheetDate . '</td>
-    </tr>';
+  
 
     foreach ($runsheetData['items'] as $itemRowId => $data) {
         $customInvoiceName2 = $data['customInvoiceName'];

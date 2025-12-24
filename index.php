@@ -38,7 +38,7 @@ require 'session.php';
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a class="dropdown-item" href="invoice_bedding-furniture.php" target="_blank">Bedding/Furniture</a></li>
             <li><a class="dropdown-item" href="invoice_electric.php" target="_blank">Electric</a></li>
-            <!-- <li><a class="dropdown-item" href="invoice_blank.php" target="_blank">Blank</a></li> -->
+            <li><a class="dropdown-item" href="invoice_blank.php" target="_blank">Blank</a></li>
           </ul>
         </div>
       </div>
