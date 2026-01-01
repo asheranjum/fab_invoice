@@ -243,9 +243,14 @@ $html = '
        
            <h1 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h1>
            <h4 style=" margin-top:60px; margin-left:5px; color:#001f80" ><span class="label">INVOICE DATE:</span> ' . $date . '</h4>
-           <h2 style=" margin-left:5px; color:#001f80">Bill To</h2>
+
+           <table class="bill-to">
+
+           <tr>  
+                <td><h2 class="label" style="font-weight:bold">Bill To</h2></td>
+                <td style="text-align:right; font-weight:bold; font-size:15px"><span class="label">Total Including GST:</span>$' . $total_cost . '</td>      
+           </tr>
          
-                   <table class="bill-to">
             <tr>
                 <td><span class="label" style="font-weight:bold">COMPANY NAME:</span> ' . $company . '</td>
                 <td style="text-align:right; font-weight:bold; font-size:15px"><span class="label">Invoice Number:</span> ' . $invoiceNo . '</td>
@@ -398,7 +403,7 @@ if ($totalItems == 3 || $totalItems == 4 || $totalItems ==  16) {
     $html .= '<pagebreak />';
 }
 
-    $html .= '
+$html .= '
  
       <img src="assets/images/footer.png" />
 
