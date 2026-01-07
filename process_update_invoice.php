@@ -60,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->execute()) {
         foreach ($items as $item) {
             $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
-            $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
-            $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
+            $customerInvoiceNo = $item['customer_inv_no'] ?? '';
+            $customerInvoiceName = $item['customer_inv_name'] ?? '';
             $noteText = mysqli_real_escape_string($conn, $item['note_text_value'] ?? '');
             $row_position = intval($item['row_position'] ?? 0); // <-- get row_position
             $runsheet_number = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
@@ -145,8 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
            
             $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
-            $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
-            $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
+            $customerInvoiceNo = $item['customer_inv_no'] ?? '';
+            $customerInvoiceName = $item['customer_inv_name'] ?? '';
             $noteText = mysqli_real_escape_string($conn, $item['note_text_value'] ?? '');
             $runsheet_number = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
             $runsheet_date_raw = $item['runsheet_date'] ?? '';
