@@ -223,7 +223,7 @@ mysqli_close($conn);
                         <?php $selectedType = $invoiceData['invoice_type'] ?? '';    ?>
                         <select id="invoice_type" name="invoice_type" class="form-control w-50 ">
                             <option value="Electric" <?= $selectedType == 'Electric' ? 'selected' : '' ?>>Electric</option>
-                            
+
                         </select>
                     </div>
 
@@ -251,7 +251,7 @@ mysqli_close($conn);
                         <!-- <div class="invalid-feedback">Phone is required.</div> -->
                     </div>
 
-                     <div class="mb-2 d-flex align-items-center">
+                    <div class="mb-2 d-flex align-items-center">
                         <label for="address" class="form-label  w-25">ADDRESS:</label>
                         <input type="text" name="address" id="company_address" class="form-control w-50" placeholder="Enter Address Here" value="<?php echo $invoiceData['address'] ?? ''; ?>">
                         <!-- <div class="invalid-feedback">Address is required.</div> -->
@@ -267,7 +267,7 @@ mysqli_close($conn);
                         <label for="employer_company" class="form-label mb-0 me-3 w-50">EMPLOYER COMPANY</label>
                         <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="<?php echo $invoiceData['employer_company'] ?? ''; ?>">
                     </div>
-                    
+
                     <div class="mb-2 d-flex align-items-center">
                         <label for="employer_abn" class="form-label mb-0 me-3 w-50">EMPLOYER ABN</label>
                         <input type="text" name="employer_abn" id="employer_abn" class="form-control w-50" placeholder="Employer ABN" value="<?php echo $invoiceData['employer_abn'] ?? ''; ?>">
@@ -564,10 +564,14 @@ mysqli_close($conn);
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <div class="topbtngr btn-group" role="group">
-                    <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
-                    <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
-                    <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                <div class="d-flex justify-content-between mb-2">
+                    <div class="topbtngr btn-group" role="group"> <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                        <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                        <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" form="invoiceForm" class="btn mergebtn export-button-external">Update Invoice</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1205,7 +1209,7 @@ mysqli_close($conn);
                 date: $("input[name='date']").val().trim(),
                 invoice: $("input[name='invoice']").val().trim(),
                 company: $("input[name='company']").val().trim(),
-                trading:$("input[name='trading']").val().trim(),
+                trading: $("input[name='trading']").val().trim(),
                 address: $("input[name='address']").val().trim(),
                 phone: $("input[name='phone']").val().trim(),
                 abn: $("input[name='abn']").val().trim(),

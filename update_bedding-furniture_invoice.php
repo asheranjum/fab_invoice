@@ -574,10 +574,14 @@ mysqli_close($conn);
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <div class="topbtngr btn-group" role="group">
-                    <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
-                    <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
-                    <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                <div class="d-flex justify-content-between mb-2">
+                    <div class="topbtngr btn-group" role="group"> <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                        <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
+                        <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" form="invoiceForm" class="btn mergebtn export-button-external">Update Invoice</button>
+                    </div>
                 </div>
             </div>
         </div>
