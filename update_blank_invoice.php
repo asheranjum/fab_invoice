@@ -173,7 +173,7 @@ mysqli_close($conn);
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="addRunsheet">Add Runsheet</button>
+                    
                 </div>
             </div>
         </div>
@@ -539,7 +539,7 @@ mysqli_close($conn);
                     </tbody>
                 </table>
                     <div class="d-flex justify-content-between mb-2">
-                        <div class="topbtngr btn-group" role="group"> <button type="button" class="btn mergebtn add-runsheet-button">Add Runsheet</button>
+                        <div class="topbtngr btn-group" role="group"> 
                             <button type="button" class="btn mergebtn  add-bulk-button">Add Row</button>
                             <button type="button" class="btn mergebtn remove-bulk-button">Remove Row</button>
                         </div>
@@ -1360,7 +1360,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.success) {
                         alert("Invoice successfully updated!");
-                        // window.location.href = "index.php"; // Redirect after success
+                         window.location.href = "index.php"; // Redirect after success
                     } else {
                         alert("Error: " + (data.message || "Unknown error"));
                     }

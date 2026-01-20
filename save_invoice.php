@@ -94,14 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    // Get the current max customer_invoice_id
 
 
-                $newCustomerInvoiceId = mysqli_real_escape_string($conn, $item['customer_inv_id'] ?? '');
-                $customerInvoiceNo = mysqli_real_escape_string($conn, $item['customer_inv_no'] ?? '');
-                $customerInvoiceName = mysqli_real_escape_string($conn, $item['customer_inv_name'] ?? '');
-                $itemRowId = mysqli_real_escape_string($conn, $item['item_row_id'] ?? '');
-                $itemName = mysqli_real_escape_string($conn, $item['item_name'] ?? '');
-                $itemValue = mysqli_real_escape_string($conn, $item['item_value'] ?? '0');
-                $runsheetNumber = mysqli_real_escape_string($conn, $item['runsheet_number'] ?? '');
-                $noteText = mysqli_real_escape_string($conn, $item['note_text_value'] ?? '');
+                $newCustomerInvoiceId = $item['customer_inv_id'] ?? '';
+                $customerInvoiceNo =  $item['customer_inv_no'] ?? '';
+                $customerInvoiceName = $item['customer_inv_name'] ?? '';
+                $itemRowId = $item['item_row_id'] ?? '';
+                $itemName = $item['item_name'] ?? '';
+                $itemValue = $item['item_value'] ?? '0';
+                $runsheetNumber = $item['runsheet_number'] ?? '';
+                $noteText = $item['note_text_value'] ?? '';
                 $row_position = intval($item['row_position'] ?? 0); // <-- get row_position
                 // $runsheetDate = mysqli_real_escape_string($conn, $item['runsheet_date'] ?? '');
 
