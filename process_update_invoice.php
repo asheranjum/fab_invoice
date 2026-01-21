@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $itemId = mysqli_real_escape_string($conn, $entry['item_id'] ?? 0);
                 
               
-                if ($itemValueInt != 0) {
+                if (isset($entry['item_value'])) {
                     $itemsToKeep[] = $itemId;
 
                     // Check if item exists, update if it does, insert if not
