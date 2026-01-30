@@ -391,7 +391,7 @@ $html .= '
                 </table>
     ';
 
-if ($totalItems == 3 || $totalItems == 4 || $totalItems ==  16) {
+if ($totalItems == 9  || $totalItems ==  18) {
     $html .= '<pagebreak />';
 }
 
