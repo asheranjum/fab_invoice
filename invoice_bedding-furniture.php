@@ -272,6 +272,11 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][assem_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="unpack-0" name="item[0][unpack]">
+                                        <label for="unpack-0" class="form-check-label">UNPACK+</label>
+                                        <input type="text" name="item[0][unpack_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
+                                    <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="rub-0" name="item[0][rub]">
                                         <label for="rub-0" class="form-check-label">RUB+</label>
                                         <input type="text" name="item[0][rub_value]" class="form-control mt-1 numeric-only" disabled placeholder="">

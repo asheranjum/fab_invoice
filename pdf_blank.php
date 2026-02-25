@@ -248,12 +248,12 @@ $html = '
 
             <tr>  
                 <td><h2 class="label" style="font-weight:bold">Bill To</h2></td>
-                <td style="text-align:right; font-weight:bold; font-size:15px"><span class="label">Total Including GST:</span>$' . $total_cost . '</td>      
+                <td style="text-align:right; font-weight:bold; font-size:15px"><span class="label">INVOICE NUMBER:</span> ' . $invoiceNo . '</td>
            </tr>
-            
+          
             <tr>
-                <td><span class="label" style="font-weight:bold">TRADING AS:</span>' . $trading . '</td>
-                <td style="text-align:right"><span class="label" style="font-weight:bold;">COMPANY NAME:</span>' . $employer_company . '</td>
+                <td><span class="label" style="font-weight:bold">COMPANY NAME:</span> ' . $company . '</td>
+                <td style="text-align:right; font-weight:bold; font-size:15px"><span class="label">AMOUNT DUE:</span>$' . $total_cost . '</td> 
             </tr>
             
             <tr>
