@@ -242,9 +242,8 @@ $html = '
         <img src="assets/images/head.png"  style="width:100%" />
        
            <h1 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h1>
-           <h4 style=" margin-top:60px; margin-left:5px; color:#001f80" ><span class="label">INVOICE DATE:</span> ' . $date . '</h4>
+           <h4 style=" margin-top:60px; margin-left:5px; color:#001f80" ><span class="label">AMOUNT DUE:</span>$' . $total_cost . '</h4>
            
-         
           <table class="bill-to">
           
            <tr>  
@@ -254,7 +253,7 @@ $html = '
           
             <tr>
                 <td><span class="label" style="font-weight:bold">COMPANY NAME:</span> ' . $company . '</td>
-                <td style="text-align:right; font-weight:bold; font-size:15px"><span class="label">AMOUNT DUE:</span>$' . $total_cost . '</td> 
+                <td style="text-align:right; font-weight:bold; font-size:14.5px"><span class="label">INVOICE DATE:</span> ' . $date . '</td> 
             </tr>
             
             <tr>
