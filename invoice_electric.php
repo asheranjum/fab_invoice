@@ -261,6 +261,11 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][ins_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="unpack-0" name="item[0][unpack]">
+                                        <label for="unpack-0" class="form-check-label">UNPACK+</label>
+                                        <input type="text" name="item[0][unpack_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
+                                    <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="rub-0" name="item[0][rub]">
                                         <label for="rub-0" class="form-check-label">RUB+</label>
                                         <input type="text" name="item[0][rub_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
@@ -297,6 +302,12 @@ mysqli_close($conn);
                                     </div>
 
                                     <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="brtrans-0" name="item[0][brtrans]">
+                                        <label for="brtrans-0" class="form-check-label">BRTRANS+</label>
+                                        <input type="text" name="item[0][brtrans_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
+
+                                    <div class="form-check ">
                                         <select id="pup-0" name="item[0][pup]" class="form-contro">
                                             <option value="">P/UP</option>
                                             <option value="1">P/UP(1)</option>
@@ -312,6 +323,18 @@ mysqli_close($conn);
                                         </select>
 
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
+                                    </div>
+
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="wallmount-0" name="item[0][wallmount]">
+                                        <label for="wallmount-0" class="form-check-label">WALL MOUNT+</label>
+                                        <input type="text" name="item[0][wallmount_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
+
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="linkd-0" name="item[0][linkd]">
+                                        <label for="linkd-0" class="form-check-label">LINK DELIV+</label>
+                                        <input type="text" name="item[0][linkd_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                 </div>
 
@@ -970,9 +993,6 @@ mysqli_close($conn);
                         console.error("Error:", error);
                         alert("An error occurred. Please try again.");
                     });
-
-
-
 
             }
 

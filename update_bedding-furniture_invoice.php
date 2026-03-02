@@ -275,7 +275,7 @@ mysqli_close($conn);
                         <input type="text" name="employer_company" id="employer_company" class="form-control w-50" placeholder="Employer Company Name" value="<?php echo $invoiceData['employer_company'] ?? ''; ?>">
                     </div>
 
-                     <div class="mb-2 d-flex align-items-center">
+                    <div class="mb-2 d-flex align-items-center">
                         <label for="employer_abn" class="form-label mb-0 me-3 w-50">EMPLOYER ABN</label>
                         <input type="text" name="employer_abn" id="employer_abn" class="form-control w-50" placeholder="Employer ABN" value="<?php echo $invoiceData['employer_abn'] ?? ''; ?>">
                     </div>
@@ -285,11 +285,11 @@ mysqli_close($conn);
                         <input type="text" name="employer_phone" id="employer_phone" class="form-control w-50" placeholder="Employer Phone" value="<?php echo $invoiceData['employer_phone'] ?? ''; ?>">
                     </div>
 
-                     <div class="mb-2 d-flex align-items-center">
+                    <div class="mb-2 d-flex align-items-center">
                         <label for="employer_address" class="form-label mb-0 me-3 w-50">EMPLOYER ADDRESS</label>
                         <input type="text" name="employer_address" id="employer_address" class="form-control w-50" placeholder="Employer Address" value="<?php echo $invoiceData['employer_address'] ?? ''; ?>">
                     </div>
-                   
+
                 </div>
 
                 <!-- <div class="info">
@@ -412,6 +412,12 @@ mysqli_close($conn);
 
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
+
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="linkd-0" name="item[0][linkd]">
+                                        <label for="linkd-0" class="form-check-label">LINK DELIV+</label>
+                                        <input type="text" name="item[0][linkd_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
                                 </div>
 
                             </td>
@@ -480,6 +486,7 @@ mysqli_close($conn);
                                                     'DISAS+' => 'DISAS+',
                                                     'ASSEM+' => 'ASSEM+',
                                                     'UNPACK+' => 'UNPACK+',
+                                                    'LINK DELIV+' => 'LINK DELIV+',
                                                     'RUB+' => 'RUB+',
                                                     'UPST+' => 'UPST+',
                                                     'DOWNST+' => 'DOWNST+',

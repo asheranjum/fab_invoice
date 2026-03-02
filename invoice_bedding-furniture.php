@@ -330,6 +330,11 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
                                     </div>
 
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="linkd-0" name="item[0][linkd]">
+                                        <label for="linkd-0" class="form-check-label">LINK DELIV+</label>
+                                        <input type="text" name="item[0][linkd_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
 
                                 </div>
 

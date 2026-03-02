@@ -344,6 +344,11 @@ mysqli_close($conn);
                                         <input type="text" name="item[0][ins_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                     <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="unpack-0" name="item[0][unpack]">
+                                        <label for="unpack-0" class="form-check-label">UNPACK+</label>
+                                        <input type="text" name="item[0][unpack_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
+                                    <div class="form-check ">
                                         <input type="checkbox" class="form-check-input form-checkboxes" id="rub-0" name="item[0][rub]">
                                         <label for="rub-0" class="form-check-label">RUB+</label>
                                         <input type="text" name="item[0][rub_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
@@ -378,6 +383,11 @@ mysqli_close($conn);
                                         <label for="water_con-0" class="form-check-label">WATERCON+</label>
                                         <input type="text" name="item[0][water_con_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="brtrans-0" name="item[0][brtrans]">
+                                        <label for="brtrans-0" class="form-check-label">BRTRANS+</label>
+                                        <input type="text" name="item[0][brtrans_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
 
                                     <div class="form-check ">
                                         <select id="pup-0" name="item[0][pup]" class="form-contro">
@@ -395,6 +405,18 @@ mysqli_close($conn);
                                         </select>
 
                                         <input type="text" name="item[0][pup_value]" class="form-control mt-1" disabled placeholder="">
+                                    </div>
+                                    
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="wallmount-0" name="item[0][wallmount]">
+                                        <label for="wallmount-0" class="form-check-label">WALL MOUNT+</label>
+                                        <input type="text" name="item[0][wallmount_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
+                                    </div>
+
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input form-checkboxes" id="linkd-0" name="item[0][linkd]">
+                                        <label for="linkd-0" class="form-check-label">LINK DELIV+</label>
+                                        <input type="text" name="item[0][linkd_value]" class="form-control mt-1 numeric-only" disabled placeholder="">
                                     </div>
                                 </div>
 
@@ -464,12 +486,16 @@ mysqli_close($conn);
                                                     'DELIV+' => 'DELIV+',
                                                     'INST+' => 'INST+',
                                                     'RUB+' => 'RUB+',
+                                                    'UNPACK+' => 'UNPACK+',
                                                     'UPST+' => 'UPST+',
                                                     'DOWNST+' => 'DOWNST+',
                                                     'DOOR/CH+' => 'DOOR/CH+',
                                                     'DOOR/RE+' => 'DOOR/RE+',
                                                     'RELO+' => 'RELO+',
                                                     'WATERCON+' => 'WATERCON+',
+                                                    'BRTRANS+' => 'BRTRANS+',
+                                                    'WALL MOUNT+' => 'WALL MOUNT+',
+                                                    'LINK DELIV+' => 'LINK DELIV+',
                                                 ];
                                                 $pupOptions = [
                                                     '0' => 'P/UP',

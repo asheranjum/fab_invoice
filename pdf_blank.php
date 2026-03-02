@@ -241,8 +241,8 @@ $html = '
         
         <img src="assets/images/head.png"  style="width:100%" />
        
-          <h1 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h1>
-           <h4 style=" margin-top:60px; margin-left:5px; color:#001f80" ><span class="label">AMOUNT DUE:</span>$' . $total_cost . '</h4>
+            <h1 style=" margin-left:30px; margin-top:-100px; color:white">TAX INVOICE</h1>
+            <p style=" margin-top:63px; margin-left:5px; color:#001f80; font-weight:bold; font-size:16px " ><span class="label">AMOUNT DUE:</span>$' . $total_cost . '</p>
          
           <table class="bill-to">
 
